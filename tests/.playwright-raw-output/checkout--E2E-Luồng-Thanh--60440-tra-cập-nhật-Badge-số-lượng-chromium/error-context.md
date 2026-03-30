@@ -1,0 +1,252 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e7]:
+        - generic [ref=e8] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e14]: ElectroHub
+        - generic [ref=e16]:
+          - img [ref=e17]
+          - textbox "Tìm kiếm điện thoại, laptop, phụ kiện..." [ref=e20]
+        - navigation [ref=e21]:
+          - button "Trang chủ" [ref=e22]
+          - button "Sản phẩm" [ref=e23]
+          - button "Khuyến mãi" [ref=e24]
+        - generic [ref=e25]:
+          - button [ref=e26]:
+            - img [ref=e27]
+          - button "2" [ref=e29]:
+            - img [ref=e30]
+            - generic [ref=e34]: "2"
+          - button "Đăng nhập" [ref=e36]:
+            - img [ref=e37]
+            - text: Đăng nhập
+    - main [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img "Banner" [ref=e43]
+          - generic [ref=e46]:
+            - generic [ref=e47]: Siêu ưu đãi mùa hè
+            - heading "Nâng tầm Trải nghiệm" [level=1] [ref=e48]:
+              - text: Nâng tầm
+              - text: Trải nghiệm
+            - paragraph [ref=e49]: Khám phá bộ sưu tập thiết bị điện tử mới nhất với công nghệ tiên tiến và thiết kế đột phá. Giảm giá lên đến 30% cho các dòng Laptop Gaming.
+            - generic [ref=e50]:
+              - button "Mua sắm ngay" [ref=e51]:
+                - text: Mua sắm ngay
+                - img [ref=e52]
+              - button "Xem khuyến mãi" [ref=e54]
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - heading "Danh mục nổi bật" [level=2] [ref=e58]
+            - paragraph [ref=e59]: Khám phá các dòng sản phẩm công nghệ hàng đầu
+          - generic [ref=e60]:
+            - generic [ref=e61] [cursor=pointer]:
+              - img [ref=e63]
+              - generic [ref=e65]: Điện thoại
+            - generic [ref=e66] [cursor=pointer]:
+              - img [ref=e68]
+              - generic [ref=e70]: Laptop
+            - generic [ref=e71] [cursor=pointer]:
+              - img [ref=e73]
+              - generic [ref=e75]: Máy tính bảng
+            - generic [ref=e76] [cursor=pointer]:
+              - img [ref=e78]
+              - generic [ref=e83]: Đồng hồ
+            - generic [ref=e84] [cursor=pointer]:
+              - img [ref=e86]
+              - generic [ref=e88]: Tai nghe
+            - generic [ref=e89] [cursor=pointer]:
+              - img [ref=e91]
+              - generic [ref=e94]: Loa
+        - generic [ref=e96]:
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - heading "Sản phẩm bán chạy" [level=2] [ref=e99]
+              - paragraph [ref=e100]: Những thiết bị được yêu thích nhất tuần qua
+            - button "Xem tất cả" [ref=e101]:
+              - text: Xem tất cả
+              - img [ref=e102]
+          - generic [ref=e104]:
+            - generic [ref=e105]:
+              - generic [ref=e106]:
+                - img "iPhone 15 Pro Max" [ref=e107]
+                - generic [ref=e108]:
+                  - generic [ref=e109]:
+                    - img [ref=e110]
+                    - generic [ref=e112]: "4.8"
+                  - button [ref=e113]:
+                    - img [ref=e114]
+              - generic [ref=e116]:
+                - generic [ref=e117]: Smartphone
+                - heading "iPhone 15 Pro Max" [level=3] [ref=e118]
+                - paragraph [ref=e119]: Flagship mới nhất từ Apple với chip A17 Pro.
+                - generic [ref=e120]:
+                  - generic [ref=e121]: 32.000.000₫
+                  - generic [ref=e122]:
+                    - button [ref=e123]:
+                      - img [ref=e124]
+                    - button "Mua ngay" [ref=e128]
+            - generic [ref=e129]:
+              - generic [ref=e130]:
+                - img "MacBook Pro M3" [ref=e131]
+                - generic [ref=e132]:
+                  - generic [ref=e133]:
+                    - img [ref=e134]
+                    - generic [ref=e136]: "4.9"
+                  - button [ref=e137]:
+                    - img [ref=e138]
+              - generic [ref=e140]:
+                - generic [ref=e141]: Laptop
+                - heading "MacBook Pro M3" [level=3] [ref=e142]
+                - paragraph [ref=e143]: Sức mạnh vượt trội cho đồ họa và lập trình.
+                - generic [ref=e144]:
+                  - generic [ref=e145]: 45.000.000₫
+                  - generic [ref=e146]:
+                    - button [ref=e147]:
+                      - img [ref=e148]
+                    - button "Mua ngay" [ref=e152]
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - img "Samsung Galaxy S24 Ultra" [ref=e155]
+                - generic [ref=e156]:
+                  - generic [ref=e157]:
+                    - img [ref=e158]
+                    - generic [ref=e160]: "4.7"
+                  - button [ref=e161]:
+                    - img [ref=e162]
+              - generic [ref=e164]:
+                - generic [ref=e165]: Smartphone
+                - heading "Samsung Galaxy S24 Ultra" [level=3] [ref=e166]
+                - paragraph [ref=e167]: Camera 200MP và tính năng AI thông minh.
+                - generic [ref=e168]:
+                  - generic [ref=e169]: 28.000.000₫
+                  - generic [ref=e170]:
+                    - button [ref=e171]:
+                      - img [ref=e172]
+                    - button "Mua ngay" [ref=e176]
+            - generic [ref=e177]:
+              - generic [ref=e178]:
+                - img "Sony WH-1000XM5" [ref=e179]
+                - generic [ref=e180]:
+                  - generic [ref=e181]:
+                    - img [ref=e182]
+                    - generic [ref=e184]: "4.8"
+                  - button [ref=e185]:
+                    - img [ref=e186]
+              - generic [ref=e188]:
+                - generic [ref=e189]: Phụ kiện
+                - heading "Sony WH-1000XM5" [level=3] [ref=e190]
+                - paragraph [ref=e191]: Chống ồn đỉnh cao, âm thanh chi tiết.
+                - generic [ref=e192]:
+                  - generic [ref=e193]: 8.500.000₫
+                  - generic [ref=e194]:
+                    - button [ref=e195]:
+                      - img [ref=e196]
+                    - button "Mua ngay" [ref=e200]
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - img [ref=e206]
+            - heading "Giao hàng siêu tốc" [level=3] [ref=e211]
+            - paragraph [ref=e212]: Nhận hàng trong vòng 2h tại khu vực nội thành. Miễn phí vận chuyển cho đơn hàng từ 2 triệu.
+          - generic [ref=e213]:
+            - img [ref=e215]
+            - heading "Bảo hành chính hãng" [level=3] [ref=e218]
+            - paragraph [ref=e219]: Cam kết 100% sản phẩm chính hãng. Bảo hành 1 đổi 1 trong vòng 30 ngày nếu có lỗi từ nhà sản xuất.
+          - generic [ref=e220]:
+            - img [ref=e222]
+            - heading "Hỗ trợ 24/7" [level=3] [ref=e225]
+            - paragraph [ref=e226]: Đội ngũ kỹ thuật viên giàu kinh nghiệm luôn sẵn sàng hỗ trợ bạn bất cứ lúc nào qua hotline.
+    - contentinfo [ref=e227]:
+      - generic [ref=e228]:
+        - generic [ref=e229]:
+          - generic [ref=e230]:
+            - generic [ref=e231]:
+              - img [ref=e233]
+              - generic [ref=e237]: ElectroHub
+            - paragraph [ref=e238]: Cửa hàng thiết bị điện tử hàng đầu Việt Nam. Cung cấp những sản phẩm công nghệ mới nhất với giá cả cạnh tranh.
+          - generic [ref=e239]:
+            - heading "Sản phẩm" [level=4] [ref=e240]
+            - list [ref=e241]:
+              - listitem [ref=e242]:
+                - link "Điện thoại" [ref=e243] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e244]:
+                - link "Laptop" [ref=e245] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e246]:
+                - link "Máy tính bảng" [ref=e247] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e248]:
+                - link "Phụ kiện" [ref=e249] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e250]:
+            - heading "Hỗ trợ" [level=4] [ref=e251]
+            - list [ref=e252]:
+              - listitem [ref=e253]:
+                - link "Trung tâm bảo hành" [ref=e254] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e255]:
+                - link "Chính sách đổi trả" [ref=e256] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e257]:
+                - link "Vận chuyển" [ref=e258] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e259]:
+                - link "Liên hệ" [ref=e260] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e261]:
+            - heading "Bản tin" [level=4] [ref=e262]
+            - paragraph [ref=e263]: Đăng ký để nhận thông tin khuyến mãi sớm nhất.
+            - generic [ref=e264]:
+              - textbox "Email của bạn" [ref=e265]
+              - button "Gửi" [ref=e266]
+        - generic [ref=e267]:
+          - paragraph [ref=e268]: © 2024 ElectroHub. Tất cả quyền được bảo lưu.
+          - generic [ref=e269]:
+            - link "Điều khoản dịch vụ" [ref=e270] [cursor=pointer]:
+              - /url: "#"
+            - link "Chính sách bảo mật" [ref=e271] [cursor=pointer]:
+              - /url: "#"
+  - generic [ref=e274]:
+    - button [ref=e275]:
+      - img [ref=e276]
+    - generic [ref=e279]:
+      - img [ref=e281]
+      - heading "Tạo tài khoản mới" [level=2] [ref=e284]
+      - paragraph [ref=e285]: Tham gia cộng đồng mua sắm của chúng tôi
+    - generic [ref=e286]:
+      - generic [ref=e287]: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> <html><head> <title>404 Not Found</title> </head><body> <h1>Not Found</h1> <p>The requested URL was not found on this server.</p> <hr> <address>Apache/2.4.66 (Debian) Server at 127.0.0.1 Port 8888</address> </body></html>
+      - generic [ref=e288]:
+        - text: Họ và tên
+        - generic [ref=e289]:
+          - img [ref=e290]
+          - textbox "Nguyễn Văn A" [ref=e293]: Test User
+      - generic [ref=e294]:
+        - text: Email
+        - generic [ref=e295]:
+          - img [ref=e296]
+          - textbox "name@example.com" [ref=e299]: test_1774371113717@shop.com
+      - generic [ref=e300]:
+        - text: Mật khẩu
+        - generic [ref=e301]:
+          - img [ref=e302]
+          - textbox "••••••••" [ref=e305]: user123
+      - generic [ref=e306]:
+        - text: Số điện thoại
+        - generic [ref=e307]:
+          - img [ref=e308]
+          - textbox "0901234567" [ref=e310]
+      - generic [ref=e311]:
+        - text: Địa chỉ
+        - generic [ref=e312]:
+          - img [ref=e313]
+          - textbox "Số 1 Đại Cồ Việt, Hà Nội" [ref=e316]
+      - button "Đăng ký ngay" [ref=e317]
+    - paragraph [ref=e318]:
+      - text: Đã có tài khoản?
+      - button "Đăng nhập ngay" [ref=e319]
+```

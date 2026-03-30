@@ -1,0 +1,825 @@
+
+
+
+
+Đặc tả yêu cầu phần mềm 
+<< Quản lý cửa hàng giày dép >>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+< Địa điểm, ngày phát hành của Tài >
+Bảng Từ Điển Thuật Ngữ (Glossary)
+ STT
+Thuật Ngữ
+Định Nghĩa
+Ví Dụ/Ghi Chú
+1
+SRS
+Tài liệu Đặc tả Yêu cầu Phần mềm (Software Requirements Specification)
+Tài liệu này mô tả chi tiết các yêu cầu chức năng và phi chức năng của hệ thống.
+2
+Use Case
+Mô tả tương tác giữa người dùng và hệ thống để đạt mục tiêu cụ thể.
+"Đăng nhập", "Tạo đơn hàng" là các Use Case phổ biến.
+3
+Actor
+Người dùng hoặc hệ thống bên ngoài tương tác với phần mềm.
+Khách hàng, Quản trị viên, Hệ thống Thanh toán.
+4
+Functional Requirement
+Yêu cầu về chức năng hệ thống phải thực hiện.
+"Hệ thống phải cho phép đăng nhập bằng email/mật khẩu."
+5
+Non-functional Requirement
+Yêu cầu về chất lượng hệ thống (hiệu suất, bảo mật, khả năng sử dụng...).
+"Thời gian phản hồi < 2s cho 90% request."
+6
+UI (User Interface)
+Giao diện người dùng, nơi người dùng tương tác với hệ thống.
+Màn hình đăng nhập, trang quản lý sản phẩm.
+7
+API
+Giao diện lập trình ứng dụng, cho phép các hệ thống giao tiếp với nhau.
+REST API, GraphQL.
+8
+Microservices
+Kiến trúc phần mềm chia hệ thống thành các dịch vụ nhỏ, độc lập.
+Auth Service, Product Service, Order Service.
+9
+MVC (Model-View-Controller)
+Mô hình kiến trúc phần mềm chia ứng dụng thành 3 thành phần.
+Model (dữ liệu), View (giao diện), Controller (xử lý logic).
+10
+DFD (Data Flow Diagram)
+Sơ đồ mô tả luồng dữ liệu giữa các thành phần trong hệ thống.
+DFD Level 0, Level 1.
+11
+MoSCoW
+Phương pháp phân loại ưu tiên yêu cầu: Must, Should, Could, Won't have.
+"Must have": Đăng nhập, "Could have": Gợi ý sản phẩm.
+12
+Traceability Matrix
+Ma trận truy xuất nguồn gốc yêu cầu từ giai đoạn phân tích đến triển khai.
+Theo dõi yêu cầu FR-01 từ SRS đến test case.
+13
+UX (User Experience)
+Trải nghiệm người dùng khi tương tác với hệ thống.
+Đánh giá qua tốc độ, dễ sử dụng, tính thẩm mỹ.
+14
+CI/CD
+Tích hợp liên tục (Continuous Integration) và Triển khai liên tục (Continuous Deployment).
+Tự động build/test khi có code mới.
+15
+DevOps
+Văn hóa phát triển kết hợp giữa Development (phát triển) và Operations (vận hành).
+Sử dụng Docker, Kubernetes để triển khai.
+16
+Stakeholder
+Các bên liên quan đến dự án (khách hàng, nhà phát triển, quản lý...).
+Product Owner, Developer, End-user.
+17
+Wireframe
+Bản phác thảo giao diện ở mức cơ bản, thể hiện bố cục và luồng màn hình.
+Wireframe trang chủ, wireframe giỏ hàng.
+18
+Acceptance Criteria
+Tiêu chí chấp nhận để xác nhận một tính năng hoạt động đúng yêu cầu.
+"Khi nhấn 'Gửi', hệ thống hiển thị thông báo 'Thành công'."
+19
+Backend
+Phần xử lý logic nghiệp vụ, cơ sở dữ liệu phía server.
+API, Database, Server.
+20
+Frontend
+Phần giao diện người dùng và xử lý tương tác phía client.
+HTML/CSS/JavaScript, React, Flutter.
+Nhật ký thay đổi
+*A – Added (Thêm vào) M – Modified (Chỉnh sửa) D – Deleted (Xóa đi)
+Ngày có hiệu lực
+Đối tượng thay đổi 
+A*M, D
+Mô tả thay đổi 
+Phiên bản mới
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MỤC LỤC
+I.Giới thiệu3
+1.1Tóm tắt dự án3
+1.2Phạm vi của dự án3
+1.3Quy ước về tài liệu4
+II.Mô tả tổng quan4
+2.1. Quan điểm về sản phẩm4
+2.2 Đặc trưng của sản phẩm4
+2.3 Người dùng và đặc trưng4
+2.4 Yêu cầu của người dùng5
+3. Đặc tả tính năng8
+4. Luồng màn hình (Screen flow)9
+5. Các yêu cầu khác của hệ thống11
+
+
+
+
+
+
+
+
+
+Giới thiệu
+Tóm tắt dự án
+Tóm tắt lại các thông tin cơ bản về dự án:
+Hệ thống sẽ xây dựng là gì?
+Mục đích xây dựng hệ thống là gì? Hệ thống giúp giải quyết cho bài toán gì?
+Các mục tiêu để xây dựng dự án là gì? 
+Phạm vi của dự án
+Giải thích phạm vi của dự án:
+Phạm vi về dịch vụ
+Phạm vi về khách hàng
+Phạm vi về nền tảng/hệ thống
+Quy ước về tài liệu 
+Mô tả bất kỳ tiêu chuẩn hoặc quy ước đánh máy nào được tuân theo khi viết SRS này, chẳng hạn như phông chữ hoặc tô sáng có ý nghĩa đặc biệt. Ví dụ, nêu rõ liệu các ưu tiên cho các yêu cầu cấp cao hơn có được coi là được kế thừa bởi các yêu cầu chi tiết hay không hoặc liệu mỗi tuyên bố yêu cầu có phải có ưu tiên riêng của nó không.
+ Mô tả tổng quan
+2.1. Quan điểm về sản phẩm
+[Phần này Mô tả bối cảnh và nguồn gốc của sản phẩm bạn đang phát triển. Sản phầm là thành viên tiếp theo của một dòng sản phẩm đang phát triển hay là phiên bản tiếp theo của hệ thống lâu năm hay là sản phẩm thay thế cho một ứng dụng hiện có hay là một sản phẩm hoàn toàn mới? Nếu Đặc tả yêu cầu phần mềm (SRS) dành cho một phần mềm thuộc một hệ thống lớn hơn, hãy chỉ định sự liên quan của phần mềm này với hệ thống tổng thể và xác định các giao diện chính giữa hai hệ thống. Cân nhắc đưa vào các mô hình trực quan như sơ đồ ngữ cảnh hoặc bản đồ hệ sinh thái để thể hiện mối quan hệ của sản phẩm với các hệ thống khác.
+Sơ đồ ngữ cảnh trình bày ranh giới cũng như các kết nối giữa hệ thống bạn đang phát triển và các thành phần khác. Nhờ đó có thể xác định các thực thể bên ngoài (hoặc thiết bị đầu cuối - phần mềm, phần cứng, thành phần con người và các hệ thống khác) ở ngoài hệ thống giao tiếp với, cũng như các luồng dữ liệu, điều khiển và dòng chảy vật chất giữa các thiết bị đầu cuối và hệ thống.
+Bản đồ hệ sinh thái cho thấy sự tương tác giữa tất cả các hệ thống liên quan đến hệ thống quan tâm với nhau và bản chất của các tương tác đó. Nó thể hiện phạm vi bằng cách hiển thị tất cả các hệ thống có kết nối với nhau (trực tiếp hoặc gián tiếp) và do đó có thể cần được sửa đổi để phù hợp với hệ thống mới của bạn]
+<<Mẫu: Hệ thống Đặt hàng Nhà ăn là một hệ thống phần mềm mới có thể thay thế các quy trình thủ công và điện thoại hiện tại để đặt hàng và chọn bữa ăn trong nhà ăn. Với mục tiêu tự động hóa trong quy trình quản lý nhà hàng giúp người quản lý dễ dàng. Hệ thống dự kiến sẽ phát triển qua một số bản phát hành, cuối cùng sẽ kết nối với dịch vụ đặt hàng qua Internet cho một số nhà hàng địa phương và kết nối với các dịch vụ ủy quyền thẻ tín dụng và thẻ ghi nợ.
+2.2 Đặc trưng của sản phẩm
+Tóm tắt các tính năng chính mà sản phẩm chứa hoặc các chức năng quan trọng mà sản phẩm thực hiện hoặc cho phép người dùng thực hiện. Chi tiết sẽ được cung cấp trong Phần 3, vì vậy chỉ cần tóm tắt các tính năng chính ở đây. Mô tả ngắn gọn các chức năng để bất kỳ người đọc nào của SRS cũng có thể hiểu được. 
+Dưới đây là đề xuất bảng mẫu cho phần "Đặc trưng của sản phẩm" để làm rõ các tính năng chính của hệ thống:
+Bảng Mẫu: Các tính năng chính của sản phẩm (Ví dụ với hệ thống bán hàng)
+#
+Nhóm Tính Năng
+Mô Tả Ngắn
+Tác Nhân Chính
+Mức Độ Ưu Tiên
+Phiên Bản Dự Kiến
+1
+Quản lý người dùng
+Cho phép đăng ký, đăng nhập, phân quyền và quản lý thông tin người dùng
+Quản trị viên
+Cao
+1.0
+2
+Quản lý đơn hàng
+Hỗ trợ tạo, xem, cập nhật trạng thái và hủy đơn hàng
+Nhân viên, Khách hàng
+Cao
+1.0
+3
+Báo cáo thống kê
+Cung cấp các báo cáo doanh thu, sản phẩm bán chạy theo nhiều tiêu chí
+Quản lý
+Trung bình
+1.1
+4
+Thanh toán đơn hàng
+Hỗ trợ nhiều hình thức thanh toán như: COD, online, Bank
+Khách hàng
+Cao
+1.0
+5
+Quản lý kho
+Theo dõi tồn kho, cảnh báo hết hàng, nhập/xuất kho
+Nhân viên kho
+Cao
+1.0
+...
+...
+...
+...
+...
+...
+Hướng Dẫn Sử Dụng Bảng:
+- Nhóm Tính Năng: Đặt tên nhóm tính năng chính (dùng động từ + danh từ)
+- Mô Tả Ngắn: Mô tả ngắn gọn (1-2 câu) về chức năng
+- Tác Nhân Chính: Ai sẽ sử dụng chức năng này thường xuyên
+- Mức Độ Ưu Tiên:
++ Cao: Bắt buộc phải có ngay từ đầu
++ Trung bình: Có thể phát triển sau
++ Thấp: Tính năng nâng cao
++ Phiên Bản Dự Kiến: Kế hoạch triển khai theo phiên bản
+Các bạn cũng có thể thay thế phần mô tả đặc trưng sản phẩm bằng ma trận phân quyền chức năng để thể hiện rõ ràng về quyền của người dùng và hệ thống hơn. Chúng ta có 3 dạng ma trận: 
+- Ma trận tính năng theo nhóm người dùng
+- Ma trận tính năng theo phiên bản
+- Ma trận ưu tiên tính năng
+Dưới đây là ví dụ mô tả chi tiết về Ma Trận Tính Năng Sản phẩm
+1. Ma Trận Tính Năng Theo Nhóm Người Dùng
+Tính Năng \ Người Dùng
+Khách hàng
+Nhân viên
+Quản lý
+Quản trị hệ thống
+Đăng ký/Đăng nhập
+✓
+✓
+✓
+✓
+Quản lý sản phẩm
+✗
+✓
+✓
+✓
+Tạo đơn hàng
+✓
+✓
+✗
+✗
+Xem báo cáo doanh thu
+✗
+✗
+✓
+✓
+Cấu hình hệ thống
+✗
+✗
+✗
+✓
+2. Ma Trận Tính Năng Theo Phiên Bản Phát Triển
+Tính Năng
+Mô tả ngắn
+V1.0 (MVP)
+V1.5
+V2.0
+Ghi chú
+Thanh toán online
+Hỗ trợ VNPay, Momo
+✓
+-
+-
+Đã tích hợp
+Push notification
+Thông báo trạng thái đơn hàng
+✗
+✓
+-
+Đang phát triển
+AI Recommend
+Gợi ý sản phẩm
+✗
+✗
+✓
+Cần nghiên cứu thêm
+3. Ma Trận Ưu Tiên Tính Năng (MoSCoW)
+Tính Năng
+Must have
+Should have
+Could have
+Won't have
+Lý do
+Đăng nhập bằng MXH
+✓
+-
+-
+-
+Core feature
+Live chat support
+-
+✓
+-
+-
+Tăng trải nghiệm
+AR xem sản phẩm
+-
+-
+✓
+-
+Chi phí cao
+Blockchain verification
+-
+-
+-
+✓
+Không cần thiết
+Giải thích ký hiệu:
+✓ - Có hỗ trợ
+✗ - Không hỗ trợ
+- - Chưa xác định
+Đây là phần gợi ý để các nhóm thực hiện, các bạn có thể lựa chọn phương pháp mô tả đặc trưng sản phẩm phù hợp với bài toán mình đang thực hiện. Không có yêu cầu bắt buộc về việc lựa chọn phương pháp trong phần mô tả đặc trưng sản phẩm này.
+2.3 Người dùng và đặc trưng người dùng
+Xác định các lớp người dùng khác nhau mà bạn dự đoán sẽ sử dụng sản phẩm này. Các lớp người dùng có thể được phân biệt dựa trên tần suất sử dụng, tập hợp con các chức năng sản phẩm được sử dụng, chuyên môn kỹ thuật, mức độ bảo mật hoặc đặc quyền, trình độ học vấn hoặc kinh nghiệm. Mô tả các đặc điểm thích hợp của từng lớp người dùng. Một số yêu cầu nhất định có thể chỉ liên quan đến một số lớp người dùng nhất định. Phân biệt các lớp người dùng được ưu tiên với những lớp ít quan trọng hơn để đáp ứng.
+Trong phần này, bạn cũng cần phải mô tả vai trò của người dùng trong hệ thống. 
+Xác định các vai trò của những người dùng khác nhau sẽ sử dụng sản phẩm này. Vai trò của người dùng có thể được phân biệt dựa trên tần suất sử dụng, tập hợp con các chức năng của sản phẩm, chuyên môn kỹ thuật, mức độ bảo mật hoặc đặc quyền, trình độ học vấn hoặc kinh nghiệm. Sử dụng mẫu như dưới đây:
+Hệ thống sẽ có các vai trò người dùng sau:
+Nhân viên: <mô tả vai trò Nhân viên>>
+Người quản lý: <mô tả vai trò Người quản lý>
+Quản trị viên: <mô tả cho vai trò Quản trị viên>
+Dưới đây là Bảng hoặc Ma trận đặc trưng người dùng để thay thế cho phần mô tả người dùng truyền thống, giúp hệ thống hóa thông tin và dễ tra cứu hơn (Chỉ lựa chọn một trong hai):
+Bảng Đặc Trưng Người Dùng
+(Mô tả chi tiết từng vai trò người dùng trong hệ thống)
+Vai Trò
+Mô Tả
+Mục Tiêu Sử Dụng
+Yêu Cầu Đặc Biệt
+Tần Suất Sử Dụng
+Khách hàng
+Người mua sản phẩm/dịch vụ, không cần đăng nhập nếu mua hàng nhanh
+Tìm kiếm sản phẩm, đặt hàng, thanh toán
+Giao diện thân thiện, tốc độ tải nhanh
+Cao
+Nhân viên
+Xử lý đơn hàng, quản lý kho, hỗ trợ khách hàng
+Cập nhật trạng thái đơn, nhập/xuất kho
+Quyền truy cập giới hạn theo phòng ban
+Trung bình
+Quản lý
+Giám sát hoạt động, phân tích báo cáo, điều phối nhân viên
+Theo dõi KPI, duyệt yêu cầu đặc biệt
+Truy cập dữ liệu toàn hệ thống
+Thấp
+Quản trị hệ thống
+Cấu hình hệ thống, phân quyền, xử lý sự cố
+Bảo trì CSDL, backup dữ liệu, nâng cấp phần mềm
+Kiến thức kỹ thuật chuyên sâu
+Rất thấp
+ 
+Ma Trận Người Dùng với Tính Năng
+(Ánh xạ vai trò người dùng với các tính năng cụ thể của hệ thống. Nếu các bạn lựa chọn theo ma trận này, cần xác định rõ phân quyền người dùng, họ có vai trò gì, những chức năng họ làm việc được)
+Tính Năng
+Khách hàng
+Nhân viên
+Quản lý
+Quản trị
+Ghi Chú
+Đăng ký tài khoản
+✓
+✗
+✗
+✗
+Khách hàng tự đăng ký
+Duyệt đơn hàng
+✗
+✓
+✓
+✗
+Quản lý có quyền hủy đơn đặc biệt
+Xuất báo cáo Excel
+✗
+✓
+✓
+✓
+Quản trị có thể tùy chỉnh mẫu
+Cấu hình hệ thống
+✗
+✗
+✗
+✓
+Chỉ quản trị truy cập
+Xem lịch sử giao dịch
+✓ (cá nhân)
+✓ (tất cả)
+✓
+✓
+Phân quyền theo phạm vi dữ liệu
+Ký hiệu:
+✓: Có quyền truy cập đầy đủ
+△: Truy cập giới hạn (ví dụ: chỉ xem, không sửa)
+✗: Không có quyền
+2.4 Yêu cầu của người dùng
+2.4.1 Yêu cầu chức năng
+Yêu cầu chức năng (Functional Requirements) xác định hệ thống cần làm gì để đáp ứng nhu cầu người dùng.
+(Đây là phần cực kỳ quan trọng nó quyết định đến chất lượng phần mềm nên cần nghiên cứu tỷ mỉ chính xác. Chức năng của phần mềm được xây dựng dựa trên yêu cầu của người dùng)
+Chúng ta có những phương pháp Mô Tả Yêu Cầu Chức Năng như sau:
+Thứ nhất. Mô Tả Bằng Lời (Textual Description)
+Ưu điểm: Dễ hiểu, linh hoạt, phù hợp với mọi đối tượng.
+Nhược điểm: Dài dòng, khó kiểm soát tính nhất quán.
+- Đăng nhập với tài khoản đã đăng kí hoặc có thể đăng nhập qua tài khoản gmail
+- Xem danh sách hàng hóa 
+- Tìm kiếm hàng hóa theo tên, giá, hãng sản xuất
+Ví dụ:
+"Hệ thống phải cho phép người dùng đăng nhập bằng email/mật khẩu. Nếu sai 3 lần liên tiếp, tài khoản sẽ tạm khóa trong 5 phút."
+Thứ hai. Bảng Liệt Kê Tính Năng
+Ưu điểm: Ngắn gọn, dễ tra cứu, phù hợp để tổng hợp các chức năng chính.
+
+ID
+Tính Năng
+Mô Tả
+Người Dùng
+Ưu Tiên
+
+FR-01
+Đăng nhập
+Xác thực bằng email/mật khẩu, có CAPTCHA sau 3 lần sai
+Khách hàng, Nhân viên
+Cao
+
+FR-02
+Quên mật khẩu
+Gửi link reset mật khẩu qua email
+Khách hàng
+Trung bình
+Thứ ba. Ma Trận Truy Xuất Nguồn Gốc (Traceability Matrix)
+Mục đích: Ánh xạ yêu cầu chức năng với nguồn gốc (từ stakeholder, tài liệu nghiên cứu) và thiết kế hệ thống.
+ID Yêu Cầu
+Nguồn Gốc
+Use Case
+Module Liên Quan
+Trạng Thái
+FR-01
+Phỏng vấn khách hàng
+UC-Đăng nhập
+Auth Service
+Đã triển khai
+FR-02
+Đặc tả SRS v1.0
+UC-Quên mật khẩu
+Email Service
+Đang phát triển
+Thứ 4. User Story (Agile)
+Cú pháp chuẩn:
+"Là [vai trò], tôi muốn [tính năng] để [mục đích]."
+Ví dụ:
+"Là khách hàng, tôi muốn tìm kiếm sản phẩm theo tên để tiết kiệm thời gian mua hàng."
+Kết hợp với tiêu chí chấp nhận (Acceptance Criteria):
+Khi nhập từ khóa "áo thun"
+Thì hiển thị tối đa 50 kết quả
+Và sắp xếp theo giá tăng dần
+Thứ 5. Biểu Đồ Use Case
+Mục đích: Mô tả tương tác giữa actor (người dùng) và hệ thống.
+Thành phần:
+Actor (người dùng, hệ thống khác).
+Use case (tính năng).
+Relationship (kết nối).
+Ví dụ:
+[Khách hàng] --> (Đặt hàng)  
+[Quản lý] --> (Xem báo cáo)  
+Ví Dụ Tổng Hợp cho các phương pháp trên
+A. Mô tả bằng lời - Yêu Cầu Chức Năng "Đặt Hàng"
+Mô tả bằng lời: "Khách hàng chọn sản phẩm, thêm vào giỏ hàng, nhập thông tin giao nhận và thanh toán."
+User Story: "Là khách hàng, tôi muốn thanh toán bằng ví điện tử để không cần nhập thẻ."
+Bảng quy trình:
+Bước
+Hành Động
+Hệ Thống Xử Lý
+1
+Chọn sản phẩm
+Hiển thị chi tiết và số lượng tồn kho
+2
+Thêm vào giỏ hàng
+Cập nhật giỏ hàng real-time
+3
+Nhập địa chỉ giao hàng
+Validate định dạng
+Biểu đồ Use Case:
+[Khách hàng] --> (Chọn sản phẩm)
+[Khách hàng] --> (Thanh toán)
+[Hệ thống] --> (Gửi email xác nhận)
+
+Lưu ý sử dụng
+Với yêu cầu đơn giản: Dùng mô tả bằng lời hoặc bảng liệt kê.
+Yêu cầu phức tạp: Kết hợp ma trận, DFD, User Story.
+Dự án Agile: Ưu tiên User Story + Acceptance Criteria.
+Tính minh bạch: Luôn dùng Traceability Matrix để theo dõi nguồn gốc yêu cầu.
+Các phương pháp này có thể kết hợp linh hoạt tùy vào độ phức tạp của hệ thống!
+
+2.4.2 Yêu cầu phi chức năng
+1. Khả năng sử dụng
+[Xác định các yêu cầu liên quan đến các đặc điểm giúp phần mềm có giao diện “thân thiện với người dùng”. Khả năng sử dụng bao gồm dễ sử dụng, dễ học; có khả năng ghi nhớ; tránh lỗi, khả năng xử lý và phục hồi; hiệu quả tương tác; khả năng tiếp cận; và thiết kế gọn nhẹ. Đôi khi những điều này có thể xung đột với nhau, cũng như dễ sử dụng có thể xung đột với dễ học. Chỉ ra tất cả tiêu chuẩn hoặc nguyên tắc thiết kế giao diện người dùng mà ứng dụng phải tuân theo.]
+2. Hiệu suất
+[Nêu các yêu cầu hiệu suất cụ thể cho các hoạt động hệ thống khác nhau. Nếu các yêu cầu chức năng hoặc tính năng khác nhau có yêu cầu về hiệu suất khác nhau, nên chỉ định các mục tiêu hiệu suất đó ngay cạnh các yêu cầu chức năng tương ứng chứ không gộp lại trong phần này. Một số mục tiêu hiệu suất mẫu bao gốm: 
+Thời gian phản hồi cho một giao dịch (trung bình, tối đa)
+Xuất lượng, ví dụ: giao dịch mỗi giây
+Hiệu suất, ví dụ, số lượng khách hàng hoặc giao dịch mà hệ thống có thể đáp ứng
+Sử dụng tài nguyên, chẳng hạn như bộ nhớ, đĩa, thông tin liên lạc, v.v.]
+3. Độ tin cậy  
+[Yêu cầu về độ tin cậy của hệ thống nên được nêu rõ ở đây. Dưới đây là một số gợi ý:
+Tính khả dụng — chỉ định phần trăm thời gian khả dụng (xx.xx%), số giờ sử dụng, quyền truy cập bảo trì, hoạt động ở chế độ bị xuống cấp, v.v.
+Thời gian trung bình giữa hai lỗi (MTBF) - thường được xác định bằng giờ, nhưng cũng có thể được xác định theo ngày, tháng hoặc năm.
+Thời gian trung bình để sửa chữa (MTTR) —hệ thống được phép ngừng hoạt động sau khi bị lỗi trong bao lâu?
+Độ chính xác — chỉ định độ chính xác (độ phân giải) và độ chính xác (theo một số tiêu chuẩn đã biết) được yêu cầu trong đầu ra của hệ thống.
+Số lỗi tối đa hoặc tỷ lệ lỗi — thường được biểu thị bằng số lỗi trên một nghìn dòng mã (bug / KLOC) hoặc số lỗi trên mỗi điểm chức năng (bug / function-point).
+Lỗi hoặc Tỷ lệ Lỗi — được phân loại theo các lỗi nhỏ, lớn và nghiêm trọng: (các) yêu cầu phải xác định ý nghĩa của một lỗi “nghiêm trọng”; ví dụ: mất hoàn toàn dữ liệu hoặc hoàn toàn không thể sử dụng các phần nhất định của chức năng của hệ thống.]
+4. Độ bảo mật
+[Xác định các yêu cầu liên quan đến vấn đề bảo mật hoặc quyền riêng tư dẫn đến hạn chế quyền truy cập hoặc sử dụng sản phẩm. Có thể là bảo mật vật lý, dữ liệu hoặc phần mềm. Các yêu cầu bảo mật thường bắt nguồn từ các quy tắc kinh doanh, vì vậy hãy xác định mọi chính sách hoặc quy định về bảo mật hoặc quyền riêng tư mà sản phẩm phải tuân theo. Hãy tham khảo tài liệu nếu những điều này được ghi lại trong kho lưu trữ quy tắc kinh doanh,.] 
+5. Độ an toàn
+[Xác định các yêu cầu liên quan đến mất mát, hư hỏng hoặc tổn hại có thể xảy ra khi sử dụng sản phẩm. Xác định các biện pháp bảo vệ hoặc hành động phải được thực hiện, cũng như các hành động nguy hiểm tiềm ẩn phải ngăn chặn. Xác định các chứng nhận, chính sách hoặc quy định an toàn mà sản phẩm cần phải tuân theo.] 
+6. Khả năng hỗ trợ
+[Phần này chỉ ra các yêu cầu nâng cao khả năng hỗ trợ hoặc khả năng bảo trì của hệ thống đang được xây dựng, bao gồm các tiêu chuẩn mã hóa, quy ước đặt tên, thư viện lớp, quyền truy cập bảo trì và các tiện ích bảo trì.]
+7. Ràng buộc về thiết kế
+[Phần này chỉ ra tất cả các ràng buộc thiết kế đối với hệ thống đang được xây dựng. Các ràng buộc thiết kế đại diện cho các quyết định thiết kế đã được ủy quyền và phải tuân thủ. Ví dụ gồm có ngôn ngữ phần mềm, yêu cầu quy trình phần mềm, việc sử dụng theo quy định của các công cụ phát triển, các ràng buộc về kiến trúc và thiết kế, các thành phần đã mua, thư viện lớp, v.v.] 
+8. [Các yêu cầu liên quan khác]
+<Tạo một phần riêng biệt trong SRS cho mỗi thuộc tính bổ sung về chất lượng sản phẩm để mô tả các đặc điểm quan trọng đối với khách hàng hoặc nhà phát triển. Có thể bao gồm tính khả dụng, hiệu quả, khả năng cài đặt, tính toàn vẹn, khả năng tương tác, khả năng sửa đổi, tính di động, độ tin cậy, khả năng tái sử dụng, độ mạnh mẽ, khả năng mở rộng và khả năng kiểm chứng. Khi viết những điều này cần phải cụ thể, có tính định lượng và có thể kiểm chứng được. Làm rõ các ưu tiên tương đối cho các thuộc tính khác nhau, chẳng hạn như bảo mật so với hiệu suất.>
+2.3 Kiến trúc tổng quan của phần mềm
+Trong phần nội dung này, sinh viên cần đưa ra kiến trúc tổng quan của hệ thống mà nhóm mình lựa chọn như client - server, even - driven, pipe and filter, microkernel, microservice, MVC...
+Kiến trúc phần mềm là bộ khung định nghĩa cách các thành phần hệ thống tương tác với nhau. Dưới đây là mô tả chi tiết kiến trúc tổng quan, bao gồm các mô hình phổ biến và cách lựa chọn phù hợp với yêu cầu dự án. Các bạn cần chọn một trong các mô hình kiến trúc dưới đây để áp dụng cho bài toán mình đang thực hiện.
+2.3.1. Các Mô Hình Kiến Trúc Phổ Biến
+2.3.1.1. Kiến Trúc Lớp (Layered Architecture)
+Mô tả: Chia hệ thống thành các lớp độc lập (thường 3 lớp):
+Presentation Layer (UI): Giao diện người dùng (Web, Mobile, Desktop).
+Business Logic Layer: Xử lý nghiệp vụ (API, Services).
+Data Access Layer: Tương tác cơ sở dữ liệu (Database, Cache).
+Ưu điểm: Dễ bảo trì, phù hợp cho ứng dụng vừa và nhỏ.
+Nhược điểm: Hiệu năng có thể giảm do phải đi qua nhiều lớp.
+Ví dụ: Hệ thống quản lý bán hàng, CMS.
+2.3.1.2. Kiến Trúc Client-Server
+Mô tả:
+Client: Gửi yêu cầu (Web browser, Mobile app).
+Server: Xử lý và trả kết quả (Backend API).
+Ưu điểm: Đơn giản, dễ triển khai.
+Nhược điểm: Server có thể trở thành "điểm nghẽn".
+Ví dụ: Ứng dụng chat, email.
+2.3.1.3. Kiến Trúc Microservices
+Mô tả: Chia hệ thống thành các service nhỏ, độc lập (mỗi service có database riêng).
+Ưu điểm: Khả năng mở rộng cao, dễ triển khai từng phần.
+Nhược điểm: Phức tạp trong quản lý giao tiếp giữa các service.
+Ví dụ: Hệ thống lớn như Amazon, Netflix.
+2.3.1.4. Kiến Trúc Event-Driven
+Mô tả: Các thành phần giao tiếp qua sự kiện (event) thay vì gọi trực tiếp.
+Ưu điểm: Linh hoạt, xử lý bất đồng bộ tốt.
+Nhược điểm: Khó debug do luồng xử lý phân tán.
+Ví dụ: Hệ thống real-time (IoT, thông báo).
+2.3.1.5. Kiến Trúc MVC (Model-View-Controller)
+Mô tả: Phân tách logic thành 3 phần:
+Model: Quản lý dữ liệu.
+View: Hiển thị giao diện.
+Controller: Điều phối giữa Model và View.
+Ưu điểm: Dễ bảo trì, phù hợp ứng dụng web.
+Nhược điểm: Có thể dư thừa code ở Controller.
+Ví dụ: Framework như Ruby on Rails, Laravel.
+2.3.2. Tiêu Chí Lựa Chọn Kiến Trúc
+Tiêu Chí
+Layered
+Client-Server
+Microservices
+Event-Driven
+MVC
+Độ phức tạp
+Thấp
+Thấp
+Cao
+Trung bình
+Thấp
+Khả năng mở rộng
+Hạn chế
+Hạn chế
+Rất tốt
+Tốt
+Hạn chế
+Hiệu suất
+Trung bình
+Trung bình
+Cao
+Cao
+Trung bình
+Phù hợp dự án
+Nhỏ-vừa
+Nhỏ
+Lớn
+Real-time
+Web apps
+
+
+
+
+
+
+Ví Dụ Thiết Kế Kiến Trúc Hệ Thống E-commerce
+Lựa chọn kiến trúc phù hợp với hệ thống thương mại điện tử: client - server và microservice
+Client: Web app (React), Mobile app (Flutter).
+API Gateway: Điều phối request (Kong, Nginx).
+Microservices:
+Auth Service: Xử lý đăng nhập, phân quyền (JWT).
+Product Service: Quản lý sản phẩm, danh mục.
+Order Service: Xử lý đơn hàng, tích hợp thanh toán.
+Database: Mỗi service có DB riêng (MySQL, MongoDB).
+Payment Gateway: Kết nối với VNPay, Momo.
+Các công Cụ Hỗ Trợ Thiết Kế Kiến Trúc
+Vẽ sơ đồ: Draw.io, Lucidchart, Mermaid.
+Thiết kế API: Swagger, Postman.
+Triển khai: Docker, Kubernetes (cho Microservices).
+Lưu Ý Khi Thiết Kế Kiến Trúc
+Không có kiến trúc "tốt nhất", chỉ có kiến trúc phù hợp với yêu cầu.
+Ưu tiên tính đơn giản trước khi tối ưu.
+Dự phòng scaling từ giai đoạn thiết kế.
+Document đầy đủ các quyết định kiến trúc (ADR - Architecture Decision Record).
+Kiến trúc tốt giúp hệ thống dễ bảo trì, mở rộng và tiết kiệm chi phí về lâu dài!
+(Trong phần này sinh viên phải phân tích, vì sao chọn kiến trúc cho dự án, mỗi kiến trúc sẽ có nội dung phân tích thiết kế khác nhau, tránh lỗi gò ép phương pháp phân tích không phù hợp với kiến trúc)
+2.4 Sơ đồ Ca sử dụng (Use case)
+a. Tác nhân hệ thống
+[Tác nhân là một người (đôi khi là một hệ thống phần mềm khác hoặc một thiết bị phần cứng) tương tác với hệ thống để tạo một ca sử dụng. Sau đây là một số câu hỏi giúp đại diện người dùng xác định các tác nhân
+Ai (hoặc cái gì) sẽ được thông báo khi có vấn đề trong hệ thống?
+Ai (hoặc cái gì) sẽ cung cấp thông tin hoặc dịch vụ cho hệ thống?
+Ai (hoặc cái gì) sẽ giúp hệ thống phản hồi và hoàn thành nhiệm vụ?
+Phần này đưa ra mô tả về các tác nhân của hệ thống, có thể làm theo mẫu bảng dưới đây
+#
+Tác nhân
+Mô tả
+1
+Nhân viên
+Là nhân viên của cửa hàng
+2
+Người quản lý
+Là quản lý cửa hàng
+
+
+
+]
+b. Danh sách Ca sử dụng
+[Ca sử dụng mô tả một chuỗi tương tác giữa hệ thống và tác nhân bên ngoài. Nhờ có tương tác giữa chúng mà tác nhân có thể đạt được một số kết quả có giá trị. Tên của ca sử dụng luôn được viết dưới dạng động từ theo sau là tân ngữ. Chọn những tên rõ ràng, thuyết phục, mang tính mô tả để làm đảm bảo sẽ mang lại giá trị cho người dùng;
+Phần này mô tả các ca sử dụng, có thể làm theo mẫu bảng dưới đây, trong đó: các tác nhân chính khởi tạo ca sử dụng và lấy giá trị chính từ ca sử dụng, các tác nhân phụ là người hoặc hệ thống sẽ tham gia thực hiện ca sử dụng (đóng góp vào sự thành công của ca sử dụng)
+#
+Ca sử dụng
+Tác nhân chính
+Tác nhân phụ
+Mô tả
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Biểu đồ usecase tổng quát của hệ thống
+
+3. Đặc tả usecase
+Trong phần nội dung này, các nhóm sẽ mô tả tính năng mà nhóm mình xây dựng dựa trên biểu đồ Usecase và mô hình kiến trúc nhóm đã thiết kế. Nếu nhóm xây dựng API thì trong phần nội dung này, cần đặc tả rõ API. 
+3.1 Đặc tả tính năng 1 (Mô tả chi tiết chức năng mức là/Flow of event usecase)
+Trong phần này, cần cung cấp các chi tiết về chức năng liên quan, tập trung vào thông tin bên dưới
+Kích hoạt chức năng: chức năng này được kích hoạt như thế nào (đường dẫn điều hướng, tần số thời gian, v.v.
+Mô tả chức năng: tác nhân / vai trò, mục đích, giao diện, xử lý dữ liệu, v.v.
+Bố cục màn hình: mẫu thử nghiệm của màn hình, ở dưới là mẫu màn hình Quản lý sản phẩm
+3.1.1 Mô tả và Mức độ ưu tiên
+<Cung cấp mô tả ngắn gọn về tính năng và chỉ ra tính năng đó có mức độ ưu tiên Cao, Trung bình hay Thấp. Bạn cũng có thể đưa vào các xếp hạng thành phần ưu tiên cụ thể, chẳng hạn như lợi ích, hình phạt, chi phí và rủi ro (mỗi xếp hạng được xếp hạng theo thang điểm tương đối từ thấp nhất là 1 đến cao nhất là 9).>
+3.1.2 Chuỗi kích thích/phản hồi
+<Liệt kê các chuỗi hành động của người dùng và phản hồi của hệ thống kích thích hành vi được xác định cho tính năng này. Các chuỗi này sẽ tương ứng với các thành phần hộp thoại liên quan đến các trường hợp sử dụng.>
+3.1.3 Yêu cầu chức năng
+<Phân loại các yêu cầu chức năng chi tiết liên quan đến tính năng này. Đây là các khả năng phần mềm phải có để người dùng có thể thực hiện các dịch vụ do tính năng cung cấp hoặc thực hiện trường hợp sử dụng. Bao gồm cách sản phẩm phản hồi với các điều kiện lỗi dự đoán hoặc đầu vào không hợp lệ. Các yêu cầu phải ngắn gọn, đầy đủ, rõ ràng, có thể xác minh và cần thiết. Sử dụng "TBD" làm chỗ giữ chỗ để chỉ ra khi thông tin cần thiết vẫn chưa có sẵn.>
+
+<Mỗi yêu cầu phải được xác định duy nhất bằng một số thứ tự hoặc một thẻ có ý nghĩa nào đó.>
+3.2 Đặc tả tính năng 2 và các tính năng khác
+
+4. Luồng màn hình (Screen flow)
+[Phần này biểu diễn các màn hình hệ thống và mối quan hệ giữa các màn hình. Có thể vẽ Luồng màn hình cho hệ thống dưới dạng sơ đồ như bên dưới. Nếu nhóm thực hiện và lựa chọn kiến trúc microservices cần chỉ rõ flow giữa các services là gì?]
+
+
+4.1. Mô tả màn hình
+[Cung cấp mô tả cho các màn hình trong Luồng màn hình ở trên]
+#
+Màn hình
+Mô tả
+1
+LogIn
+Màn hình giúp người dùng nhập thông tin đăng nhập hệ thống
+2
+
+
+
+
+
+
+4.2. Các chức năng không liên quan đến màn hình 
+[Cung cấp mô tả cho các chức năng hệ thống không liên quan đến màn hình, tức là công việc theo lô/ cron job, dịch vụ, API, v.v. 
+#
+Chức năng hệ thống
+Mô tả 
+1
+
+
+2
+
+
+
+
+
+
+4.3 Hệ thống cấp quyền
+Các quyền truy cập vào màn hình và hoạt động của màn hình như bên dưới
+Màn hình
+Chức năng1
+Chức năng2
+Chức năng3
+Chức năng4
+Chức năngX
+<<Màn hình Tên1>>
+X
+
+
+X
+X
+    <<Hoạt động của màn hình>>
+
+
+
+X
+X
+<< Màn hình Tên2>>
+X
+
+
+X
+
+    Truy vấn Tất cả Dữ liệu
+X
+
+
+
+
+    Truy vấn Dữ liệu Riêng
+
+
+
+X
+
+    Truy vấn Dữ liệu Được quản lý
+
+
+
+X
+
+    Thêm Dữ liệu Mới
+
+
+
+X
+X
+    Cập nhật Tất cả Dữ liệu
+
+
+
+
+X
+    Cập nhật Dữ liệu Riêng
+
+
+
+
+X
+    Cập nhật Dữ liệu Được quản lý
+
+
+
+
+X
+    Xóa Dữ liệu
+
+
+
+
+
+    …
+
+
+
+
+
+Trong đó:
+Chức năng1: <<mô tả chức năng1>>
+Chức năng2: <<mô tả chức năng2>>
+…
+5. Các yêu cầu khác của hệ thống
+Các nhóm có thể bổ sung CI/CD, Devops Requirements trong thực thi và triển khai phần mềm
+6. Risk Assessment (đánh giá rủi ro) để xác định các rủi ro tiềm ẩn và kế hoạch giảm thiểu
+(Phần nâng cao không bắt buộc)Risk Assessment (đánh giá rủi ro) để xác định các rủi ro tiềm ẩn và kế hoạch giảm thiểu.
+

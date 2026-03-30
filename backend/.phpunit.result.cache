@@ -1,0 +1,1 @@
+{"version":2,"defects":{"UserTest::testUserInstantiation":8},"times":{"UserTest::testUserInstantiation":0.585,"UserTest::testPasswordHashing":0.471,"AuthIntegrationTest::testPlaceholder":0}}

@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  php-apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce_backend
+    ports:
+      - "8888:80"
+    volumes:
+      - .:/var/www/html
+      - ../tests:/var/www/tests
+      - ./uploads:/var/www/html/uploads
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=ecommerce_db
+      - DB_USER=ecommerce_user
+      - DB_PASS=secret123
+      - JWT_SECRET=your_super_secret_jwt_key_change_me_in_production
+      - APP_ENV=development
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - ecommerce_net
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: ecommerce_mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ecommerce_db
+      MYSQL_USER: ecommerce_user
+      MYSQL_PASSWORD: secret123
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce_net
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ecommerce_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    depends_on:
+      - mysql
+    networks:
+      - ecommerce_net
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  ecommerce_net:
+    driver: bridge

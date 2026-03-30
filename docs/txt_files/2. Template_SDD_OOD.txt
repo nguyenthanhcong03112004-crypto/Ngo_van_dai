@@ -1,0 +1,323 @@
+
+
+
+
+
+
+
+
+
+
+
+TÀI LIỆU MÔ TẢ THIẾT KẾ PHẦN MỀM
+
+<<Tên dự án>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SDD_Tên nhóm_Tên hệ thống viết tắt.docx
+SDD_Nhóm 11_QLVBNB.docx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hà Nội, [tháng/năm]
+
+Bảng ghi nhận sự thay đổi của tài liệu
+Thời gian thay đổi
+Nội dung thay đổi
+Lý do
+Phiên bản bị thay đổi
+Mô tả sự thay đổi
+Phiên bản mới
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MỤC LỤC
+1. GIỚI THIỆU3
+1.1. Mục đích tài liệu4
+1.2. Phạm vi tài liệu4
+1.3. Thuật ngữ và các từ viết tắt4
+1.4. Tài liệu tham khảo4
+1.5. Mô tả tài liệu4
+2. KHẢO SÁT HIỆN TRẠNG PHẦN MỀM4
+3. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG6
+3.1. Biểu đồ usecase6
+3.2. Biểu đồ activity6
+3.4 Biểu đồ class7
+3.3 Biểu đồ sequence7
+3.5 Biểu đồ Component7
+3.6 Biểu đồ Deployment7
+4. THIẾT KẾ DỮ LIỆU7
+4.1. Mô tả dữ liệu7
+4.2. Thiết kế ER7
+4.3 Thiết kế dữ liệu7
+5. Thiết kế giao diện9
+6. Các mục nâng cao không bắt buộc9
+
+1. GIỚI THIỆU
+1.1. Mục đích tài liệu
+[Mục này giới thiệu mục đích của tài liệu. Thường chỉ đơn giản là định nghĩa “đây là tài liệu mô tả chi tiết về thiết kế phần mềm XYZ”.]
+1.2. Phạm vi tài liệu
+[Nêu tác dụng của tài liệu (là cơ sở giao tiếp của các thành viên phát triển, là căn cứ để kiểm thử, vận hành, bảo trì v.v.)]
+1.3. Thuật ngữ và các từ viết tắt
+[Định nghĩa các thuật ngữ và từ viết tắt sẽ dùng trong tài liệu]
+Thuật ngữ
+Định nghĩa
+Giải thích
+CNTT
+Công nghệ thông tin
+
+CNPM
+Công nghệ phần mềm
+
+CSDL
+Cơ sở dữ liệu
+Nơi lưu trữ thông tin và cho phép truy cập
+PK
+Primary Key
+Khóa chính
+UK
+Unique Key
+Khóa duy nhất
+….
+…..
+….
+1.4. Tài liệu tham khảo
+[Nêu các tài liệu là căn cứ để lập nên tài liệu này. Nên mô tả dưới dạng bảng (Tên, nguồn, ngày phát hành,…). Ví dụ IEEE 1016-1998]
+1.5. Mô tả tài liệu
+Tài liệu SDD của phần mềm quản lý văn bản nội bộ bao gồm 4 phần:
+Phần 1: Tổng quan về tài liệu, trong phần này chỉ ra mục đích và ý nghĩa của tài liệu SDD trong quy trình phát triển phần mềm 
+Phần 2: Tổng quan về phần mềm, trong phần này chỉ ra định nghĩa về phần mềm quản lý văn bản nội bộ, các phân hệ của phần mềm và vai trò của mỗi phân hệ
+.
+[Mô tả cấu trúc của tài liệu này, các phần chứa gì, miêu tả gì, có mục đích gì]
+2. KHẢO SÁT HIỆN TRẠNG PHẦN MỀM
+[Khảo sát hiện trạng nêu về mô hình hiện có, sau đó mô tả khái quát về yêu cầu của phần mềm đang thiết kế: môi trường triển khai, công cụ/công nghệ sử dụng, phương pháp thiết kế, ràng buộc thiết kế]
+Có thể mô tả theo ví dụ dưới đây:
+2.1 Khảo sát hiện trạng
+Hiện trạng các Website phổ biến hiện nay, người dùng có thể dễ dàng tiếp cận các sản phẩm khả dễ dàng, tuy nhiên còn tồn tại một số vấn đề mà chúng ta muốn được khắc phục và chúng em muốn hoàn thiện như 
+•Một số website chưa cho phép người dùng đăng ký đăng nhập, do đó không thuận tiện với người dùng khi muốn tương tác.
+•Số lượng của sản phẩm trên website chưa được cập nhật một cách chính xác, kịp thời.
+•Một số website không hỗ trợ truy cập Giỏ hàng.
+•Khách hàng không thể theo dõi tình trạng đơn hàng, lịch sửa mua hàng.
+Quy trinh bán hàng được thực hiện thông qua nhưng tương tác giữa Khách hàng, Nhân viên Bán hàng, Nhân viên Kho hàng và Đơn vị Vận chuyển.
+Bước 1: Khách hàng chọn những sản phẩm muốn mua vào Giỏ hàng, Tiến hành Đặt hàng.
+Bước 2: Nhân viên Bán hàng tiếp nhận đơn hàng, xác nhận lại đơn hàng với Khách hàng. 
+Nếu xác nhận thành công: Nhân viên Kho tiến hành gửi yêu cầu xuất kho tới Nhân viên Kho, đồng thời Tạo mã Vận đơn với Đơn vị vận chuyển. Trong bước này Nhân viên Thu ngân sẽ Tạo hóa đơn. 
+Nếu xác nhận không thành công: Nhân viên sẽ tiến hành cập nhật thông tin Hủy đơn hàng trên CSDL hệ thống.
+Bước 3: Nhân viên Kho tiếp nhận Đơn hàng, tạo phiếu xuất Kho và tiến hành đóng gói Giao đơn hàng cùng Hóa đơn.
+Bước 4: Nhân viên Đơn vị vận chuyển tới Kho nhận kiện hàng từ Nhân viên Kho và giao hàng tới Khách hàng. Khách hàng kiểm tra và tiến hành thanh toán và nhận được Sản phẩm đã đặt mua và Hóa đơn từ kiện hàng.
+Bước 5: Nhân viên Thu ngân kiểm tra nhận được Thanh toán đơn hàng từ Đơn vị vận chuyển và Nhân viên Bán hàng sẽ cập nhật tình trạng Đã hoàn thành đơn hàng.
+(Tham khảo file quy trình hướng dẫn hoàn thành báo cáo bài tập lớn môn học đồ án CNPM)
+2.2 Mô tả yêu cầu hệ thống mới
+Sau khi tìm hiểu, chúng em rút ra được Hệ thống sẽ gồm nhiều phân hệ các chức năng khác nhau: Quản lý Hệ thống, Quản lý Danh mục, Quản lý Kho hàng, Quản lý Bán hàng, Báo cáo thống kê.
+Quản lý Hệ thống làm nhiệm vụ quản lý thông tin về các Tài khoản và thông tin của Khách hàng và Nhân viên, Quản lý Quyền, phân quyền. Khi có thông tin về một người dùng mới, người quản trị sẽ tiền hành nhập thông tin người dùng vào hệ thống, nếu người dùng mới là nhân viên thì người quản trị có thể thay đổi quyền tại mục Quản lý Phân quyền, đồng thời khi một Khách hàng tiến hành đăng ký tài khoản hoặc thay đổi mật khẩu, thông tin, những thay đổi này sẽ được hệ thống lưu lại. Khi có thay đổi về Nhân sự, người quản trị truy cập mục Quản lý Phân quyền để tiến hành các cập nhật và lưu lại vào Hệ thống.
+Quản lý Danh mục gồm các chức năng Quản lý NCC, Quản lý Loại Sản phẩm, Quản lý Sản phẩm, Quản lý Bài viết, Quản lý Khuyến mại, Quản lý Mã giảm giá, Quản lý Thông báo, Quản lý Đánh giá, Bình luận. Nhân viên hệ thống sẽ là người quản lý những dữ liệu trên như thêm mới, cập nhật, xóa dữ liệu. Khách hàng khi truy cập trang web sẽ có thể xem những thông tin về Sản phẩm, Bài viết, Chương trình Khuyến mại, Bình luận và có thể tiến hành mua Sản phẩm, cũng như thêm Bình luận, Đánh giá của mình sau khi mua hàng và bình luận về những Bài viết trên webiste.
+Quản lý Bán hàng sẽ quản lý Thông tin Đơn hàng và Thông tin Hóa Đơn. Khi Khách hàng tiến hành đặt hàng, thông tin Đơn hàng sẽ được thông báo tới Nhân viên của Cửa hàng. Nhân viên tiếp nhận sẽ liên hệ với khách hàng để xác nhận lại thông tin. Sau đó, Nhân viên sẽ tiếp hành cập nhật thông tin về Tình trạng đơn hàng, tạo Mã vận đơn mới với Đơn vị vận chuyển (Yêu cầu giao hàng), tiến hành tạo Phiếu xuất và chuẩn bị đóng gói Sản phẩm trước khi gửi đến khách hàng. Hóa đơn của Đơn hàng cũng sẽ được tạo và gửi đến Khách hàng kèm theo Sản phẩm được đặt mua. Nhân viên cũng sẽ cập nhật Tình trạng đơn hàng sau khi  Sản phẩm đến tay Khách hàng hoặc khi Đơn hàng không thành công (Khách không nhận hàng hoặc trả hàng).  
+Báo cáo, thống kê có nhiệm vụ thống kê Số lượng Đơn hàng được bán, Sản phẩm bán chạy - ế và Báo cáo thống kê Doanh thu… từ dữ liệu về Sản phẩm, Hóa đơn khi Người quản trị có yêu cầu tra cứu những thông tin này để có thể tiến hành phân tích những kế hoạch kinh doanh tiếp theo.
+2.3 Ràng buộc thiết kế
+
+3. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
+Xác định actor và usecase của hệ thống bằng cách trả lời các câu hỏi tìm actor, usecase. Sau đó vẽ biểu đồ usecase, tạo tài liệu luồng sự kiện của từng usecase, sau đó vẽ biểu đồ activity, sequence, class, state, deployment và component
+
+3.1. Biểu đồ usecase
+Trong phần này, sinh viên cần vẽ lại biểu đồ usecase tổng quát đã thực hiện trong tài liệu SRS và thực hiện phân rã thành các usecase chi tiết. Thực hiện đặc tả cho usecase theo các kịch bản của usecase
+3.2. Biểu đồ activity
+
+3.3 Biểu đồ class
+Đặc tả được lớp như vai trò của nó là gì? Loại của lớp đó, nó có thể thuộc gói nào (package), nó có những phương thức gì? Sự tương tác với các lớp khác? Tại sao lại có những tương tác này?
+
+3.4 Biểu đồ sequence
+
+3.5 Biểu đồ Component
+
+3.6 Biểu đồ Deployment
+
+4. THIẾT KẾ DỮ LIỆU
+4.1. Mô tả dữ liệu
+Từ class, actor và các flow of event xác định các thông tin có thể chuyển thành thực thể, định nghĩa thực thể đó.
+[Giải thích các thông tin liên quan đến phần mềm được chuyển thành các cấu trúc dữ liệu nào]
+4.2. Biểu đồ ER
+Vẽ biểu đồ ER để mô tả trực quan các thực thể, thuộc tính, và mối quan hệ. 
+4.3 Thiết kế dữ liệu
+Nêu được các bước cụ thể (6 bước) chuyển thực thể thành bảng và định nghĩa dữ liệu cho bảng theo nguyên tắc chuyển từ từ ER thành cơ sở dữ liệu quan hệ.
+Lược đồ dữ liệu:
+
+Mô tả chi tiết cơ sở dữ liệu bảng:
+Ví dụ:
+Bảng Khách hàng:
+
+Lập bảng liên kết (xác định khóa chính khóa phụ)
+
+Biểu đồ ERD 
+
+
+5. THIẾT KẾ GIAO DIỆN
+Wireframe mẫu...
+Nguyên tắc thiết kế UI/UX...
+Thêm hình ảnh mockup các màn hình chính...
+Quy định về màu sắc, font chữ..
+6. CÁC MỤC NÂNG CAO (KHÔNG BẮT BUỘC)
+Đánh giá rủi ro:
+Rủi ro kỹ thuật
+Rủi triển khai
+Kế hoạch dự phòng
+Lộ trình triển khai:
+Các mốc quan trọng
+Phân công nhiệm vụ

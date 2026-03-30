@@ -1,0 +1,451 @@
+
+
+[Tên dự án]
+Kế hoạch kiểm thử
+
+Revision History
+Date
+Version
+Author
+Description
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Table of Contents
+1. Overview3
+1.1. Purpose3
+1.2. Scope3
+2. Testing Summary3
+2.1. Scope of Testing3
+3. Analysis of Scope and Test Focus Areas3
+3.1. Release Content3
+3.2. Regression Testing3
+3.3. Platform Testing3
+4. Progression Test Objectives3
+5. Progression Test Objectives3
+6. Other Testing3
+6.1. Security3
+6.2. Stress & Volume Testing (S&V)3
+6.3. Connectivity Testing (CT)3
+6.4. Disaster Recovery/Back Up3
+6.5. Unit Testing3
+6.6. Integration Testing3
+7. Test Strategy3
+7.1. Test level responsibility3
+7.2. Test Type & Approach3
+7.3. Build strategy3
+7.4. Test Execution Schedule3
+7.5. Facility, data, and resource provision plan3
+7.6. Testing Tools3
+7.7. Testing Handover Procedure3
+7.8. Testing Metrics3
+8. Test Environment Plan3
+8.1. Test Environment Man3
+8.2. Test Environment Details3
+8.3. Establishing Environment3
+8.4. Environment Control3
+8.5. Environment Roles and Responsibilities3
+9. Assumptions and Dependencies3
+9.1. Assumptions3
+9.2. Dependencies3
+10. Entry and Exit Criteria3
+11. Administrative Plan3
+11.1. Approvals3
+11.2. Test Milestones and Schedule3
+11.3. Training3
+11.4. Defect Management3
+12. Definitions3
+13. References3
+14. Points of Contact3
+
+
+Tổng quan về tài liệu kế hoạch kiểm thử
+Mục đích
+
+Mô tả chi tiết mục đích của tài liệu kế hoạch kiểm thử là gì? Có thể viết theo phần gợi ý dưới đây:
+Mục đích của tài liệu kế hoạch kiểm thử là:
+Phạm vi thử nghiệm, các lĩnh vực trọng tâm và mục tiêu
+Trách nhiệm thử nghiệm
+Chiến lược thử nghiệm cho các cấp độ và loại thử nghiệm cho bản phát hành này
+Tiêu chí đầu vào và đầu ra
+Cơ sở của các ước tính thử nghiệm
+Mọi rủi ro, vấn đề, giả định và sự phụ thuộc của thử nghiệm
+Lịch trình thử nghiệm và các mốc quan trọng
+Các sản phẩm thử nghiệm
+
+Phạm vi
+Mô tả chi tiết phạm vi của tài liệu. Có thể viết theo gợi ý dưới đây:
+Tài liệu này nêu chi tiết về thử nghiệm sẽ được nhóm dự án thực hiện cho dự án <tên dự án>. Tài liệu này xác định các yêu cầu thử nghiệm chung và cung cấp góc nhìn tổng hợp về các hoạt động thử nghiệm của dự án. Mục đích của tài liệu là ghi lại:
+Những gì sẽ được thử nghiệm;
+Cách thức thử nghiệm sẽ được thực hiện;
+Những nguồn lực nào là cần thiết và khi nào
+
+
+
+Testing Summary
+Phạm vi của kiểm thử
+Trong phạm vi kiểm thử
+Chi tiết những gì nằm trong phạm vi từ góc độ thử nghiệm cho nhóm dự án. Ví dụ, điều này chỉ có thể bao gồm thử nghiệm tích hợp hệ thống và/hoặc thử nghiệm chấp nhận của người dùng
+
+Ngoài phạm vi kiểm thử
+Chi tiết những gì nằm ngoài phạm vi từ góc độ thử nghiệm cho nhóm dự án. Lưu ý: nếu thử nghiệm khả năng sử dụng được thực hiện bởi người dùng hoặc thử nghiệm tích hợp được thực hiện bởi nhà cung cấp. 
+Phân tích phạm vi và các lĩnh vực trọng tâm cần kiểm thử
+Nội dung phiên bản
+Chi tiết nội dung phát hành dự án hoặc tham khảo tài liệu phân tích có liên quan. 
+
+
+Nền tảng kiểm thử
+Chi tiết về nền tảng sẽ kiểm thử, ví dụ:
+Với kiểm thử phần mềm cần chỉ rõ hệ điều hành, phần mềm có liên quan
+Với phần cứng cần chỉ rõ yêu cầu về thiết bị
+
+Mục tiêu tiến trình kiểm thử
+Phần này trình bày chi tiết các mục tiêu kiểm tra tiến trình mà nhóm dự án sẽ thực hiện. Xin lưu ý rằng đây là mục tiêu ở cấp độ cao. Đối với các dự án lớn, một bộ trường hợp kiểm tra sẽ được tạo ra để tham chiếu trực tiếp đến bản gốc này.
+Điều này có thể được ghi lại dưới dạng dấu đầu dòng hoặc trong một bảng tương tự như bảng bên dưới để hỗ trợ cho Khả năng truy xuất yêu cầu
+
+Ref
+Chức năng
+Mục tiêu kiểm thử
+Tiêu chí đánh giá
+Tham chiếu chéo
+Độ ưu tiên
+Function to be tested
+
+Test reference
+Tên của chức năng được kiểm thử
+Mục tiêu kiểm thử cần xác minh
+
+Các tiêu chí sẽ được đánh giá để chứng minh kết quả kiểm thử là thành công
+Tham chiếu chéo như yêu cầu chức năng, tài liệu thiết kế
+Mức độ ưu tiên của kiểm thử
+Test reference
+Tên của chức năng được kiểm thử
+Mục tiêu kiểm thử cần xác minh
+
+Các tiêu chí sẽ được đánh giá để chứng minh kết quả kiểm thử là thành công
+Tham chiếu chéo như yêu cầu chức năng, tài liệu thiết kế
+Mức độ ưu tiên của kiểm thử
+Test reference
+Tên của chức năng được kiểm thử
+Mục tiêu kiểm thử cần xác minh
+
+Các tiêu chí sẽ được đánh giá để chứng minh kết quả kiểm thử là thành công
+Tham chiếu chéo như yêu cầu chức năng, tài liệu thiết kế
+Mức độ ưu tiên của kiểm thử
+
+Kiểm thử khác
+Bảo mật
+Detail what security testing will be performed and who will perform it.
+
+Kiểm thử hiệu năng (S&V)
+Detail stress and volume testing to be performed for the project, how it will be performed, who will perform it and expected outcomes. (this is also referred to as Load Testing)
+
+Kiểm thử đơn vị
+Detail what unit testing will be performed – note Unit Testing is verification of individual modules or “units” of code
+
+Kiểm thử tích hợp
+Detail what integration testing will be performed 
+
+
+Chiến lược kiểm thử
+Mức độ kiểm thử
+Trình bày chi tiết các cấp độ thử nghiệm dự kiến ​​sẽ được áp dụng và ai có trách nhiệm chính (P) và phụ (S) trong việc thực hiện thử nghiệm này (thực hiện theo bảng minh họa bên dưới).
+Mức độ kiểm thử
+Bên ngoài 
+Nhóm kiểm thử
+Khách hàng
+Kiểm thử đơn vị
+
+P
+
+Kiểm thử tích hợp
+
+P
+
+Kiểm thử hệ thống
+P
+S
+
+KIểm thử chấp nhận người dùng - UAT
+
+S
+P
+Kiểm thử xác minh sản phẩm
+
+S
+P
+Loại hình kiểm thử
+Chi tiết các loại hình kiểm thử như kiểm thử chức năng, kiểm thử phi chức năng, …  được nhóm dự án thực hiện và các mục tiêu tiêu chuẩn của họ (ví dụ bên dưới)
+Loại hình kiểm thử
+Objectives
+Yêu cầu tiến trình
+Mục tiêu là xác minh rằng ứng dụng:
+• Đáp ứng các yêu cầu đã xác định;
+• Thực hiện và hoạt động chính xác;
+• Xử lý đúng các điều kiện lỗi;
+• Giao diện hoạt động chính xác;
+• Tải dữ liệu thành công.
+Kiểm tra chức năng sẽ diễn ra theo cách lặp lại và được kiểm soát, đảm bảo giải pháp phù hợp với các yêu cầu đã xác định.
+Regression testing
+
+
+Lịch trình kiểm thử
+Cung cấp lịch trình kiểm tra cho nhóm dự án dưới dạng văn bản (ví dụ: sử dụng MS Word, MS Project hoặc MS Excel). Nêu chi tiết từng loại kiểm tra, chức năng và mức độ ưu tiên.
+Có thể làm theo bảng mẫu dưới đây
+Nội dung công việc
+Thời gian bắt đầu
+Thời gian kết thúc
+Người thực hiện
+Ràng buộc công việc
+Kế hoạch kiểm thử
+
+
+
+
+Tìm hiểu tài liệu yêu cầu
+
+
+
+
+Đào tạo nhân sự
+
+
+
+
+Triển khai môi trường QA
+
+
+
+
+Kiểm thử chức năng – Lặp lần 1
+
+
+
+
+
+TIện ích, dữ liệu và môi trường
+Môi trường kiểm thử
+Chi tiết về môi trường kiểm thử cần thiết và ngày khả dụng. Đối với các hệ thống/bản phát hành phức tạp lớn, cần tạo một tài liệu môi trường thử nghiệm riêng biệt bao gồm sự chấp thuận từ mỗi chủ sở hữu hệ thống. Có thể mô tả theo từng yêu cầu kiểm thử theo ví dụ mẫu dưới đây:
+Trình duyệt: 
+Windows: Edge, Chrome (bản mới nhất), Firefox (bản mới nhất)
+MacOS: Chrome (bản mới nhất), Safari (bản mới nhất)
+Thiết bị: 
+Hệ điều hành: từ hệ điều hành Win 10 trở lên, MacOS 
+
+Các thiết bị khác
+Chi tiết các hệ thống có yêu cầu được truy cập để thực thi kiểm 
+
+Yêu cầu kiểm thử
+
+Chi tiết các yêu cầu để bắt đầu kiểm thử. 
+Ví dụ:
+Mỗi người tham gia thử nghiệm sẽ cần quyền truy cập sau:
+• Trình duyệt web có quyền truy cập vào mạng nội bộ
+• Quyền truy cập vào cơ sở dữ liệu XYZ và công cụ SQL cơ sở dữ liệu có liên quan;
+• Quyền truy cập vào Business Objects;
+• Quyền truy cập vào Microsoft Excel để báo cáo lỗi;
+
+Yêu cầu dữ liệu
+Định nghĩa yêu cầu cài đặt dữ liệu bắt đầu kiểm thử
+
+Tài nguyên và kĩ năng
+Mô tả các yêu cầu về loại tài nguyên để thực hiện kiểm thử. Ví dụ:
+Kĩ năng SQL;
+Kĩ năng .Net để xử lý lỗi source code;
+Kĩ năng xử lý công nghệ mạng.
+
+Công cụ kiểm thử
+Mô tả các công cụ cần thiết cho kiểm thử
+Ví dụ: 
+Các công cụ dưới đây cần cho kiểm thử:
+Bước thực hiện
+Công cụ
+Test case creation
+Microsoft Word
+Test case tracking
+Microsoft Excel
+Test case execution
+Manual
+Test case management
+Microsoft Excel
+Defect management
+Microsoft Excel
+Vai trò 
+Xác định vai trò và trách nhiệm của những người sẽ chịu trách nhiệm hoặc tương tác với môi trường
+Vai trò
+Nhân viên
+Trách nhiệm
+Release Manager
+Bill Smith
+Responsible for overall establishment, coordination and support of the test environment
+Test Manager
+Mary Jones
+Responsible for advising release manager of environment requirements for planning, establishment and ongoing
+Project Manager
+Cathy Simons
+Escalation point for environment issues.
+
+Giả thiết và ràng buộc
+Giả thiết
+Chi tiết bất kỳ giả định nào được đưa ra để thử nghiệm.
+Ví dụ, các thành viên nhóm phát triển và phân tích kinh doanh sẽ có mặt để cung cấp hỗ trợ, đào tạo và giải quyết lỗi cho các thành viên nhóm thử nghiệm khi cần thiết
+Ràng buộc
+Chi tiết kiểm tra sự phụ thuộc
+Ví dụ, quyền truy cập vào hệ thống trong môi trường thử nghiệm sẽ được quản trị viên hệ thống cấu hình cho tất cả các thành viên nhóm thử nghiệm được xác định trước khi bắt đầu thử nghiệm
+
+
+
+Điều khoản chấp thuận
+Detail the entry and exit criteria that are used to determine when a phase of testing (or level of testing) is able to commence and when testing is considered to be completed. 
+
+
+
+
+
+Kế hoạch tài liệu
+
+Mốc kiểm thử
+Dưới đây là các mốc kiểm tra cấp cao được nêu chi tiết.
+Mốc thời gian
+Thời gian kết thúc
+Thời gian kết thúc thực tế
+Tài nguyên
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kế hoạch đào tào
+Các yêu cầu đào tạo sau đây đã được xác định để đảm bảo việc thử nghiệm có thể bắt đầu:
+Yêu cầu đào tạo
+Nhân viên
+Ngày
+
+
+
+
+
+
+Quản lý lỗi
+Chi tiết cách quản lý lỗi cho dự án này. Chi tiết công cụ quản lý lỗi nào sẽ được sử dụng. Tham khảo bất kỳ quy trình lỗi nào nếu cần.
+
+
+
+Định nghĩa
+Các từ viết tắt và thuật ngữ sau đây đã được sử dụng trong toàn bộ tài liệu này
+Thuật ngữ/Từ viết tắt
+Định nghĩa/Mô tả
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+References
+The following documents have been used to assist in creation of this document.
+#
+Document name
+Version
+Comments
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Points of Contact
+The following people can be contacted in reference to this document
+Primary Contact
+Name
+
+Title/Organisation
+
+Phone
+
+Email
+
+Secondary Contact
+Name
+
+Title/Organisation
+
+Phone
+
+Email
+

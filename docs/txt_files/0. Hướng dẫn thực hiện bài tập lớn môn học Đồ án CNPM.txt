@@ -1,0 +1,175 @@
+HƯỚNG DẪN HOÀN THÀNH BÁO CÁO BÀI TẬP LỚN 
+MÔN HỌC ĐỒ ÁN CNPM
+Mục tiêu: 
+Giúp sinh viên hiểu rõ và nắm vững quy trình phát triển phần mềm, từ khâu phân tích và thu thập yêu cầu đến triển khai hệ thống thông tin hoàn chỉnh.
+Khuyến khích sinh viên tự chọn đề tài, tìm hiểu và áp dụng kiến thức theo từng bước trong quy trình — từ thu thập yêu cầu, phân tích, thiết kế đến viết tài liệu theo mẫu và xây dựng sản phẩm cuối cùng.
+Trang bị kỹ năng soạn thảo tài liệu SRS (Software Requirements Specification) và SDD (Software Design Document) đúng cấu trúc, đầy đủ nội dung theo mẫu được cung cấp.
+Rèn luyện phương pháp làm việc nhóm: lập kế hoạch, phân công nhiệm vụ, giao tiếp, phối hợp và quản lý tiến độ.
+Phát triển khả năng tự tổ chức công việc, quản lý thời gian và đảm bảo tiến độ công việc.
+Kết quả đầu ra mong muốn:
+Sinh viên hoàn thành bộ tài liệu SRS, SDD và các tài liệu liên quan theo đúng mẫu và yêu cầu giảng viên.
+Có đầy đủ mã nguồn (source code), giao diện người dùng (UI/UX) và lược đồ cơ sở dữ liệu (database schema).
+Áp dụng được công cụ và phương pháp lập kế hoạch, theo dõi tiến độ (ví dụ: Gantt chart, Kanban board) để đảm bảo mục tiêu dự án.
+Thành thạo kỹ năng:
+Phân tích và thiết kế hệ thống (sử dụng UML, ERD, flowchart…).
+Lập trình theo tiêu chuẩn (coding conventions, version control).
+Trình bày báo cáo, thuyết trình kết quả dự án.
+Làm việc nhóm hiệu quả.
+Quy trình phát triển phần mềm sử dụng trong môn học
+Quá trình thực hiện và làm các sản phẩm của bài tập lớn theo nhóm môn học Đồ án CNPM cần bám theo quy trình dưới đây:
+
+Hình 1 Quy trình phát triển phần mềm
+Hướng dẫn thực hiện và yêu cầu cần làm của mỗi bước trong quy trình:
+Khảo sát hiện trạng:
+Mục tiêu: khảo sát về nghiệp vụ hiện tại đang được thực hiện với bài toán mình đang xử lý là gì? Cá nhân, hay tổ chức họ làm gì để thực hiện được nó?
+Công việc cần làm: Khảo sát về nghiệp vụ thực tế của bài toán, tìm hiểu về cách làm thực tế của bài toán, sử dụng các phần mềm cùng có sẵn (nếu có), lập các bảng khảo sát, tìm hiểu (nếu có)
+Kết quả cần đạt được: đưa ra được nghiệp vụ hiện có của bài toán, Lập bảng ma trận truy xuất nguồn gốc các yêu cầu (Requirement Traceability Matrix). Ví dụ mẫu RTM giai đoạn khảo sát
+ID
+Nguồn khảo sát
+Mô tả yêu cầu hiện trạng
+Loại yêu cầu
+Vấn đề tồn tại
+Yêu cầu người dùng
+Gợi ý giải pháp
+KH-01
+Phỏng vấn nhân viên lễ tân
+Nhân viên ghi nhận đặt phòng bằng sổ tay
+Chức năng
+Dễ thất lạc, khó tìm kiếm
+Cần hệ thống nhập và tra cứu thông tin đặt phòng
+Tạo giao diện nhập thông tin và tìm kiếm phòng
+KH-02
+Quan sát quy trình làm việc
+Không có cảnh báo khi trùng phòng
+Chức năng
+Ghi nhầm, mất uy tín với khách
+Cần cảnh báo khi phòng đã được đặt trùng thời gian
+Kiểm tra trùng thời gian trước khi lưu
+KH-03
+Bảng khảo sát khách hàng
+Khách không nhận được xác nhận đặt phòng
+Chức năng
+Khách gọi điện xác nhận, mất thời gian
+Gửi email hoặc tin nhắn xác nhận tự động
+Tích hợp gửi mail/tin nhắn SMS
+KH-04
+Phỏng vấn quản lý
+Không có báo cáo thống kê doanh thu
+Phi chức năng
+Không theo dõi hiệu quả hoạt động
+Hệ thống cần có báo cáo doanh thu theo ngày/tháng
+Module thống kê + xuất báo cáo PDF
+KH-05
+Quan sát thực tế
+Nhập liệu chậm do nhiều bước thủ công
+Hiệu năng
+Tốn thời gian, dễ sai sót
+Tối ưu số bước nhập liệu, dùng menu chọn nhanh
+UI thân thiện, tự động hoàn tất
+Ghi chú:
+Nguồn khảo sát: Cách thức thực khảo sát là gì? Các bạn sử dụng phương pháp phỏng vấn, bảng khảo sát, quan sát thực tế…
+Mô tả yêu cầu hiện trạng: Nghiệp vụ và cách thực hiện hiện tại tại doanh nghiệp.
+Vấn đề tồn tại: Những khó khăn khi thực hiện nghiệp vụ hiện tại
+Yêu cầu người dùng: Sự mong đợi của người dùng về hệ thống mới, họ muốn cải tiến những gì?
+Thu thập và đặc tả yêu cầu của khách hàng:
+Mục tiêu: hiểu rõ yêu cầu, hiện trạng hệ thống hiện có (của khách hàng), các ràng buộc nghiệp vụ/ kỹ thuật của tổ chức.
+Công việc cần làm: Phỏng vấn khách hàng (đặt các câu hỏi phỏng vấn) – phần này giả định, tạo bảng khảo sát, quan sát thực tế.
+Kết quả cần đạt được: 
+Tài liệu SRS (Software Requirement Specification): tài liệu đặc tả yêu cầu người dùng
+Ràng buộc nghiệp vụ cần tuân theo
+RTM yêu cầu của khách hàng
+ID yêu cầu
+Nguồn yêu cầu
+Mô tả yêu cầu (từ khách hàng)
+Phân loại
+Ưu tiên
+Mô tả đặc tả (viết lại chuẩn SRS)
+Liên kết Tài liệu
+REQ-01
+Phỏng vấn khách hàng
+Người dùng muốn đăng nhập bằng tài khoản cá nhân
+Chức năng (FR)
+Cao
+Hệ thống cho phép người dùng đăng nhập bằng tên người dùng và mật khẩu hợp lệ.
+SRS 2.1
+REQ-02
+Phỏng vấn quản lý
+Quản lý muốn xem báo cáo doanh thu theo tháng
+Chức năng (FR)
+Trung bình
+Hệ thống hiển thị báo cáo doanh thu theo từng tháng dưới dạng bảng và biểu đồ.
+SRS 2.3
+REQ-03
+Bảng khảo sát người dùng
+Giao diện phải dễ sử dụng và thân thiện
+Phi chức năng (NFR - Usability)
+Cao
+Giao diện người dùng phải trực quan, hỗ trợ thao tác bằng chuột và phím tắt.
+SRS 3.2
+REQ-04
+Quan sát thực tế
+Tốc độ hệ thống cần phản hồi nhanh
+Phi chức năng (NFR - Performance)
+Cao
+Hệ thống phải phản hồi trong vòng 2 giây cho các thao tác thường xuyên.
+SRS 3.4
+REQ-05
+Email phản hồi từ khách hàng
+Phải có chức năng gửi email xác nhận sau khi đặt hàng
+Chức năng (FR)
+Trung bình
+Sau khi đơn hàng được ghi nhận, hệ thống sẽ gửi email xác nhận đến người dùng.
+SRS 2.5
+REQ-06
+Họp nhóm với khách hàng
+Hệ thống cần chạy được cả trên desktop và điện thoại
+Phi chức năng (NFR - Compatibility)
+Cao
+Hệ thống phải hỗ trợ đa nền tảng: trình duyệt trên máy tính và điện thoại.
+SRS 3.5
+
+Ghi chú cột:
+Nguồn yêu cầu: Yêu cầu này được xác định thông qua nguồn nào? như phỏng vấn, khảo sát, email, cuộc họp...
+Phân loại yêu cầu: Yêu cầu được phân chia thành: FR (Functional Requirement – yêu cầu chức năng), NFR (Non-Functional Requirement – phi chức năng); Yêu cầu người dùng; Yêu cầu hệ thống
+Mức độ ưu tiên của chức năng: Cao / Trung bình / Thấp – mức độ ưu tiên này do khách hàng hoặc nhóm dự án đánh giá.
+Liên kết tài liệu: Vị trí trong tài liệu SRS (Software Requirement Specification).
+Mục tiêu của RTM trong phân tích và thu thập yêu cầu: 
+Viết tài liệu SRS chính thức.
+Liên kết từng yêu cầu tới phần thiết kế, mã nguồn, test case (ở các RTM giai đoạn sau).
+Phân tích và thiết kế hệ thống
+Mục tiêu: Xác định cấu trúc hệ thống, luồng thông tin, kiến trúc phần mềm, dữ liệu và đề xuất công nghệ dựa trên yêu cầu đã thu thập. Đủ thông tin để triển khai mã nguồn, kiểm thử, đánh giá.
+Kết quả cần đạt được:
+Tài liệu SDD (Software Design Documentation) – tài liệu phân tích và thiết kế hệ thống
+File bản vẽ được vẽ trên phần mềm. Sơ đồ lớp, sơ đồ tuần tự (class & sequence diagrams), sơ đồ hoạt động (activity), sơ đồ thành phần (component) và sơ đồ triển khai (deployment)
+Thiết kế dữ liệu: mô hình ER (nếu theo CSDL có cấu trúc), lược đồ dữ liệu và lược đồ liên kết (relationship diagram)
+Mô tả kiến trúc tổng thể (layered architecture, components) (SAD – Software Architecture Diagram)
+Hướng dẫn thực hiện: Dựa trên đề xuất công nghệ và yêu cầu của khách hàng, lựa chọn phương pháp phân tích thiết kế hệ thống phù hợp để có thể triển khai xây dựng code hiệu quả hợp lý. Trong trường hợp không sử dụng phương pháp phân tích khối (monolithic) truyền thống, thì cần chọn các phương pháp và kỹ thuật phân tích phù hợp: Event-Driven: hướng sự kiện; Cloud-Native: Điện toán đám mây; Microservices (Tách dịch vụ, giao tiếp API/Event-Driven); Component-Based Design (UI/Backend modules); Agile & DevOps (CI/CD, IaC, Observability);Security Best Practices (JWT, Rate Limiting, API Gateway).
+Thực thi:
+Mục tiêu: Hiện thực hóa các thiết kế đã làm, phát triển chức năng, xây dựng cơ sở dữ liệu và giao diện. Sau đó, cấu hình hệ thống theo yêu cầu.
+Kết quả cần đạt được:
+Hệ thống chạy thử nghiệm
+UI/UX
+Source code
+Hướng dẫn thực hiện: Trong quá trình triển khai code cần sử dụng quản lý cấu hình và phiên bản (Version Control):Thiết lập repository Git (GitHub/GitLab). Quy định nhánh (branching strategy), quy ước commit, pull request/merge request. Có đầy đủ tài liệu về thiết lập môi trường (staging, production), tài liệu hướng dẫn cài đặt và vận hành.
+Kiểm thử:
+Mục tiêu: Đảm bảo hệ thống hoạt động đúng, ổn định, không có lỗi nghiêm trọng, và đáp ứng đúng yêu cầu người dùng.
+Kết quả cần đạt được:
+Test strategy – chiến lược kiểm thử
+Test plan – kế hoạch kiểm thử
+Testcase – trường hợp kiểm thử
+Các kỹ năng nâng cao (tùy chọn, nếu thực hiện đầy đủ được cộng thêm điểm)
+Đảm bảo chất lượng (Quality Assurance):
+Đánh giá code (code review), phân tích tĩnh (static code analysis).
+Kiểm soát chất lượng tài liệu (template check, nội dung consistency).
+Quản lý rủi ro (Risk Management):
+Xác định rủi ro, đánh giá mức độ ảnh hưởng.
+Đề xuất biện pháp giảm thiểu.
+Kỹ năng khác:
+Báo cáo tiến độ định kỳ:
+Họp nhóm hàng tuần, ghi biên bản.
+Cập nhật tiến độ lên công cụ (Loop/Jira/Trello).
+Thuyết trình và demo sản phẩm:
+Chuẩn bị slide tổng quan dự án.
+Demo chức năng chính, phản hồi và cải tiến.
+
+
