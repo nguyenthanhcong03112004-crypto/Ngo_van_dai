@@ -30,6 +30,12 @@ class DisputeChat
 
     public function create(array $data): int
     {
+        \Core\Logger::getInstance()->info('Creating dispute chat message', [
+            'order_id' => $data['order_id'],
+            'user_id' => $data['user_id'],
+            'sender_role' => $data['sender_role']
+        ]);
+
         $stmt = $this->db->prepare(
             'INSERT INTO `dispute_chats` (`order_id`, `user_id`, `sender_role`, `message`, `attachment_url`)
              VALUES (?, ?, ?, ?, ?)'

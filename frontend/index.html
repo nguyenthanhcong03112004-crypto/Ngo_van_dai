@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub - Trang chủ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body class="bg-white dark:bg-slate-950 min-h-screen transition-colors duration-300">
+
+    <!-- HEADER -->
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white group-hover:rotate-12 transition-transform">
+                        <i data-lucide="shopping-cart" size="24"></i>
+                    </div>
+                    <span class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">ElectroHub</span>
+                </a>
+
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-lg mx-8 relative">
+                    <div class="relative w-full">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="20"></i>
+                        <input 
+                            type="text" 
+                            id="globalSearchInput"
+                            placeholder="Tìm kiếm điện thoại, laptop, phụ kiện..."
+                            class="w-full pl-12 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800 border-transparent rounded-full outline-none focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-blue-500 transition-all text-sm dark:text-white"
+                        >
+                    </div>
+                    <!-- Search Suggestions Dropdown -->
+                    <div id="searchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 hidden z-50">
+                        <!-- Suggestions will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden lg:flex items-center gap-8 text-sm font-bold">
+                    <a href="index.html" class="text-blue-600">Trang chủ</a>
+                    <a href="shop.html" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors">Cửa hàng</a>
+                    <a href="promotions.html" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors">Khuyến mãi</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Theme Toggle -->
+                    <button onclick="ThemeManager.toggle()" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                        <i data-lucide="sun" class="theme-sun hidden" size="22"></i>
+                        <i data-lucide="moon" class="theme-moon" size="22"></i>
+                    </button>
+                    <a href="user/checkout.html" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative transition-colors">
+                        <i data-lucide="shopping-cart" size="22"></i>
+                        <span class="cart-badge absolute top-1 right-1 w-4 h-4 bg-blue-600 text-white text-[10px] flex items-center justify-center rounded-full font-bold" style="display: none;">0</span>
+                    </a>
+                    
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+
+                    <div id="auth-header-container">
+                        <a href="login.html" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+                            <i data-lucide="user" size="18"></i> Đăng nhập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="relative h-[600px] overflow-hidden bg-slate-900">
+        <img 
+            src="https://picsum.photos/seed/tech-banner/1920/1080?blur=2" 
+            class="absolute inset-0 w-full h-full object-cover opacity-40"
+            alt="Banner"
+        >
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/40 to-transparent"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
+            <div class="max-w-2xl space-y-8">
+                <span class="inline-block px-4 py-1.5 bg-blue-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-full">
+                    Siêu ưu đãi mùa hè
+                </span>
+                <h1 class="text-6xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter">
+                    Nâng tầm <br /> <span class="text-blue-500">Trải nghiệm</span>
+                </h1>
+                <p class="text-xl text-slate-300 leading-relaxed max-w-lg">
+                    Khám phá bộ sưu tập thiết bị điện tử mới nhất với công nghệ tiên tiến và thiết kế đột phá. Giảm giá lên đến 30% cho các dòng Laptop Gaming.
+                </p>
+                <div class="flex gap-4 pt-4">
+                    <a href="#" class="px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
+                        Mua sắm ngay <i data-lucide="zap" size="20"></i>
+                    </a>
+                    <button class="px-8 py-4 bg-white/10 text-white font-bold rounded-2xl hover:bg-white/20 backdrop-blur-md transition-all border border-white/20">
+                        Xem khuyến mãi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight mb-4">Danh mục nổi bật</h2>
+                <p class="text-slate-500 font-medium">Khám phá các dòng sản phẩm công nghệ hàng đầu</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <!-- Category Item -->
+                <div class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200 transition-all cursor-pointer text-center border border-slate-100 flex flex-col items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 bg-blue-50 text-blue-600">
+                        <i data-lucide="smartphone" size="24"></i>
+                    </div>
+                    <span class="font-bold text-slate-800 text-sm">Điện thoại</span>
+                </div>
+                <div class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200 transition-all cursor-pointer text-center border border-slate-100 flex flex-col items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 bg-indigo-50 text-indigo-600">
+                        <i data-lucide="laptop" size="24"></i>
+                    </div>
+                    <span class="font-bold text-slate-800 text-sm">Laptop</span>
+                </div>
+                <div class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200 transition-all cursor-pointer text-center border border-slate-100 flex flex-col items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 bg-purple-50 text-purple-600">
+                        <i data-lucide="tablet" size="24"></i>
+                    </div>
+                    <span class="font-bold text-slate-800 text-sm">Máy tính bảng</span>
+                </div>
+                <div class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200 transition-all cursor-pointer text-center border border-slate-100 flex flex-col items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 bg-rose-50 text-rose-600">
+                        <i data-lucide="watch" size="24"></i>
+                    </div>
+                    <span class="font-bold text-slate-800 text-sm">Đồng hồ</span>
+                </div>
+                <div class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200 transition-all cursor-pointer text-center border border-slate-100 flex flex-col items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 bg-amber-50 text-amber-600">
+                        <i data-lucide="headphones" size="24"></i>
+                    </div>
+                    <span class="font-bold text-slate-800 text-sm">Tai nghe</span>
+                </div>
+                <div class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200 transition-all cursor-pointer text-center border border-slate-100 flex flex-col items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 bg-emerald-50 text-emerald-600">
+                        <i data-lucide="speaker" size="24"></i>
+                    </div>
+                    <span class="font-bold text-slate-800 text-sm">Loa</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCT GRID -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-end justify-between mb-16">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900 tracking-tight mb-4">Sản phẩm bán chạy</h2>
+                    <p class="text-slate-500 font-medium">Những thiết bị được yêu thích nhất tuần qua</p>
+                </div>
+                <a href="shop.html" class="group flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all">
+                    Xem tất cả <i data-lucide="arrow-right" size="20"></i>
+                </a>
+            </div>
+
+            <div id="featuredProducts" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Products will be dynamically loaded here by JS -->
+                <div class="col-span-full py-12 text-center text-slate-500">
+                    <i data-lucide="loader-2" class="animate-spin mx-auto mb-2" size="24"></i> Đang tải sản phẩm...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center gap-2 text-white mb-6">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i data-lucide="shopping-cart" size="20"></i>
+                </div>
+                <span class="text-xl font-black tracking-tighter">ElectroHub</span>
+            </div>
+            <p class="text-sm">&copy; 2026 ElectroHub. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <!-- QUICK VIEW MODAL -->
+    <div id="quickViewModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-4xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative">
+            <button onclick="closeQuickView()" class="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-all z-10">
+                <i data-lucide="x" size="24"></i>
+            </button>
+            <div class="md:w-1/2 h-64 md:h-auto">
+                <img id="qvImage" src="" alt="" class="w-full h-full object-cover">
+            </div>
+            <div class="md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+                <h2 id="qvName" class="text-3xl font-black text-slate-900 mb-4 leading-tight"></h2>
+                <p id="qvPrice" class="text-2xl font-black text-blue-600 mb-6"></p>
+                <p class="text-slate-600 mb-8 leading-relaxed">
+                    Sản phẩm chính hãng, bảo hành 12 tháng. Hỗ trợ trả góp 0% lãi suất qua thẻ tín dụng. Giao hàng nhanh toàn quốc.
+                </p>
+                <div class="flex gap-4">
+                    <button id="qvAddBtn" class="flex-1 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-100">
+                        Thêm vào giỏ hàng
+                    </button>
+                    <button class="p-4 bg-slate-100 text-slate-600 rounded-2xl hover:bg-slate-200 transition-all">
+                        <i data-lucide="heart" size="24"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="js/helpers.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/search.js"></script>
+    <script>
+        function openQuickView(name, price, image) {
+            document.getElementById('qvName').innerText = name;
+            document.getElementById('qvPrice').innerText = price;
+            document.getElementById('qvImage').src = image;
+            document.getElementById('quickViewModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeQuickView() {
+            document.getElementById('quickViewModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>

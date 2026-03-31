@@ -174,8 +174,13 @@ class Logger
             'method'     => $_SERVER['REQUEST_METHOD'] ?? 'CLI',
             'endpoint'   => $this->getCurrentUrl(),
             'message'    => $message,
-            'context'    => $context,
+            'context'    => $this->maskSensitiveFields($context),
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        // In development, log to stderr to be visible in `docker logs`
+        if (($_ENV['APP_ENV'] ?? 'production') === 'development') {
+            error_log($entry);
+        }
 
         $filePath = $this->logDir . '/app-' . date('Y-m-d') . '.log';
 

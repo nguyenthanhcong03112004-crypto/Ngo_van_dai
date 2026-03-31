@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý Khuyến mãi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex">
+    <!-- SIDEBAR -->
+    <aside class="w-72 bg-white border-r border-slate-200 h-screen sticky top-0 flex flex-col">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+    
+    <main class="flex-1 p-10 overflow-auto">
+        <header class="flex items-center justify-between mb-10">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Mã giảm giá</h1>
+                <p class="text-slate-500 font-medium">Tạo và quản lý các chương trình ưu đãi</p>
+            </div>
+            <button onclick="openVoucherModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+                <i data-lucide="plus" size="18"></i> Tạo mã mới
+            </button>
+        </header>
+
+        <!-- VOUCHER TABLE -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Mã Code</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Giá trị giảm</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Đơn tối thiểu</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Hạn sử dụng</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50" id="voucherTableBody">
+                        <tr><td colspan="5" class="text-center p-12 text-slate-500"><i data-lucide="loader-2" class="animate-spin mx-auto mb-2 text-blue-600"></i> Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- CREATE VOUCHER MODAL -->
+    <div id="voucherModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden relative">
+            <form id="voucherForm" class="flex flex-col">
+                <div class="p-8 pb-4">
+                    <button type="button" onclick="closeVoucherModal()" class="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-all">
+                        <i data-lucide="x" size="24"></i>
+                    </button>
+                    <h2 class="text-2xl font-black text-slate-900 mb-2">Tạo mã giảm giá</h2>
+                </div>
+                <div class="p-8 pt-4 space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-600">Mã Code (VIẾT HOA)</label>
+                        <input type="text" id="vCode" required placeholder="VD: SUMMER26" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-bold uppercase">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-600">Số tiền giảm (VND)</label>
+                        <input type="number" id="vDiscount" required min="1000" placeholder="VD: 500000" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-600">Giá trị đơn tối thiểu (VND)</label>
+                        <input type="number" id="vMinOrder" min="0" placeholder="VD: 10000000 (Không bắt buộc)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-600">Ngày hết hạn</label>
+                        <input type="date" id="vExpire" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                    </div>
+                </div>
+                <div class="p-8 pt-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-4">
+                    <button type="button" onclick="closeVoucherModal()" class="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-100 transition-all">Hủy</button>
+                    <button type="submit" id="saveVoucherBtn" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">Tạo mã</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/helpers.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            fetchVouchers();
+        });
+
+        async function fetchVouchers() {
+            const user = AuthManager.getUser();
+            const tableBody = document.getElementById('voucherTableBody');
+            try {
+                const response = await fetch('http://localhost:8888/api/admin/vouchers', {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    const data = result.data;
+                    if (!data || data.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-12 text-slate-500">Chưa có mã giảm giá nào.</td></tr>`;
+                        return;
+                    }
+                    tableBody.innerHTML = data.map(v => {
+                        const exp = v.expires_at ? new Date(v.expires_at).toLocaleDateString('vi-VN') : 'Không thời hạn';
+                        const isActive = v.is_active && (!v.expires_at || new Date(v.expires_at) > new Date());
+                        const badge = isActive 
+                            ? `<span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Khả dụng</span>`
+                            : `<span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[10px] font-bold uppercase tracking-wider">Hết hạn</span>`;
+                        return `
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-8 py-6 font-black text-blue-600 tracking-widest">${v.code}</td>
+                                <td class="px-8 py-6 font-bold text-slate-900">${formatVND(v.discount_amount)}</td>
+                                <td class="px-8 py-6 font-medium text-slate-500">${v.min_order_value > 0 ? formatVND(v.min_order_value) : 'Mọi đơn hàng'}</td>
+                                <td class="px-8 py-6 font-medium text-slate-500">${exp}</td>
+                                <td class="px-8 py-6">${badge}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else { showToast(result.message, 'error'); }
+            } catch (e) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-12 text-red-500">Lỗi kết nối máy chủ</td></tr>`;
+            }
+        }
+
+        function openVoucherModal() {
+            document.getElementById('voucherForm').reset();
+            document.getElementById('voucherModal').classList.remove('hidden');
+        }
+        function closeVoucherModal() {
+            document.getElementById('voucherModal').classList.add('hidden');
+        }
+
+        document.getElementById('voucherForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('saveVoucherBtn');
+            btn.innerText = 'Đang xử lý...'; btn.disabled = true;
+            
+            const payload = {
+                code: document.getElementById('vCode').value.trim().toUpperCase(),
+                discount_amount: parseInt(document.getElementById('vDiscount').value),
+                min_order_value: parseInt(document.getElementById('vMinOrder').value || 0),
+                expires_at: document.getElementById('vExpire').value ? document.getElementById('vExpire').value + ' 23:59:59' : null
+            };
+
+            try {
+                const user = AuthManager.getUser();
+                const response = await fetch('http://localhost:8888/api/admin/vouchers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showToast(result.message, 'success');
+                    closeVoucherModal();
+                    fetchVouchers();
+                } else { throw new Error(result.message); }
+            } catch (err) { showToast(err.message, 'error'); }
+            finally { btn.innerText = 'Tạo mã'; btn.disabled = false; }
+        });
+    </script>
+</body>
+</html>

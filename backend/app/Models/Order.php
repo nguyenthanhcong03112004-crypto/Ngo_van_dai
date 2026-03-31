@@ -21,6 +21,7 @@ class Order
      */
     public function create(array $data): int
     {
+        \Core\Logger::getInstance()->info('Starting order creation transaction', ['user_id' => $data['user_id'], 'total_amount' => $data['total_amount']]);
         $this->db->beginTransaction();
 
         try {
@@ -61,9 +62,11 @@ class Order
             }
 
             $this->db->commit();
+            \Core\Logger::getInstance()->info('Order created successfully', ['order_id' => $orderId]);
             return $orderId;
         } catch (\Throwable $e) {
             $this->db->rollBack();
+            \Core\Logger::getInstance()->error('Order creation failed, transaction rolled back', ['error' => $e->getMessage()]);
             throw $e;
         }
     }
@@ -71,19 +74,28 @@ class Order
     /**
      * Get all orders for a specific user, newest first.
      */
-    public function getByUser(int $userId): array
+    public function getByUser(int $userId, ?int $month = null, ?int $year = null): array
     {
-        $stmt = $this->db->prepare(
-            'SELECT o.*,
-                    u.name AS user_name, u.email AS user_email,
-                    v.code AS voucher_code
-             FROM `orders` o
-             LEFT JOIN `users`    u ON o.user_id    = u.id
-             LEFT JOIN `vouchers` v ON o.voucher_id = v.id
-             WHERE o.user_id = ?
-             ORDER BY o.created_at DESC'
-        );
-        $stmt->execute([$userId]);
+        $sql = 'SELECT o.*,
+                       u.name AS user_name, u.email AS user_email,
+                       v.code AS voucher_code
+                FROM `orders` o
+                LEFT JOIN `users`    u ON o.user_id    = u.id
+                LEFT JOIN `vouchers` v ON o.voucher_id = v.id
+                WHERE o.user_id = ?';
+        
+        $params = [$userId];
+
+        if ($month && $year) {
+            $sql .= ' AND MONTH(o.created_at) = ? AND YEAR(o.created_at) = ?';
+            $params[] = $month;
+            $params[] = $year;
+        }
+
+        $sql .= ' ORDER BY o.created_at DESC';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         $orders = $stmt->fetchAll();
 
         return array_map(fn($o) => $this->attachItems($o), $orders);
@@ -149,6 +161,7 @@ class Order
      */
     public function updateStatus(int $id, string $status): bool
     {
+        \Core\Logger::getInstance()->info('Updating order status', ['order_id' => $id, 'new_status' => $status]);
         $stmt = $this->db->prepare('UPDATE `orders` SET `status` = ? WHERE `id` = ?');
         return $stmt->execute([$status, $id]);
     }
@@ -158,6 +171,7 @@ class Order
      */
     public function updateReceiptUrl(int $id, string $url): bool
     {
+        \Core\Logger::getInstance()->info('Uploading payment receipt for order', ['order_id' => $id]);
         $stmt = $this->db->prepare(
             'UPDATE `orders` SET `payment_receipt_url` = ?, `status` = "confirmed" WHERE `id` = ?'
         );
@@ -171,6 +185,17 @@ class Order
     {
         $stmt = $this->db->prepare('SELECT 1 FROM `orders` WHERE `id` = ? AND `user_id` = ?');
         $stmt->execute([$orderId, $userId]);
+        return (bool) $stmt->fetch();
+    }
+
+    public function verifyPurchase(int $userId, int $productId, int $orderId): bool
+    {
+        $stmt = $this->db->prepare(
+            'SELECT 1 FROM `orders` o 
+             JOIN `order_items` oi ON o.id = oi.order_id 
+             WHERE o.id = ? AND o.user_id = ? AND oi.product_id = ? AND o.status = "completed"'
+        );
+        $stmt->execute([$orderId, $userId, $productId]);
         return (bool) $stmt->fetch();
     }
 

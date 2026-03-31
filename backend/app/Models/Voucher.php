@@ -50,6 +50,8 @@ class Voucher
 
     public function create(array $data): int
     {
+        \Core\Logger::getInstance()->info('Creating new voucher', ['code' => $data['code']]);
+
         $stmt = $this->db->prepare(
             'INSERT INTO `vouchers` (`code`, `discount_amount`, `min_order_value`, `applicable_product_id`, `expires_at`)
              VALUES (?, ?, ?, ?, ?)'

@@ -33,6 +33,7 @@ class Wishlist
 
     public function add(int $userId, int $productId): bool
     {
+        \Core\Logger::getInstance()->info('Adding product to wishlist', ['user_id' => $userId, 'product_id' => $productId]);
         $stmt = $this->db->prepare(
             'INSERT IGNORE INTO `wishlists` (`user_id`, `product_id`) VALUES (?, ?)'
         );
@@ -41,6 +42,7 @@ class Wishlist
 
     public function remove(int $userId, int $productId): bool
     {
+        \Core\Logger::getInstance()->info('Removing product from wishlist', ['user_id' => $userId, 'product_id' => $productId]);
         $stmt = $this->db->prepare(
             'DELETE FROM `wishlists` WHERE `user_id` = ? AND `product_id` = ?'
         );

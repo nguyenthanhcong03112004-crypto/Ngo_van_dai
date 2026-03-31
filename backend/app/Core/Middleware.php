@@ -40,6 +40,7 @@ class Middleware
         $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
 
         if (!preg_match('/Bearer\s+(.+)/', $authHeader, $matches)) {
+            Logger::getInstance()->warning('Authentication failed: Missing token');
             self::unauthorized('Authorization token required');
         }
 
@@ -47,7 +48,15 @@ class Middleware
         $payload = self::verifyToken($token);
 
         if ($payload === null) {
+            Logger::getInstance()->warning('Authentication failed: Invalid or expired token');
             self::unauthorized('Invalid or expired token');
+        }
+
+        // Set User ID in the Logger so all subsequent logs in this request have context
+        if (isset($payload['user_id'])) {
+            $logger = Logger::getInstance();
+            $logger->setUserId((int)$payload['user_id']);
+            $logger->debug('User authenticated via JWT', ['user_id' => $payload['user_id'], 'role' => $payload['role'] ?? '']);
         }
 
         return $payload;
@@ -61,6 +70,11 @@ class Middleware
         $payload = self::requireAuth();
 
         if (($payload['role'] ?? '') !== $role) {
+            Logger::getInstance()->warning("Access forbidden: User lacks required role", [
+                'required_role' => $role,
+                'actual_role'   => $payload['role'] ?? null
+            ]);
+
             http_response_code(403);
             echo json_encode([
                 'status'  => 'error',

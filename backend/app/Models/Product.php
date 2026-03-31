@@ -37,10 +37,14 @@ class Product
         $params[]    = $offset;
 
         $stmt = $this->db->prepare(
-            "SELECT p.*, c.name AS category_name
+            "SELECT p.*, c.name AS category_name,
+                    COUNT(r.id) AS review_count,
+                    COALESCE(AVG(r.rating), 0) AS average_rating
              FROM `products` p
              LEFT JOIN `categories` c ON p.category_id = c.id
+             LEFT JOIN `product_reviews` r ON p.id = r.product_id
              WHERE {$whereClause}
+             GROUP BY p.id
              ORDER BY p.created_at DESC
              LIMIT ? OFFSET ?"
         );
@@ -51,10 +55,14 @@ class Product
     public function getById(int $id): ?array
     {
         $stmt = $this->db->prepare(
-            'SELECT p.*, c.name AS category_name
+            'SELECT p.*, c.name AS category_name,
+                    COUNT(r.id) AS review_count,
+                    COALESCE(AVG(r.rating), 0) AS average_rating
              FROM `products` p
              LEFT JOIN `categories` c ON p.category_id = c.id
-             WHERE p.id = ? AND p.is_active = 1 LIMIT 1'
+             LEFT JOIN `product_reviews` r ON p.id = r.product_id
+             WHERE p.id = ? AND p.is_active = 1
+             GROUP BY p.id LIMIT 1'
         );
         $stmt->execute([$id]);
         $row = $stmt->fetch();
@@ -63,6 +71,8 @@ class Product
 
     public function create(array $data): int
     {
+        \Core\Logger::getInstance()->info('Creating new product', ['name' => $data['name'], 'category_id' => $data['category_id']]);
+
         $stmt = $this->db->prepare(
             'INSERT INTO `products` (`category_id`,`name`,`slug`,`description`,`price`,`stock`,`image_url`)
              VALUES (?,?,?,?,?,?,?)'
@@ -81,6 +91,8 @@ class Product
 
     public function update(int $id, array $data): bool
     {
+        \Core\Logger::getInstance()->info('Updating product', ['product_id' => $id, 'updated_fields' => array_keys($data)]);
+
         $fields = [];
         $params = [];
         $allowed = ['category_id','name','slug','description','price','stock','image_url','is_active'];
@@ -97,6 +109,7 @@ class Product
 
     public function softDelete(int $id): bool
     {
+        \Core\Logger::getInstance()->info('Soft deleting product', ['product_id' => $id]);
         $stmt = $this->db->prepare('UPDATE `products` SET `is_active` = 0 WHERE `id` = ?');
         return $stmt->execute([$id]);
     }

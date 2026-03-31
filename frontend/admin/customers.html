@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý khách hàng</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 min-h-screen flex">
+
+    <!-- SIDEBAR -->
+    <aside class="w-72 bg-white border-r border-slate-200 h-screen sticky top-0 flex flex-col">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all">
+                <i data-lucide="bar-chart-3" size="20"></i> Tổng quan
+            </a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all">
+                <i data-lucide="package" size="20"></i> Sản phẩm
+            </a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all">
+                <i data-lucide="shopping-bag" size="20"></i> Đơn hàng
+            </a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all">
+                <i data-lucide="users" size="20"></i> Khách hàng
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all">
+                <i data-lucide="message-square" size="20"></i> Khiếu nại
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all">
+                <i data-lucide="settings" size="20"></i> Cài đặt
+            </a>
+        </nav>
+
+        <div class="p-6 border-t border-slate-100">
+            <a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all">
+                <i data-lucide="log-out" size="20"></i> Thoát Admin
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-10 overflow-auto">
+        <!-- HEADER -->
+        <header class="flex items-center justify-between mb-10">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Quản lý khách hàng</h1>
+                <p class="text-slate-500 font-medium">Danh sách người dùng trên hệ thống</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                    <input type="text" id="customerSearch" placeholder="Tìm kiếm khách hàng..." class="pl-12 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium w-64">
+                </div>
+                <button onclick="exportExcel()" class="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-md">
+                    <i data-lucide="download" size="18"></i> Xuất Excel
+                </button>
+                <button class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+                    <i data-lucide="plus" size="18"></i> Thêm khách hàng
+                </button>
+            </div>
+        </header>
+
+        <!-- STATS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center"><i data-lucide="users" size="24"></i></div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Tổng khách hàng</p>
+                        <h3 class="text-2xl font-black text-slate-900">8,420</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center"><i data-lucide="user-check" size="24"></i></div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Đang hoạt động</p>
+                        <h3 class="text-2xl font-black text-slate-900">8,315</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center"><i data-lucide="user-x" size="24"></i></div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Đã khóa</p>
+                        <h3 class="text-2xl font-black text-slate-900">105</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOMER TABLE -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <button class="sort-btn flex items-center gap-2 group" data-sort-by="name">
+                                    Khách hàng <i data-lucide="arrow-up-down" class="opacity-30 group-hover:opacity-100" size="14"></i>
+                                </button>
+                            </th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Email</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <button class="sort-btn flex items-center gap-2 group" data-sort-by="date">
+                                    Ngày tham gia <i data-lucide="arrow-up-down" class="opacity-30 group-hover:opacity-100" size="14"></i>
+                                </button>
+                            </th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <button class="sort-btn flex items-center gap-2 group" data-sort-by="orders">
+                                    Tổng đơn hàng <i data-lucide="arrow-up-down" class="opacity-30 group-hover:opacity-100" size="14"></i>
+                                </button>
+                            </th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Trạng thái</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50" id="customerTableBody">
+                        <!-- Dữ liệu sẽ được render bằng JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination Container -->
+            <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-sm text-slate-500 font-medium" id="paginationInfo">Đang tải dữ liệu...</p>
+                <div class="flex items-center gap-2">
+                    <button id="prevPageBtn" class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:bg-slate-100 transition-all">
+                        <i data-lucide="chevron-left" size="18"></i>
+                    </button>
+                    <div id="pageNumbers" class="flex items-center gap-1">
+                        <!-- Các nút số trang -->
+                    </div>
+                    <button id="nextPageBtn" class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-all">
+                        <i data-lucide="chevron-right" size="18"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/helpers.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            
+            // --- 1. DATA & STATE ---
+            const mockCustomers = Array.from({ length: 45 }, (_, i) => ({
+                id: i + 1,
+                name: `Khách hàng ${String.fromCharCode(65 + (i % 26))}${i}`, // Tên đa dạng hơn để dễ sort
+                email: `khachhang${i + 1}@electrohub.vn`,
+                date: `0${(i % 9) + 1}/04/2026`,
+                orders: Math.floor(Math.random() * 20),
+                status: Math.random() > 0.85 ? 'locked' : 'active',
+                avatar: `https://picsum.photos/seed/user${i + 1}/100/100`
+            }));
+
+            let currentSort = { column: 'date', direction: 'desc' };
+            let currentPage = 1;
+            const itemsPerPage = 8;
+
+            // --- 2. DOM ELEMENTS ---
+            const searchInput = document.getElementById('customerSearch');
+            const tableBody = document.getElementById('customerTableBody');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const sortButtons = document.querySelectorAll('.sort-btn');
+
+            // --- 3. RENDER FUNCTIONS ---
+
+            function renderTable() {
+                const displayData = getDisplayData();
+                const totalPages = Math.ceil(displayData.length / itemsPerPage);
+
+                tableBody.innerHTML = '';
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                const paginatedItems = displayData.slice(start, end);
+
+                if (paginatedItems.length === 0 && (searchInput.value || allCustomers.length > 0)) {
+                    tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-12 text-slate-500">Không tìm thấy khách hàng nào.</td></tr>`;
+                }
+
+                paginatedItems.forEach(customer => {
+                    const statusHtml = customer.status === 'active' 
+                        ? `<span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Hoạt động</span>`
+                        : `<span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Đã khóa</span>`;
+
+                    const actionHtml = customer.status === 'active' ?
+                        `<button onclick="toggleLockStatus(${customer.id}, 'active')" class="p-2 text-slate-400 hover:text-red-600 transition-all" title="Khóa tài khoản"><i data-lucide="lock" size="18"></i></button>` :
+                        `<button onclick="toggleLockStatus(${customer.id}, 'locked')" class="p-2 text-green-600 hover:text-green-700 transition-all" title="Mở khóa"><i data-lucide="unlock" size="18"></i></button>`;
+
+                    tableBody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50 transition-colors animate-fade-in">
+                            <td class="px-8 py-6">
+                                <div class="flex items-center gap-3">
+                                    <img src="${customer.avatar}" alt="User" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
+                                    <span class="font-bold text-slate-800">${customer.name}</span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6 text-slate-500 font-medium">${customer.email}</td>
+                            <td class="px-8 py-6 text-slate-500 font-medium">${customer.date}</td>
+                            <td class="px-8 py-6 font-bold text-slate-900">${customer.orders || 0} đơn</td>
+                            <td class="px-8 py-6">${statusHtml}</td>
+                            <td class="px-8 py-6 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <button class="p-2 text-slate-400 hover:text-blue-600 transition-all" title="Xem chi tiết"><i data-lucide="eye" size="18"></i></button>
+                                    ${actionHtml}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                if (window.lucide) lucide.createIcons();
+
+                // Cập nhật text thống kê trang
+                paginationInfo.innerText = `Hiển thị ${paginatedItems.length > 0 ? start + 1 : 0} đến ${Math.min(end, displayData.length)} trong số ${displayData.length} khách hàng`;
+
+                // Cập nhật trạng thái nút Prev/Next
+                prevPageBtn.disabled = currentPage === 1;
+                prevPageBtn.classList.toggle('opacity-50', currentPage === 1);
+                prevPageBtn.classList.toggle('cursor-not-allowed', currentPage === 1);
+
+                nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+                nextPageBtn.classList.toggle('opacity-50', currentPage === totalPages || totalPages === 0);
+                nextPageBtn.classList.toggle('cursor-not-allowed', currentPage === totalPages || totalPages === 0);
+
+                renderPaginationNumbers(totalPages);
+            }
+
+            function renderPaginationNumbers(totalPages) {
+                pageNumbersContainer.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    // Hiển thị trang đầu, trang cuối, trang hiện tại và các trang lân cận
+                    if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
+                        const isCurrent = i === currentPage;
+                        const btnClass = isCurrent 
+                            ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-100'
+                            : 'border border-slate-200 text-slate-600 font-bold hover:bg-slate-100';
+
+                        pageNumbersContainer.innerHTML += `
+                            <button onclick="goToPage(${i})" class="w-10 h-10 flex items-center justify-center rounded-xl transition-all ${btnClass}">
+                                ${i}
+                            </button>
+                        `;
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        pageNumbersContainer.innerHTML += `<span class="text-slate-400 mx-1">...</span>`;
+                    }
+                }
+            }
+
+            // --- 4. DATA PROCESSING ---
+
+            function getDisplayData() {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                const filtered = allCustomers.filter(customer =>
+                    customer.name.toLowerCase().includes(searchTerm) ||
+                    customer.email.toLowerCase().includes(searchTerm)
+                );
+
+                const col = currentSort.column;
+                const dir = currentSort.direction === 'asc' ? 1 : -1;
+
+                filtered.sort((a, b) => {
+                    let valA = a[col];
+                    let valB = b[col];
+
+                    if (col === 'date') {
+                        valA = new Date(valA.split('/').reverse().join('-'));
+                        valB = new Date(valB.split('/').reverse().join('-'));
+                    }
+
+                    if (valA < valB) return -1 * dir;
+                    if (valA > valB) return 1 * dir;
+                    return 0;
+                });
+
+                return filtered;
+            }
+
+            // --- 5. UI UPDATERS & EVENT HANDLERS ---
+            function updateSortIcons() {
+                sortButtons.forEach(btn => {
+                    const icon = btn.querySelector('i');
+                    if (btn.dataset.sortBy === currentSort.column) {
+                        icon.setAttribute('data-lucide', currentSort.direction === 'asc' ? 'arrow-up' : 'arrow-down');
+                        icon.classList.remove('opacity-30');
+                    } else {
+                        icon.setAttribute('data-lucide', 'arrow-up-down');
+                        icon.classList.add('opacity-30');
+                    }
+                });
+                if (window.lucide) lucide.createIcons();
+            }
+
+            window.goToPage = function(page) {
+                const displayData = getDisplayData();
+                const totalPages = Math.ceil(displayData.length / itemsPerPage);
+                if (page >= 1 && page <= totalPages) {
+                    currentPage = page;
+                    renderTable();
+                } else if (totalPages > 0) {
+                    currentPage = 1;
+                    renderTable();
+                } else { // No results
+                    currentPage = 1;
+                    renderTable();
+                }
+            };
+
+            window.toggleLockStatus = async function(customerId, currentStatus) {
+                const newStatus = currentStatus === 'active' ? 'locked' : 'active';
+                const actionText = currentStatus === 'active' ? 'khóa' : 'mở khóa';
+
+                if (!confirm(`Bạn có chắc chắn muốn ${actionText} tài khoản này không?`)) {
+                    return;
+                }
+
+                Logger.info(`Admin: Attempting to ${actionText} user`, { customerId });
+
+                try {
+                    const user = AuthManager.getUser();
+                    if (!user || !user.token) {
+                        showToast('Vui lòng đăng nhập lại để thực hiện thao tác này.', 'error');
+                        return;
+                    }
+
+                    const response = await fetch(`http://localhost:8888/api/admin/customers/${customerId}/status`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                        body: JSON.stringify({ status: newStatus })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showToast(result.message, 'success');
+                        const customerIndex = allCustomers.findIndex(c => c.id === customerId);
+                        if (customerIndex > -1) {
+                            allCustomers[customerIndex].status = newStatus;
+                            renderTable();
+                        }
+                    } else { throw new Error(result.message || 'Có lỗi xảy ra'); }
+                } catch (error) {
+                    Logger.error('Admin: Failed to update user status', { error: error.message });
+                    showToast(error.message, 'error');
+                }
+            }
+
+            prevPageBtn.addEventListener('click', () => goToPage(currentPage - 1));
+            nextPageBtn.addEventListener('click', () => goToPage(currentPage + 1));
+
+            searchInput.addEventListener('input', () => goToPage(1));
+
+            sortButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const sortBy = btn.dataset.sortBy;
+                    if (currentSort.column === sortBy) {
+                        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        currentSort.column = sortBy;
+                        currentSort.direction = 'asc';
+                    }
+                    updateSortIcons();
+                    goToPage(1);
+                });
+            });
+
+            // --- 6. INITIALIZATION ---
+            async function initializePage() {
+                Logger.info('Admin Customers: Initializing page, fetching data...');
+                try {
+                    const user = AuthManager.getUser();
+                    if (!user || !user.token) {
+                        showToast('Không thể tải dữ liệu khách hàng. Vui lòng đăng nhập lại.', 'error');
+                        return;
+                    }
+                    const response = await fetch('http://localhost:8888/api/admin/customers', {
+                        headers: { 'Authorization': `Bearer ${user.token}` }
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message);
+
+                    allCustomers = result.data.customers.map(c => ({
+                        id: c.id,
+                        name: c.name,
+                        email: c.email,
+                        date: new Date(c.created_at).toLocaleDateString('vi-VN'),
+                        orders: c.orders_count,
+                        status: c.status,
+                        avatar: `https://picsum.photos/seed/user${c.id}/100/100`
+                    }));
+
+                    updateSortIcons();
+                    renderTable();
+                } catch (error) {
+                    Logger.error('Admin Customers: Failed to fetch customer data', { error: error.message });
+                    showToast('Lỗi tải dữ liệu khách hàng: ' + error.message, 'error');
+                    paginationInfo.innerText = 'Không thể tải dữ liệu.';
+                }
+            }
+
+            initializePage();
+        });
+
+        async function exportExcel() {
+            try {
+                const user = AuthManager.getUser();
+                showToast('Đang tạo file Excel...', 'info');
+                
+                const response = await fetch('http://localhost:8888/api/admin/customers/export', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                
+                if (!response.ok) throw new Error('Không thể tải file.');
+                
+                // Convert Response stream to Blob (Tệp nhị phân)
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                // Tạo thẻ <a> ẩn để tự động kích hoạt tiến trình download
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Danh_sach_khach_hang.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                showToast('Đã xuất dữ liệu thành công!', 'success');
+            } catch (err) {
+                showToast('Lỗi khi xuất file: ' + err.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

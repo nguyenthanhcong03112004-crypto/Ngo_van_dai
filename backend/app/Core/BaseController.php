@@ -5,31 +5,46 @@ namespace Core;
 
 abstract class BaseController
 {
+    protected Logger $logger;
+
+    public function __construct()
+    {
+        $this->logger = Logger::getInstance();
+    }
+
     /**
      * Send a standardized JSON success response.
      */
     protected function success(mixed $data = null, string $message = 'OK', int $code = 200): void
     {
         http_response_code($code);
-        echo json_encode([
+        $response = json_encode([
             'status'  => 'success',
             'message' => $message,
             'data'    => $data,
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $this->logger->logResponse($code, strlen($response));
+
+        echo $response;
         exit;
     }
 
     /**
      * Send a standardized JSON error response.
      */
-    protected function error(string $message = 'An error occurred', int $code = 400, mixed $data = null): void
+    protected function error(string $message = 'An error occurred', int $code = 400, mixed $errorData = null): void
     {
         http_response_code($code);
-        echo json_encode([
+        $response = json_encode([
             'status'  => 'error',
             'message' => $message,
-            'data'    => $data,
+            'data'    => $errorData,
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $this->logger->logResponse($code, strlen($response));
+
+        echo $response;
         exit;
     }
 
@@ -57,6 +72,11 @@ abstract class BaseController
                 $missing[] = $field;
             }
         }
+
+        if (!empty($missing)) {
+            $this->logger->warning('Validation failed: Missing required fields', ['missing_fields' => $missing]);
+        }
+
         return $missing;
     }
 }

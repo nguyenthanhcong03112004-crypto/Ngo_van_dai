@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý đơn hàng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex">
+    <aside class="w-72 bg-white border-r border-slate-200 h-screen sticky top-0 flex flex-col">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white"><i data-lucide="layout-dashboard"></i></div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-bold transition-all"><i data-lucide="package"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag"></i> Đơn hàng</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out"></i> Thoát Admin</a></div>
+    </aside>
+    <main class="flex-1 p-10 overflow-auto">
+        <!-- HEADER -->
+        <header class="flex items-center justify-between mb-10">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Quản lý đơn hàng</h1>
+                <p class="text-slate-500 font-medium">Theo dõi, lọc và xử lý các đơn đặt hàng</p>
+            </div>
+        </header>
+
+        <!-- FILTERS AND SEARCH -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 flex flex-wrap items-center gap-4 justify-between">
+            <div class="flex items-center gap-4 flex-1">
+                <!-- Tìm kiếm -->
+                <div class="relative max-w-sm w-full">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                    <input type="text" id="orderSearch" placeholder="Tìm mã đơn (VD: ORD-9821)..." class="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm transition-all">
+                </div>
+                <!-- Lọc theo trạng thái -->
+                <div class="relative">
+                    <i data-lucide="filter" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                    <select id="statusFilter" class="pl-12 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm appearance-none cursor-pointer transition-all">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="pending">Chờ xác nhận</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="shipping">Đang giao</option>
+                        <option value="completed">Hoàn thành</option>
+                        <option value="cancelled">Đã hủy</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size="16"></i>
+                </div>
+            </div>
+            <button class="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-bold hover:bg-black transition-all shadow-md">
+                <i data-lucide="download" size="18"></i> Xuất dữ liệu
+            </button>
+        </div>
+
+        <!-- ORDERS TABLE -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Mã đơn</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Khách hàng</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Ngày đặt</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Tổng tiền</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Trạng thái</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50" id="orderTableBody">
+                        <!-- Orders will be rendered here by JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Empty State (Hiển thị khi không có kết quả tìm kiếm) -->
+            <div id="emptyState" class="hidden p-12 text-center">
+                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="search-x" size="32"></i></div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Không tìm thấy đơn hàng</h3>
+                <p class="text-slate-500 text-sm">Vui lòng thử lại với từ khóa hoặc bộ lọc khác</p>
+            </div>
+
+            <!-- Pagination Container -->
+            <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-sm text-slate-500 font-medium" id="paginationInfo">Đang tải dữ liệu...</p>
+                <div class="flex items-center gap-2">
+                    <button id="prevPageBtn" class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:bg-slate-100 transition-all">
+                        <i data-lucide="chevron-left" size="18"></i>
+                    </button>
+                    <div id="pageNumbers" class="flex items-center gap-1">
+                        <!-- Các nút số trang -->
+                    </div>
+                    <button id="nextPageBtn" class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-all">
+                        <i data-lucide="chevron-right" size="18"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="../js/helpers.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            
+            const searchInput = document.getElementById('orderSearch');
+            const statusFilter = document.getElementById('statusFilter');
+            const tableBody = document.getElementById('orderTableBody');
+            const emptyState = document.getElementById('emptyState');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            
+            let allOrders = [];
+            let currentPage = 1;
+            const itemsPerPage = 6;
+
+            async function fetchOrders() {
+                try {
+                    const user = AuthManager.getUser();
+                    if (!user || !user.token) return;
+
+                    const response = await fetch('http://localhost:8888/api/admin/orders', {
+                        headers: { 'Authorization': `Bearer ${user.token}` }
+                    });
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        allOrders = result.data.orders || result.data;
+                        renderOrders();
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch orders:', error);
+                }
+            }
+
+            function getStatusBadge(status) {
+                const badges = {
+                    pending: '<span class="px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Chờ xác nhận</span>',
+                    confirmed: '<span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Đã xác nhận</span>',
+                    shipping: '<span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Đang giao</span>',
+                    completed: '<span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Hoàn thành</span>',
+                    disputed: '<span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Khiếu nại</span>',
+                    cancelled: '<span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Đã hủy</span>'
+                };
+                return badges[status] || badges['pending'];
+            }
+
+            function renderOrders() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const status = statusFilter.value;
+
+                const filtered = allOrders.filter(order => {
+                    const matchSearch = `ORD-${order.id}`.toLowerCase().includes(searchTerm) || 
+                                        (order.user_name || '').toLowerCase().includes(searchTerm);
+                    const matchStatus = status === 'all' || order.status === status;
+                    return matchSearch && matchStatus;
+                });
+
+                const totalPages = Math.ceil(filtered.length / itemsPerPage);
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                const paginatedItems = filtered.slice(start, end);
+
+                tableBody.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    if(paginationInfo) paginationInfo.innerText = `Không có dữ liệu`;
+                } else {
+                    emptyState.classList.add('hidden');
+                    paginatedItems.forEach(order => {
+                        const date = new Date(order.created_at).toLocaleDateString('vi-VN');
+                        
+                        // Nút In Hóa Đơn sẽ mở tab mới đến trang invoice.html?id=...
+                        let actions = `<button onclick="window.open('invoice.html?id=${order.id}', '_blank')" class="p-2 text-slate-400 hover:text-slate-900 transition-all" title="In hóa đơn"><i data-lucide="printer" size="18"></i></button>`;
+                        actions += `<button class="p-2 text-slate-400 hover:text-blue-600 transition-all" title="Xem chi tiết"><i data-lucide="eye" size="18"></i></button>`;
+                        
+                        if (order.status === 'pending') {
+                            actions += `<button onclick="updateOrderStatus(${order.id}, 'confirmed')" class="p-2 text-slate-400 hover:text-green-600 transition-all" title="Duyệt đơn"><i data-lucide="check-circle" size="18"></i></button>`;
+                        } else if (order.status === 'confirmed') {
+                            actions += `<button onclick="updateOrderStatus(${order.id}, 'shipping')" class="p-2 text-slate-400 hover:text-purple-600 transition-all" title="Giao hàng"><i data-lucide="truck" size="18"></i></button>`;
+                        } else if (order.status === 'shipping') {
+                            actions += `<button onclick="updateOrderStatus(${order.id}, 'completed')" class="p-2 text-slate-400 hover:text-green-600 transition-all" title="Hoàn thành"><i data-lucide="check-square" size="18"></i></button>`;
+                        }
+
+                        tableBody.innerHTML += `
+                            <tr class="order-row hover:bg-slate-50/50 transition-colors" data-status="${order.status}">
+                                <td class="px-8 py-6 font-black text-blue-600">ORD-${order.id}</td>
+                                <td class="px-8 py-6">
+                                    <p class="font-bold text-slate-800">${order.user_name || 'Khách hàng'}</p>
+                                    <p class="text-xs text-slate-500 font-medium">${order.user_phone || order.user_email || ''}</p>
+                                </td>
+                                <td class="px-8 py-6 text-slate-500 font-medium">${date}</td>
+                                <td class="px-8 py-6 font-bold text-slate-900">${formatVND(order.total_amount)}</td>
+                                <td class="px-8 py-6">${getStatusBadge(order.status)}</td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex justify-end gap-2">${actions}</div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    if(paginationInfo) paginationInfo.innerText = `Hiển thị ${start + 1} đến ${Math.min(end, filtered.length)} trong số ${filtered.length} đơn hàng`;
+                }
+
+                if(prevPageBtn) {
+                    prevPageBtn.disabled = currentPage === 1;
+                    prevPageBtn.classList.toggle('opacity-50', currentPage === 1);
+                    prevPageBtn.classList.toggle('cursor-not-allowed', currentPage === 1);
+                }
+
+                if(nextPageBtn) {
+                    nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+                    nextPageBtn.classList.toggle('opacity-50', currentPage === totalPages || totalPages === 0);
+                    nextPageBtn.classList.toggle('cursor-not-allowed', currentPage === totalPages || totalPages === 0);
+                }
+
+                renderPaginationNumbers(totalPages);
+                if (window.lucide) lucide.createIcons();
+            }
+
+            function renderPaginationNumbers(totalPages) {
+                if(!pageNumbersContainer) return;
+                pageNumbersContainer.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
+                        const isCurrent = i === currentPage;
+                        const btnClass = isCurrent 
+                            ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-100'
+                            : 'border border-slate-200 text-slate-600 font-bold hover:bg-slate-100';
+                        
+                        pageNumbersContainer.innerHTML += `
+                            <button onclick="goToPage(${i})" class="w-10 h-10 flex items-center justify-center rounded-xl transition-all ${btnClass}">
+                                ${i}
+                            </button>
+                        `;
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        pageNumbersContainer.innerHTML += `<span class="text-slate-400 mx-1">...</span>`;
+                    }
+                }
+            }
+
+            window.goToPage = function(page) {
+                currentPage = page;
+                renderOrders();
+            }
+
+            window.updateOrderStatus = async function(id, newStatus) {
+                if (!confirm('Xác nhận cập nhật trạng thái đơn hàng này?')) return;
+                try {
+                    const user = AuthManager.getUser();
+                    const response = await fetch(`http://localhost:8888/api/admin/orders/${id}/status`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                        body: JSON.stringify({ status: newStatus })
+                    });
+                    if (response.ok) {
+                        showToast('Cập nhật thành công', 'success');
+                        fetchOrders();
+                    } else {
+                        showToast('Lỗi cập nhật', 'error');
+                    }
+                } catch (error) {
+                    showToast('Lỗi cập nhật', 'error');
+                }
+            };
+
+            searchInput.addEventListener('input', () => { currentPage = 1; renderOrders(); });
+            statusFilter.addEventListener('change', () => { currentPage = 1; renderOrders(); });
+            
+            if(prevPageBtn) prevPageBtn.addEventListener('click', () => goToPage(currentPage - 1));
+            if(nextPageBtn) nextPageBtn.addEventListener('click', () => goToPage(currentPage + 1));
+            
+            fetchOrders();
+        });
+    </script>
+</body>
+</html>

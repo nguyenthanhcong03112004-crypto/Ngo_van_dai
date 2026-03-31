@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub - Đăng nhập / Đăng ký</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden">
+        <!-- Header -->
+        <div class="p-10 pb-6 text-center">
+            <a href="index.html" class="inline-flex items-center gap-2 mb-8 group">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white group-hover:rotate-12 transition-transform">
+                    <i data-lucide="shopping-cart" size="24"></i>
+                </div>
+                <span class="text-2xl font-black text-slate-900 tracking-tighter">ElectroHub</span>
+            </a>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Chào mừng trở lại!</h1>
+            <p class="text-slate-500 font-medium mt-2">Đăng nhập để tiếp tục mua sắm</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="px-10 flex border-b border-slate-100">
+            <button onclick="switchTab('login')" id="loginTab" class="flex-1 py-4 text-sm font-bold border-b-2 border-blue-600 text-blue-600 transition-all">Đăng nhập</button>
+            <button onclick="switchTab('register')" id="registerTab" class="flex-1 py-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-all">Đăng ký</button>
+        </div>
+
+        <!-- Forms -->
+        <div class="p-10">
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-600">Email</label>
+                    <div class="relative">
+                        <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                        <input type="email" placeholder="example@email.com" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-slate-600">Mật khẩu</label>
+                        <a href="#" class="text-xs font-bold text-blue-600 hover:underline">Quên mật khẩu?</a>
+                    </div>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                        <input type="password" placeholder="••••••••" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95">
+                    Đăng nhập
+                </button>
+            </form>
+
+            <!-- Register Form (Hidden) -->
+            <form id="registerForm" class="space-y-6 hidden">
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-600">Họ và tên</label>
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                        <input type="text" placeholder="Nguyễn Văn A" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-600">Email</label>
+                    <div class="relative">
+                        <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                        <input type="email" placeholder="example@email.com" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-600">Mật khẩu</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                        <input type="password" placeholder="••••••••" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95">
+                    Tạo tài khoản
+                </button>
+            </form>
+
+            <!-- Social Login -->
+            <div class="mt-10">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-100"></div></div>
+                    <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-4 text-slate-400 font-bold tracking-widest">Hoặc đăng nhập bằng</span></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="flex items-center justify-center gap-3 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all font-bold text-slate-600">
+                        <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-5 h-5" alt="Google"> Google
+                    </button>
+                    <button class="flex items-center justify-center gap-3 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all font-bold text-slate-600">
+                        <img src="https://www.svgrepo.com/show/448224/facebook.svg" class="w-5 h-5" alt="Facebook"> Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/helpers.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            // Handle Login
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = loginForm.querySelector('input[type="email"]').value;
+                
+                // Simulation: Check if email contains 'admin' to set role
+                const role = email.includes('admin') ? 'admin' : 'user';
+                const name = email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1);
+
+                AuthManager.login({
+                    name: name,
+                    email: email,
+                    role: role
+                });
+            });
+
+            // Handle Register
+            const registerForm = document.getElementById('registerForm');
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = registerForm.querySelector('input[type="text"]').value;
+                const email = registerForm.querySelector('input[type="email"]').value;
+
+                AuthManager.login({
+                    name: name,
+                    email: email,
+                    role: 'user'
+                });
+            });
+        });
+
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginTab.classList.add('border-blue-600', 'text-blue-600');
+                loginTab.classList.remove('border-transparent', 'text-slate-400');
+                registerTab.classList.remove('border-blue-600', 'text-blue-600');
+                registerTab.classList.add('border-transparent', 'text-slate-400');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                registerTab.classList.add('border-blue-600', 'text-blue-600');
+                registerTab.classList.remove('border-transparent', 'text-slate-400');
+                loginTab.classList.remove('border-blue-600', 'text-blue-600');
+                loginTab.classList.add('border-transparent', 'text-slate-400');
+            }
+        }
+    </script>
+</body>
+</html>

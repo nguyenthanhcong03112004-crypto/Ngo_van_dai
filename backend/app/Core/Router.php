@@ -68,6 +68,13 @@ class Router
             $params = $this->match($route['pattern'], $uri);
             if ($params !== null) {
                 $handler = $route['handler'];
+
+                Logger::getInstance()->info('Route matched', [
+                    'pattern' => $route['pattern'],
+                    'handler' => is_array($handler) ? $handler[0] . '@' . $handler[1] : 'Closure',
+                    'params'  => $params,
+                ]);
+
                 if (is_array($handler)) {
                     [$class, $actionMethod] = $handler;
                     $controller = new $class();
@@ -80,6 +87,8 @@ class Router
         }
 
         // 404
+        Logger::getInstance()->warning('Endpoint not found (404)', ['uri' => $uri, 'method' => $method]);
+
         header('Content-Type: application/json');
         http_response_code(404);
         echo json_encode([

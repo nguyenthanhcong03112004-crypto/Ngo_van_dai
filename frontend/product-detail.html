@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub - Chi tiết sản phẩm</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white dark:bg-slate-950 min-h-screen transition-colors duration-300">
+
+    <!-- HEADER -->
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white group-hover:rotate-12 transition-transform">
+                        <i data-lucide="shopping-cart" size="24"></i>
+                    </div>
+                    <span class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">ElectroHub</span>
+                </a>
+
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-lg mx-8 relative">
+                    <div class="relative w-full">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="20"></i>
+                        <input 
+                            type="text" 
+                            id="globalSearchInput"
+                            placeholder="Tìm kiếm điện thoại, laptop, phụ kiện..."
+                            class="w-full pl-12 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800 border-transparent rounded-full outline-none focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-blue-500 transition-all text-sm dark:text-white"
+                        >
+                    </div>
+                    <div id="searchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 hidden z-50"></div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden lg:flex items-center gap-8 text-sm font-bold">
+                    <a href="index.html" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors">Trang chủ</a>
+                    <a href="shop.html" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors">Cửa hàng</a>
+                    <a href="promotions.html" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors">Khuyến mãi</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <button onclick="ThemeManager.toggle()" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                        <i data-lucide="sun" class="theme-sun hidden" size="22"></i>
+                        <i data-lucide="moon" class="theme-moon" size="22"></i>
+                    </button>
+                    <a href="user/wishlist.html" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative transition-colors">
+                        <i data-lucide="heart" size="22"></i>
+                        <span class="wishlist-badge absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full font-bold" style="display: none;">0</span>
+                    </a>
+                    <a href="user/checkout.html" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative transition-colors">
+                        <i data-lucide="shopping-cart" size="22"></i>
+                        <span class="cart-badge absolute top-1 right-1 w-4 h-4 bg-blue-600 text-white text-[10px] flex items-center justify-center rounded-full font-bold" style="display: none;">0</span>
+                    </a>
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                    <div id="auth-header-container">
+                        <a href="login.html" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+                            <i data-lucide="user" size="18"></i> Đăng nhập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-sm font-bold text-slate-400 mb-10">
+            <a href="index.html" class="hover:text-blue-600">Trang chủ</a>
+            <i data-lucide="chevron-right" size="14"></i>
+            <a href="shop.html" class="hover:text-blue-600">Điện thoại</a>
+            <i data-lucide="chevron-right" size="14"></i>
+            <span class="text-slate-900 dark:text-white">iPhone 15 Pro Max 256GB</span>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
+            <!-- LEFT: IMAGE GALLERY -->
+            <div class="space-y-6">
+                <div id="imageContainer" onclick="openLightbox()" class="aspect-square bg-slate-50 dark:bg-slate-900 rounded-[3rem] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm relative group cursor-zoom-in">
+                    <img id="mainImage" src="https://picsum.photos/seed/iphone-main/1000/1000" alt="Main Product" class="w-full h-full object-contain p-12 transition-transform duration-300">
+                    <div class="absolute bottom-8 right-8 p-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl shadow-xl">
+                        <i data-lucide="zoom-in" class="text-slate-600 dark:text-slate-300" size="24"></i>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-4">
+                    <button onclick="changeImage(this, 'https://picsum.photos/seed/iphone-main/1000/1000')" class="aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl border-2 border-blue-600 p-2 overflow-hidden hover:bg-white dark:hover:bg-slate-800 transition-all">
+                        <img src="https://picsum.photos/seed/iphone-main/200/200" class="w-full h-full object-contain">
+                    </button>
+                    <button onclick="changeImage(this, 'https://picsum.photos/seed/iphone2/1000/1000')" class="aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl border-2 border-transparent p-2 overflow-hidden hover:bg-white dark:hover:bg-slate-800 transition-all">
+                        <img src="https://picsum.photos/seed/iphone2/200/200" class="w-full h-full object-contain">
+                    </button>
+                    <button onclick="changeImage(this, 'https://picsum.photos/seed/iphone3/1000/1000')" class="aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl border-2 border-transparent p-2 overflow-hidden hover:bg-white dark:hover:bg-slate-800 transition-all">
+                        <img src="https://picsum.photos/seed/iphone3/200/200" class="w-full h-full object-contain">
+                    </button>
+                    <button onclick="changeImage(this, 'https://picsum.photos/seed/iphone4/1000/1000')" class="aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl border-2 border-transparent p-2 overflow-hidden hover:bg-white dark:hover:bg-slate-800 transition-all">
+                        <img src="https://picsum.photos/seed/iphone4/200/200" class="w-full h-full object-contain">
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT: PRODUCT INFO -->
+            <div class="flex flex-col">
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest">Apple</span>
+                        <span class="px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full text-[10px] font-black uppercase tracking-widest">Còn hàng</span>
+                    </div>
+                    <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-4 leading-tight">iPhone 15 Pro Max 256GB - Titanium Tự Nhiên</h1>
+                    <div class="flex items-center gap-4 text-sm font-bold text-slate-500 dark:text-slate-400">
+                        <div class="flex items-center gap-1 text-orange-400" id="productAvgStars">
+                            <i data-lucide="star" fill="currentColor" size="16"></i>
+                            <i data-lucide="star" fill="currentColor" size="16"></i>
+                            <i data-lucide="star" fill="currentColor" size="16"></i>
+                            <i data-lucide="star" fill="currentColor" size="16"></i>
+                            <i data-lucide="star" fill="currentColor" size="16"></i>
+                            <span class="text-slate-800 dark:text-white ml-1 font-black">0.0/5</span>
+                        </div>
+                        <span id="productReviewCount">(0 đánh giá)</span>
+                        <span class="text-slate-200 dark:text-slate-700">|</span>
+                        <span>Đã bán 1.2k</span>
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <div class="flex items-end gap-4 mb-2">
+                        <span class="text-5xl font-black text-blue-600 tracking-tighter">32.990.000 ₫</span>
+                        <span class="text-xl font-bold text-slate-300 dark:text-slate-600 line-through mb-1">34.990.000 ₫</span>
+                    </div>
+                    <p class="text-sm font-bold text-red-500">Tiết kiệm 2.000.000 ₫ (Giảm 6%)</p>
+                </div>
+
+                <!-- Options -->
+                <div class="space-y-8 mb-12">
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-4">Màu sắc</h3>
+                        <div class="flex items-center gap-3">
+                            <button class="w-12 h-12 rounded-full border-2 border-blue-600 p-1 ring-4 ring-blue-50 dark:ring-blue-900/20 transition-all">
+                                <div class="w-full h-full rounded-full bg-slate-400"></div>
+                            </button>
+                            <button class="w-12 h-12 rounded-full border-2 border-transparent p-1 hover:border-slate-200 dark:hover:border-slate-700 transition-all">
+                                <div class="w-full h-full rounded-full bg-slate-900"></div>
+                            </button>
+                            <button class="w-12 h-12 rounded-full border-2 border-transparent p-1 hover:border-slate-200 dark:hover:border-slate-700 transition-all">
+                                <div class="w-full h-full rounded-full bg-blue-100"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-4">Dung lượng</h3>
+                        <div class="flex items-center gap-3">
+                            <button class="px-6 py-3 border-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl font-black text-sm transition-all">256GB</button>
+                            <button class="px-6 py-3 border-2 border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 rounded-2xl font-black text-sm hover:border-slate-200 dark:hover:border-slate-700 transition-all">512GB</button>
+                            <button class="px-6 py-3 border-2 border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 rounded-2xl font-black text-sm hover:border-slate-200 dark:hover:border-slate-700 transition-all">1TB</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="CartManager.addToCart({id: 'ip15pm', name: 'iPhone 15 Pro Max 256GB', price: 32990000, image: 'https://picsum.photos/seed/iphone-main/1000/1000'}, this)" class="py-5 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl font-black text-lg hover:bg-black dark:hover:bg-slate-700 transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-xl shadow-slate-200 dark:shadow-none min-h-[68px]">
+                        <i data-lucide="shopping-cart" size="24"></i> Thêm vào giỏ
+                    </button>
+                    <button onclick="CartManager.addToCart({id: 'ip15pm', name: 'iPhone 15 Pro Max 256GB', price: 32990000, image: 'https://picsum.photos/seed/iphone-main/1000/1000'}); window.location.href='user/checkout.html'" class="py-5 bg-blue-600 text-white rounded-2xl font-black text-lg hover:bg-blue-700 transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-xl shadow-blue-100 dark:shadow-none">
+                        Mua ngay <i data-lucide="arrow-right" size="24"></i>
+                    </button>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="mt-10 grid grid-cols-3 gap-4 p-6 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+                    <div class="text-center">
+                        <i data-lucide="shield-check" class="mx-auto text-blue-600 mb-2" size="20"></i>
+                        <p class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Bảo hành 12th</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="truck" class="mx-auto text-blue-600 mb-2" size="20"></i>
+                        <p class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Free Ship</p>
+                    </div>
+                    <div class="text-center">
+                        <i data-lucide="rotate-ccw" class="mx-auto text-blue-600 mb-2" size="20"></i>
+                        <p class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Đổi trả 30 ngày</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAILS & REVIEWS -->
+        <section class="space-y-16">
+            <!-- Description -->
+            <div class="bg-white dark:bg-slate-900 p-12 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-8 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center"><i data-lucide="file-text" size="20"></i></div>
+                    Mô tả chi tiết
+                </h2>
+                <div class="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 font-medium leading-relaxed space-y-6">
+                    <p>iPhone 15 Pro Max là chiếc iPhone đầu tiên có thiết kế bằng titan chuẩn hàng không vũ trụ, sử dụng cùng một loại hợp kim được dùng cho các tàu vũ trụ thực hiện nhiệm vụ đến Sao Hỏa.</p>
+                    <p>Titan có tỷ lệ độ bền trên trọng lượng tốt nhất so với bất kỳ loại kim loại nào, giúp đây trở thành những mẫu Pro nhẹ nhất từ trước đến nay của chúng tôi. Bạn sẽ nhận thấy sự khác biệt ngay khi cầm điện thoại trên tay.</p>
+                    <ul class="list-disc pl-6 space-y-3">
+                        <li>Chip A17 Pro. Một chiến thắng vang dội cho GPU.</li>
+                        <li>Camera Chính 48MP. Tiên tiến hơn bao giờ hết.</li>
+                        <li>Nút Tác Vụ. Sẵn sàng cho mọi việc.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="bg-white dark:bg-slate-900 p-12 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+                <div class="flex items-center justify-between mb-12">
+                    <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-4">
+                        <div class="w-10 h-10 bg-orange-500 text-white rounded-xl flex items-center justify-center"><i data-lucide="message-circle" size="20"></i></div>
+                        Đánh giá khách hàng
+                    </h2>
+                    <button onclick="openReviewModal()" class="px-6 py-3 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl font-bold text-sm hover:bg-black dark:hover:bg-slate-700 transition-all">Viết đánh giá</button>
+                </div>
+
+                <div class="space-y-8 divide-y divide-slate-50 dark:divide-slate-800">
+                    <!-- Review 1 -->
+                    <div class="pt-8 first:pt-0">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <img src="https://picsum.photos/seed/user1/100/100" class="w-12 h-12 rounded-full border-2 border-white dark:border-slate-700 shadow-sm">
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">Nguyễn Thành Công</p>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">2 ngày trước</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1 text-orange-400">
+                                <i data-lucide="star" fill="currentColor" size="14"></i>
+                                <i data-lucide="star" fill="currentColor" size="14"></i>
+                                <i data-lucide="star" fill="currentColor" size="14"></i>
+                                <i data-lucide="star" fill="currentColor" size="14"></i>
+                                <i data-lucide="star" fill="currentColor" size="14"></i>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 font-medium leading-relaxed">Sản phẩm tuyệt vời, cầm rất nhẹ tay nhờ khung titan. Giao hàng nhanh và đóng gói rất cẩn thận. Rất hài lòng với ElectroHub!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightboxModal" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-white hover:text-blue-500 transition-colors">
+            <i data-lucide="x" size="40"></i>
+        </button>
+        <div class="max-w-5xl w-full h-full flex items-center justify-center">
+            <img id="lightboxImage" src="" class="max-w-full max-h-full object-contain animate-zoom-in">
+        </div>
+    </div>
+
+        <!-- DETAILS & REVIEWS -->
+        <section class="space-y-16">
+            <!-- Description -->
+            <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm">
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight mb-8 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center"><i data-lucide="file-text" size="20"></i></div>
+                    Mô tả chi tiết
+                </h2>
+                <div class="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed space-y-6">
+                    <p>iPhone 15 Pro Max là chiếc iPhone đầu tiên có thiết kế bằng titan chuẩn hàng không vũ trụ, sử dụng cùng một loại hợp kim được dùng cho các tàu vũ trụ thực hiện nhiệm vụ đến Sao Hỏa.</p>
+                    <p>Titan có tỷ lệ độ bền trên trọng lượng tốt nhất so với bất kỳ loại kim loại nào, giúp đây trở thành những mẫu Pro nhẹ nhất từ trước đến nay của chúng tôi. Bạn sẽ nhận thấy sự khác biệt ngay khi cầm điện thoại trên tay.</p>
+                    <ul class="list-disc pl-6 space-y-3">
+                        <li>Chip A17 Pro. Một chiến thắng vang dội cho GPU.</li>
+                        <li>Camera Chính 48MP. Tiên tiến hơn bao giờ hết.</li>
+                        <li>Nút Tác Vụ. Sẵn sàng cho mọi việc.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-12">
+                    <h2 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-4">
+                        <div class="w-10 h-10 bg-orange-500 text-white rounded-xl flex items-center justify-center"><i data-lucide="message-circle" size="20"></i></div>
+                        Đánh giá khách hàng
+                    </h2>
+                    <button class="px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-black transition-all">Viết đánh giá</button>
+                </div>
+
+                <!-- Review Filters -->
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <button onclick="loadReviews(null)" class="filter-btn px-4 py-2 rounded-xl text-sm font-bold bg-blue-600 text-white shadow-md">Tất cả</button>
+                    <button onclick="loadReviews(5)" class="filter-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">5 Sao</button>
+                    <button onclick="loadReviews(4)" class="filter-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">4 Sao</button>
+                    <button onclick="loadReviews(3)" class="filter-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">3 Sao</button>
+                    <button onclick="loadReviews(2)" class="filter-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">2 Sao</button>
+                    <button onclick="loadReviews(1)" class="filter-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">1 Sao</button>
+                </div>
+
+                <div id="reviewsContainer" class="space-y-8 divide-y divide-slate-50">
+                    <div class="py-8 text-center text-slate-500">
+                        <i data-lucide="loader-2" class="animate-spin mx-auto mb-2 text-blue-600" size="24"></i> Đang tải đánh giá...
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 mt-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">&copy; 2026 ElectroHub. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <script src="js/helpers.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/search.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            WishlistManager.updateWishlistBadge();
+            CartManager.updateCartBadge();
+            loadReviews();
+        });
+
+        // Image Gallery Logic
+        function changeImage(btn, url) {
+            const mainImg = document.getElementById('mainImage');
+            mainImg.src = url;
+            
+            const thumbnails = btn.parentElement.querySelectorAll('button');
+            thumbnails.forEach(t => t.classList.remove('border-blue-600'));
+            thumbnails.forEach(t => t.classList.add('border-transparent'));
+            btn.classList.remove('border-transparent');
+            btn.classList.add('border-blue-600');
+        }
+
+        // Lightbox Logic
+        function openLightbox() {
+            const mainImg = document.getElementById('mainImage');
+            const lightboxImg = document.getElementById('lightboxImage');
+            const modal = document.getElementById('lightboxModal');
+            
+            lightboxImg.src = mainImg.src;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Image Hover Zoom Logic
+        const imageContainer = document.getElementById('imageContainer');
+        const mainImage = document.getElementById('mainImage');
+
+        imageContainer.addEventListener('mousemove', (e) => {
+            const rect = imageContainer.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            mainImage.style.transformOrigin = `${x}% ${y}%`;
+            mainImage.style.transform = 'scale(2)'; // Mức độ zoom
+        });
+
+        imageContainer.addEventListener('mouseleave', () => {
+            mainImage.style.transformOrigin = 'center';
+            mainImage.style.transform = 'scale(1)';
+        });
+
+        // Review Modal Logic
+        async function openReviewModal() {
+            const user = AuthManager.getUser();
+            if (!user || !user.token) {
+                showToast('Vui lòng đăng nhập để đánh giá', 'warning');
+                setTimeout(() => window.location.href = 'login.html', 1500);
+                return;
+            }
+
+            const productId = 1; // Giả lập ID sản phẩm đang xem
+            try {
+                const res = await fetch(`http://localhost:8888/api/products/${productId}/eligible-orders`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                
+                if (res.ok && result.data && result.data.length > 0) {
+                    const select = document.getElementById('reviewOrderSelect');
+                    select.innerHTML = result.data.map(o => `<option value="${o.id}">Đơn hàng #ORD-${o.id} (${new Date(o.created_at).toLocaleDateString('vi-VN')})</option>`).join('');
+                    document.getElementById('reviewModal').classList.remove('hidden');
+                } else {
+                    showToast('Bạn cần mua và hoàn thành đơn hàng để đánh giá sản phẩm này, hoặc bạn đã đánh giá hết.', 'warning');
+                }
+            } catch (err) {
+                showToast('Lỗi kiểm tra điều kiện đánh giá', 'error');
+            }
+        }
+        function closeReviewModal() { document.getElementById('reviewModal').classList.add('hidden'); }
+
+        // Star Rating Logic
+        const stars = document.querySelectorAll('#starRating i');
+        const ratingInput = document.getElementById('ratingValue');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = star.getAttribute('data-val');
+                ratingInput.value = val;
+                stars.forEach(s => {
+                    if (s.getAttribute('data-val') <= val) { s.classList.add('text-orange-400', 'fill-orange-400'); s.classList.remove('text-slate-300'); }
+                    else { s.classList.remove('text-orange-400', 'fill-orange-400'); s.classList.add('text-slate-300'); }
+                });
+            });
+        });
+
+        // Load Reviews from API
+        async function loadReviews(ratingFilter = null) {
+            // Update Active Button Style
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.innerText.includes(ratingFilter === null ? 'Tất cả' : `${ratingFilter} Sao`)) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                    btn.classList.remove('bg-slate-100', 'text-slate-600', 'hover:bg-slate-200');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                    btn.classList.add('bg-slate-100', 'text-slate-600', 'hover:bg-slate-200');
+                }
+            });
+
+            const productId = 1; // Giả lập ID sản phẩm đang xem
+            const container = document.getElementById('reviewsContainer');
+            if (!container) return;
+
+            try {
+                const url = `http://localhost:8888/api/products/${productId}/reviews` + (ratingFilter ? `?rating=${ratingFilter}` : '');
+                container.innerHTML = '<div class="py-8 text-center text-slate-500"><i data-lucide="loader-2" class="animate-spin mx-auto mb-2 text-blue-600" size="24"></i> Đang tải...</div>';
+                if (window.lucide) lucide.createIcons();
+                const res = await fetch(url);
+                const result = await res.json();
+                if (res.ok) {
+                    const reviews = result.data.reviews || result.data;
+                    const summary = result.data.summary;
+
+                    if (summary) {
+                        document.getElementById('productReviewCount').innerText = `(${summary.total_reviews} đánh giá)`;
+                        const roundedAvg = Math.round(summary.average_rating);
+                        document.getElementById('productAvgStars').innerHTML = 
+                            Array(5).fill(0).map((_, i) => `<i data-lucide="star" ${i < roundedAvg ? 'fill="currentColor"' : ''} size="16"></i>`).join('') +
+                            `<span class="text-slate-800 dark:text-white ml-1 font-black">${Number(summary.average_rating).toFixed(1)}/5</span>`;
+                    }
+
+                    if (!reviews || reviews.length === 0) {
+                        container.innerHTML = '<div class="py-8 text-center text-slate-500">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!</div>';
+                        return;
+                    }
+
+                    container.innerHTML = reviews.map(r => `
+                        <div class="pt-8 first:pt-0 animate-fade-in">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <img src="${r.avatar_url ? 'http://localhost:8888' + r.avatar_url : 'https://picsum.photos/seed/user' + r.user_id + '/100/100'}" onerror="this.src='https://picsum.photos/seed/user${r.user_id}/100/100'" class="w-12 h-12 rounded-full border-2 border-white shadow-sm object-cover">
+                                    <div>
+                                        <p class="font-bold text-slate-900">${r.user_name}</p>
+                                        <p class="text-xs text-slate-400 font-medium">${new Date(r.created_at).toLocaleDateString('vi-VN')}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1 text-orange-400">
+                                    ${Array(5).fill(0).map((_, i) => `<i data-lucide="star" ${i < r.rating ? 'fill="currentColor"' : ''} size="14"></i>`).join('')}
+                                </div>
+                            </div>
+                            <p class="text-slate-600 font-medium leading-relaxed">${r.comment}</p>
+                        </div>
+                    `).join('');
+                    if (window.lucide) lucide.createIcons();
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="py-8 text-center text-red-500">Lỗi tải danh sách đánh giá.</div>';
+            }
+        }
+
+        // Submit Review
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const rating = ratingInput.value;
+            const comment = document.getElementById('reviewComment').value;
+            const orderId = document.getElementById('reviewOrderSelect').value;
+            if (rating == 0) return showToast('Vui lòng chọn số sao', 'warning');
+
+            const user = AuthManager.getUser();
+            const productId = 1; // Giả lập ID sản phẩm hiện tại
+
+            try {
+                const res = await fetch(`http://localhost:8888/api/products/${productId}/reviews`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                    body: JSON.stringify({ order_id: orderId, rating, comment })
+                });
+                const result = await res.json();
+                if (res.ok) { 
+                    showToast(result.message, 'success'); 
+                    closeReviewModal(); 
+                    document.getElementById('reviewForm').reset();
+                    loadReviews(); // Tải lại danh sách ngay lập tức
+                } 
+                else { showToast(result.message, 'error'); }
+            } catch (err) { showToast('Lỗi gửi đánh giá', 'error'); }
+        });
+    </script>
+</body>
+</html>
