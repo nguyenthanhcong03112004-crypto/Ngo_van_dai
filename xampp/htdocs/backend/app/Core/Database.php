@@ -35,9 +35,10 @@ class Database
         } catch (PDOException $e) {
             $this->logger->critical("Database Connection Error", ['error' => $e->getMessage()]);
             http_response_code(500);
+            $msg = 'Lỗi kết nối Database: ' . $e->getMessage();
             echo json_encode([
                 'status'  => 'error',
-                'message' => 'Database connection failed',
+                'message' => $msg,
                 'data'    => null,
             ]);
             exit;

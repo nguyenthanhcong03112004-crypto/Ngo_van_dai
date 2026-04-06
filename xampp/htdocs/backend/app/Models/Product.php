@@ -15,7 +15,7 @@ class Product
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function getAll(?string $search = null, ?int $categoryId = null, int $page = 1, int $limit = 20): array
+    public function getAll(?string $search = null, ?int $categoryId = null, int $page = 1, int $limit = 20, string $sortBy = 'newest'): array
     {
         $offset = ($page - 1) * $limit;
         $params = [];
@@ -33,19 +33,32 @@ class Product
         }
 
         $whereClause = implode(' AND ', $where);
-        $params[]    = $limit;
-        $params[]    = $offset;
+
+        // Xác định ORDER BY dựa trên sortBy
+        $orderBy = match($sortBy) {
+            'popular'    => 'COALESCE(SUM(oi.quantity), 0) DESC, p.created_at DESC',
+            'rating'     => 'COALESCE(AVG(r.rating), 0) DESC, COUNT(DISTINCT r.id) DESC',
+            'price_asc'  => 'p.price ASC',
+            'price_desc' => 'p.price DESC',
+            default      => 'p.created_at DESC',  // newest
+        };
+
+        $params[] = $limit;
+        $params[] = $offset;
 
         $stmt = $this->db->prepare(
             "SELECT p.*, c.name AS category_name,
-                    COUNT(r.id) AS review_count,
-                    COALESCE(AVG(r.rating), 0) AS average_rating
+                    COUNT(DISTINCT r.id) AS review_count,
+                    COALESCE(AVG(r.rating), 0) AS average_rating,
+                    COALESCE(SUM(oi.quantity), 0) AS sold_count
              FROM `products` p
              LEFT JOIN `categories` c ON p.category_id = c.id
              LEFT JOIN `product_reviews` r ON p.id = r.product_id
+             LEFT JOIN `order_items` oi ON oi.product_id = p.id
+             LEFT JOIN `orders` o ON oi.order_id = o.id AND o.status IN ('confirmed','completed','shipping')
              WHERE {$whereClause}
              GROUP BY p.id
-             ORDER BY p.created_at DESC
+             ORDER BY {$orderBy}
              LIMIT ? OFFSET ?"
         );
         $stmt->execute($params);

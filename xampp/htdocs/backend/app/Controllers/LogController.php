@@ -10,16 +10,27 @@ class LogController extends BaseController
 {
     public function store(): void
     {
-        // Yêu cầu xác thực bằng JWT. Token phải được gửi qua header: Authorization: Bearer <token>
-        $payload = Middleware::requireAuth();
+        $headers = function_exists('getallheaders') ? getallheaders() : [];
+        if ($headers === false) $headers = [];
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        $userId = null;
+        
+        if (preg_match('/Bearer\s+(.+)/', $authHeader, $matches)) {
+            $parts = explode('.', $matches[1]);
+            if (count($parts) === 3) {
+                $payloadData = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
+                if (is_array($payloadData) && isset($payloadData['user_id'])) {
+                    $userId = $payloadData['user_id'];
+                }
+            }
+        }
 
         $body = $this->getBody();
         $level = $body['level'] ?? 'INFO';
         $message = $body['message'] ?? 'Frontend Log';
-        $context = $body['context'] ?? [];
+        $context = is_array($body['context'] ?? null) ? $body['context'] : [];
         $context['source'] = 'frontend'; // Phân biệt log này đến từ frontend
-        // Gắn ID người dùng từ payload JWT vào log để dễ dàng truy vết
-        $context['auth_user_id'] = $payload['user_id'] ?? null;
+        $context['auth_user_id'] = $userId;
 
         match (strtoupper($level)) {
             'ERROR'    => $this->logger->error($message, $context),

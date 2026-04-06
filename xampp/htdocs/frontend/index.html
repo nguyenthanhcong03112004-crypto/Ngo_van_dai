@@ -233,13 +233,85 @@
         </div>
     </div>
 
-    <!-- Custom JS -->
-    <script src="js/helpers.js?v=3"></script>
-    <script src="js/auth.js?v=3"></script>
-    <script src="js/cart.js?v=3"></script>
-    <script src="js/wishlist.js?v=3"></script>
-    <script src="js/search.js?v=3"></script>
+    <script src="js/helpers.js?v=7"></script>
+    <script src="js/auth.js?v=7"></script>
+    <script src="js/cart.js?v=7"></script>
+    <script src="js/wishlist.js?v=7"></script>
+    <script src="js/search.js?v=7"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchFeaturedProducts();
+        });
+
+        async function fetchFeaturedProducts() {
+            try {
+                const res = await fetch(`${window.API_BASE}/api/user/products?limit=8&sort_by=sold_count&sort_dir=DESC`);
+                const data = await res.json();
+                if (res.ok) {
+                    renderFeatured(data.data?.products || data.data || []);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (e) {
+                document.getElementById('featuredProducts').innerHTML =
+                    `<div class="col-span-full py-12 text-center text-slate-400">
+                        <i data-lucide="wifi-off" class="mx-auto mb-3 opacity-40" size="40"></i>
+                        <p class="font-bold">Không thể tải sản phẩm. Kiểm tra kết nối backend.</p>
+                    </div>`;
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+
+        function renderFeatured(products) {
+            const grid = document.getElementById('featuredProducts');
+            if (!products || products.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">Chưa có sản phẩm nào.</div>`;
+                return;
+            }
+            grid.innerHTML = products.map(p => {
+                const rating = Number(p.average_rating || 0).toFixed(1);
+                const imgSrc = p.image_url || `https://picsum.photos/seed/${p.id}/400/300`;
+                return `
+                <div class="group bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-2xl hover:shadow-slate-200 dark:hover:shadow-slate-900 transition-all duration-500 flex flex-col relative">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-50">
+                        <img src="${imgSrc}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-3 right-3 flex flex-col gap-2">
+                            <div class="bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+                                <i data-lucide="star" size="12" class="text-yellow-500 fill-yellow-500"></i>
+                                <span class="text-xs font-bold text-slate-800">${rating}</span>
+                            </div>
+                            <button onclick="WishlistManager && WishlistManager.toggleWishlist({id:'${p.id}',name:'${p.name}',price:${p.price},image:'${imgSrc}',category:'${p.category_name||''}'})"
+                                class="p-2 rounded-xl bg-white/90 backdrop-blur-md shadow-lg text-slate-400 hover:text-red-500 transition-all">
+                                <i data-lucide="heart" size="16"></i>
+                            </button>
+                        </div>
+                        ${p.sold_count > 0 ? `<span class="absolute top-3 left-3 px-2 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-lg">🔥 Bán chạy</span>` : ''}
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">${p.category_name || 'Sản phẩm'}</div>
+                        <a href="product-detail.html?id=${p.id}" class="block">
+                            <h3 class="font-bold text-slate-800 dark:text-white mb-2 group-hover:text-blue-600 transition-colors line-clamp-2 text-sm leading-snug">${p.name}</h3>
+                        </a>
+                        <div class="text-xs text-slate-400 mb-3">(${p.review_count || 0} đánh giá)</div>
+                        <div class="flex items-center justify-between mt-auto gap-2">
+                            <span class="text-base font-black text-slate-900 dark:text-white">${formatVND(p.price)}</span>
+                            <div class="flex gap-1">
+                                <button onclick="openQuickView('${p.name.replace(/'/g,"\\'")}','${formatVND(p.price)}','${imgSrc}')"
+                                    class="p-2 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 rounded-xl hover:bg-slate-200 transition-all" title="Xem nhanh">
+                                    <i data-lucide="eye" size="16"></i>
+                                </button>
+                                <button onclick="CartManager ? CartManager.addToCart({id:'${p.id}',name:'${p.name}',price:${p.price},image:'${imgSrc}'},this) : (window.location.href='login.html')"
+                                    class="px-3 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all text-xs font-bold flex items-center gap-1" title="Thêm vào giỏ hàng">
+                                    <i data-lucide="shopping-cart" size="14"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            if (window.lucide) lucide.createIcons();
+        }
+
         function openQuickView(name, price, image) {
             document.getElementById('qvName').innerText = name;
             document.getElementById('qvPrice').innerText = price;

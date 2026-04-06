@@ -126,10 +126,9 @@ class Router
         Logger::getInstance()->warning('Endpoint not found (404)', ['uri' => $uri, 'method' => $method]);
 
         // Phân biệt request từ Fetch/AJAX và request truy cập thẳng từ Browser
-        $isAjax = (isset($_SERVER['HTTP_SEC_FETCH_MODE']) && $_SERVER['HTTP_SEC_FETCH_MODE'] === 'cors') || 
-                  (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+        $isApi = strpos($_SERVER['REQUEST_URI'], '/api/') !== false;
 
-        if ($isAjax) {
+        if ($isApi) {
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode([
@@ -139,7 +138,7 @@ class Router
             ]);
         } else {
             // Chuyển hướng mọi API không có trong route (truy cập thẳng) về index.html kèm tham số
-            header('Location: /index.html?error=404');
+            header('Location: index.html?error=404');
         }
         exit;
     }

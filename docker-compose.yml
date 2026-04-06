@@ -1,25 +1,48 @@
-version: '3.8'
-
 services:
   # ============================================================
-  # XAMPP Web Server (Apache + PHP)
+  # MySQL 8.0 Database
+  # - Tự động tạo database từ init.sql lần đầu khởi động
+  # - Truy cập: localhost:3306 (internal) | localhost:3308 (host)
+  # ============================================================
+  mysql:
+    image: mysql:8.0
+    container_name: ngo_van_dai_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ecommerce_db
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./xampp/htdocs/backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+
+  # ============================================================
+  # XAMPP Web Server (Apache + PHP 8)
   # Frontend: http://localhost/frontend
-  # Backend:  http://localhost/backend
+  # Backend:  http://localhost/backend/public
   # ============================================================
   xampp:
     image: tomsik68/xampp:latest
     container_name: ngo_van_dai_xampp
     ports:
-      - "80:80"         # Apache web server
-      - "443:443"       # HTTPS
-      - "3308:3306"     # MySQL (port 3306 có thể đang bị chiếm bởi MySQL local)
+      - "80:80"
+      - "443:443"
     volumes:
-      #   Bạn có thể quản lý file trực tiếp tại ./xampp/htdocs/
       - ./xampp/htdocs:/opt/lampp/htdocs
-
-      # - (Tùy chọn) Log files để theo dõi lỗi
       - ./xampp/logs/apache:/opt/lampp/logs
-    privileged: true    # Cần thiết cho XAMPP container
+    privileged: true
+    depends_on:
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
 
   # ============================================================
@@ -32,14 +55,40 @@ services:
     ports:
       - "8081:80"
     environment:
-      PMA_HOST: ngo_van_dai_xampp  # Hostname của container XAMPP
+      PMA_HOST: mysql
       PMA_PORT: 3306
       PMA_USER: root
       PMA_PASSWORD: ""
       MYSQL_ROOT_PASSWORD: ""
     depends_on:
-      - xampp
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
+
+  # ============================================================
+  # WebSocket Server (Socket.IO — Real-time chat khiếu nại)
+  # URL: ws://localhost:3000
+  # ============================================================
+  websocket:
+    image: node:24-alpine
+    container_name: ngo_van_dai_websocket
+    working_dir: /app
+    command: sh -c "npm install --omit=dev && node index.js"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./xampp/htdocs/websocket-server:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  mysql_data:
+    name: ngo_van_dai_mysql_data
 
 networks:
   default:

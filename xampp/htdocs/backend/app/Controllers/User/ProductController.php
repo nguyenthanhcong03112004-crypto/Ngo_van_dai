@@ -25,9 +25,10 @@ class ProductController
         $categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
         $page       = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $limit      = isset($_GET['limit']) ? (int)$_GET['limit'] : 20;
+        $sortBy     = $_GET['sort_by'] ?? 'newest'; // newest | popular | rating | price_asc | price_desc
 
         try {
-            $products = $this->productModel->getAll($search, $categoryId, $page, $limit);
+            $products = $this->productModel->getAll($search, $categoryId, $page, $limit, $sortBy);
             
             header('Content-Type: application/json');
             echo json_encode([

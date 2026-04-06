@@ -8,12 +8,13 @@ class LoggedPDOStatement extends \PDOStatement
     private Logger $logger;
 
     /**
-     * The constructor is protected and should not be called directly.
-     * It is called by PDO when a new statement is created.
+     * Constructor phải được protected (không có tham số) để tương thích với PHP 8.x.
+     * PDO::ATTR_STATEMENT_CLASS không cho phép public constructor có tham số.
+     * Logger được inject qua setLogger() từ LoggedPDO sau khi prepare().
      */
-    protected function __construct(Logger $logger)
+    protected function __construct()
     {
-        $this->logger = $logger;
+        $this->logger = Logger::getInstance();
     }
 
     /**

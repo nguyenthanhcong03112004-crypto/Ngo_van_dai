@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -29,11 +29,18 @@
             </div>
             <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
         </div>
-        <nav class="flex-1 px-4 space-y-2">
+        <nav class="flex-1 px-4 space-y-1 overflow-y-auto py-2" style="scrollbar-width: thin; scrollbar-color: #e2e8f0 transparent;">
             <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
             <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
             <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
             <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+                        <div class="px-4 pt-3 pb-1">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">Khu vực bán hàng</p>
+            </div>
+            <a href="../sales/index.html?tab=shelf" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="layout-dashboard" size="20"></i> Kệ trưng bày</a>
+            <a href="../sales/index.html?tab=ware" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Kho hàng nhanh</a>
+            <a href="../sales/index.html?tab=orders" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="history" size="20"></i> Lịch sử đơn hàng</a>
+            <a href="../sales/index.html?tab=users" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="user-cog" size="20"></i> Quản lý tài khoản</a>
             <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
             <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
             <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
@@ -46,7 +53,7 @@
         <header class="flex items-center justify-between mb-8">
             <div>
                 <h1 class="text-3xl font-black text-slate-900 tracking-tight">Kênh Khiếu Nại</h1>
-                <p class="text-slate-500 font-medium">Giải quyết các vấn đề phát sinh sau khi mua hàng</p>
+                <p class="text-slate-500 font-medium flex items-center gap-2">Giải quyết các vấn đề phát sinh sau khi mua hàng <span class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest"><span id="wsStatus" class="w-2 h-2 rounded-full bg-slate-300 animate-pulse" title="Đang kết nối realtime..."></span><span class="text-slate-400">Realtime</span></span></p>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="exportXLS()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 shadow-sm flex items-center gap-2"><i data-lucide="download" size="18"></i> Export Báo Cáo</button>
@@ -166,32 +173,49 @@
         }
 
         function initSocket() {
-            socket = io('http://localhost:3000');
-            socket.on('connect', () => {
-                console.log('Connected to WebSocket server');
-            });
-            socket.on('receive_message', (data) => {
-                if (curId === parseInt(data.order_id)) {
-                    appendSingleMessage(data);
-                }
-            });
-
-            socket.on('receive_notification', (data) => {
-                // If it's a message for another order or the admin is not focusing on this chat
-                if (curId !== parseInt(data.order_id)) {
-                    showToast(`Có khiếu nại mới từ ${data.user_name} cho #ORD-${data.order_id}!`, 'info');
-                    unreadIds.add(parseInt(data.order_id));
-                    loadDisputesData(); // Refresh the list to show the new dispute
-                    
-                    // Native Browser Notification
-                    if ("Notification" in window && Notification.permission === "granted") {
-                        new Notification("ElectroHub - Khiếu nại mới", {
-                            body: `Đơn hàng #ORD-${data.order_id}: ${data.message}`,
-                            icon: '../assets/favicon.ico' // Assuming favicon exists
-                        });
+            try {
+                socket = io('http://localhost:3000', {
+                    timeout: 5000,
+                    reconnectionAttempts: 3,
+                    reconnectionDelay: 2000,
+                });
+                socket.on('connect', () => {
+                    console.log('WebSocket connected');
+                    const el = document.getElementById('wsStatus');
+                    if (el) { el.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse'; el.title = 'Realtime: Đang kết nối'; }
+                    stopPolling();
+                });
+                socket.on('connect_error', () => {
+                    const el = document.getElementById('wsStatus');
+                    if (el) { el.className = 'w-2 h-2 rounded-full bg-amber-400'; el.title = 'Realtime: Đang dùng polling 10s'; }
+                    startPolling();
+                });
+                socket.on('disconnect', () => {
+                    const el = document.getElementById('wsStatus');
+                    if (el) { el.className = 'w-2 h-2 rounded-full bg-slate-300'; el.title = 'Realtime: Đã ngắt'; }
+                });
+                socket.on('receive_message', (data) => {
+                    if (curId === parseInt(data.order_id)) appendSingleMessage(data);
+                });
+                socket.on('receive_notification', (data) => {
+                    if (curId !== parseInt(data.order_id)) {
+                        showToast('Có khiếu nại mới cho #ORD-' + data.order_id + '!', 'info');
+                        unreadIds.add(parseInt(data.order_id));
+                        loadDisputesData();
                     }
-                }
-            });
+                });
+            } catch (err) {
+                console.warn('WebSocket init failed, using polling:', err);
+                startPolling();
+            }
+        }
+        let pollingTimer = null;
+        function startPolling() {
+            if (pollingTimer) return;
+            pollingTimer = setInterval(() => { if (curId) fetchChatMessages(curId); }, 10000);
+        }
+        function stopPolling() {
+            if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
         }
 
         function appendSingleMessage(m) {

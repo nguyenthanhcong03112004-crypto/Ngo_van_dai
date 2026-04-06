@@ -30,10 +30,19 @@ const AuthManager = (function() {
         setTimeout(() => {
             if (userObj.role === 'admin') {
                 window.location.href = 'admin/dashboard.html';
+            } else if (userObj.role === 'sales') {
+                window.location.href = 'sales/index.html';
             } else {
-                window.location.href = 'index.html';
+                // Nếu đang ở trang chủ rồi thì không reload, chỉ update header
+                const p = window.location.pathname;
+                const onHome = p.endsWith('index.html') || p.endsWith('/frontend/') || p === '/' || p.endsWith('/frontend');
+                if (onHome) {
+                    updateHeaderAuth();
+                } else {
+                    window.location.href = 'index.html';
+                }
             }
-        }, 1000);
+        }, 800);
     }
 
     /**
@@ -142,8 +151,10 @@ const AuthManager = (function() {
         const user = getUser();
         if (!user || !user.token) return;
 
+        // Dùng window.API_BASE để tránh sai prefix khi gọi từ bất kỳ trang nào
+        const apiBase = window.API_BASE || (window.location.origin + '/backend/public');
         try {
-            const response = await fetch(`${pathPrefix()}../api/notifications/unread-count`, {
+            const response = await fetch(`${apiBase}/api/notifications/unread-count`, {
                 headers: { 'Authorization': `Bearer ${user.token}` }
             });
             const result = await response.json();
@@ -164,7 +175,7 @@ const AuthManager = (function() {
      */
     function pathPrefix() {
         const path = window.location.pathname;
-        if (path.includes('/user/') || path.includes('/admin/')) {
+        if (path.includes('/user/') || path.includes('/admin/') || path.includes('/sales/')) {
             return '../';
         }
         return '';
@@ -188,3 +199,4 @@ const AuthManager = (function() {
 
 // Expose to global scope
 window.AuthManager = AuthManager;
+window.logout = () => AuthManager.logout(); // global shortcut

@@ -1,0 +1,4 @@
+# ElectroHub - Global Routing
+# Redirect all 404 (Not Found) errors to the Landing Page
+
+ErrorDocument 404 /frontend/index.html

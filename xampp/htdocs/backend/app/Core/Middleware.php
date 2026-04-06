@@ -36,15 +36,27 @@ class Middleware
      */
     public static function requireAuth(): array
     {
-        $headers = getallheaders();
+        $headers = \function_exists('getallheaders') ? \getallheaders() : [];
         $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
 
-        if (!preg_match('/Bearer\s+(.+)/', $authHeader, $matches)) {
+        // Fallback for Apache where getallheaders() might miss Authorization
+        if (!$authHeader && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+        }
+
+        $token = '';
+        $matches = [];
+        if (\preg_match('/Bearer\s+(.+)/', $authHeader, $matches)) {
+            $token = $matches[1];
+        } elseif (isset($_GET['token']) && !empty($_GET['token'])) {
+            $token = $_GET['token'];
+        }
+
+        if (!$token) {
             Logger::getInstance()->warning('Authentication failed: Missing token');
             self::unauthorized('Authorization token required');
         }
 
-        $token = $matches[1];
         $payload = self::verifyToken($token);
 
         if ($payload === null) {
@@ -79,14 +91,14 @@ class Middleware
                       (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
 
             if ($isAjax) {
-                http_response_code(403);
-                echo json_encode([
+            \http_response_code(403);
+            echo \json_encode([
                     'status'  => 'error',
                     'message' => 'Access forbidden: insufficient permissions',
                     'data'    => null,
                 ]);
             } else {
-                header('Location: /401.html');
+            \header('Location: /401.html');
             }
             exit;
         }
@@ -100,9 +112,9 @@ class Middleware
 
     private static function createToken(array $payload): string
     {
-        $header  = self::base64UrlEncode(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
-        $payload = self::base64UrlEncode(json_encode($payload));
-        $sig     = self::base64UrlEncode(hash_hmac('sha256', "{$header}.{$payload}", self::getSecret(), true));
+        $header  = self::base64UrlEncode(\json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+        $payload = self::base64UrlEncode(\json_encode($payload));
+        $sig     = self::base64UrlEncode(\hash_hmac('sha256', "{$header}.{$payload}", self::getSecret(), true));
 
         return "{$header}.{$payload}.{$sig}";
     }
@@ -113,11 +125,11 @@ class Middleware
         if (count($parts) !== 3) return null;
 
         [$header, $payload, $sig] = $parts;
-        $expectedSig = self::base64UrlEncode(hash_hmac('sha256', "{$header}.{$payload}", self::getSecret(), true));
+        $expectedSig = self::base64UrlEncode(\hash_hmac('sha256', "{$header}.{$payload}", self::getSecret(), true));
 
-        if (!hash_equals($expectedSig, $sig)) return null;
+        if (!\hash_equals($expectedSig, $sig)) return null;
 
-        $data = json_decode(self::base64UrlDecode($payload), true);
+        $data = \json_decode(self::base64UrlDecode($payload), true);
         if (!$data || (isset($data['exp']) && $data['exp'] < time())) return null;
 
         return $data;
@@ -125,12 +137,12 @@ class Middleware
 
     private static function base64UrlEncode(string $data): string
     {
-        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+        return rtrim(strtr(\base64_encode($data), '+/', '-_'), '=');
     }
 
     private static function base64UrlDecode(string $data): string
     {
-        return base64_decode(strtr($data, '-_', '+/') . str_repeat('=', (4 - strlen($data) % 4) % 4));
+        return \base64_decode(strtr($data, '-_', '+/') . str_repeat('=', (4 - strlen($data) % 4) % 4));
     }
 
     private static function unauthorized(string $message): never
@@ -139,14 +151,14 @@ class Middleware
                   (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
 
         if ($isAjax) {
-            http_response_code(401);
-            echo json_encode([
+            \http_response_code(401);
+            echo \json_encode([
                 'status'  => 'error',
                 'message' => $message,
                 'data'    => null,
             ]);
         } else {
-            header('Location: /401.html');
+            \header('Location: /401.html');
         }
         exit;
     }

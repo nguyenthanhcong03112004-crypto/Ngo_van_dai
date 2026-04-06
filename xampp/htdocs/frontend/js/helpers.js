@@ -28,6 +28,18 @@ async function apiFetch(endpoint, options = {}) {
     // Ensure endpoint start with /
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
     const url = API_BASE + cleanEndpoint;
+
+    // Auto-inject Authorization header
+    const userStr = localStorage.getItem('electrohub_user');
+    if (userStr) {
+        try {
+            const userData = JSON.parse(userStr);
+            if (userData.token) {
+                if (!options.headers) options.headers = {};
+                options.headers['Authorization'] = `Bearer ${userData.token}`;
+            }
+        } catch (e) {}
+    }
     
     try {
         const res = await fetch(url, options);

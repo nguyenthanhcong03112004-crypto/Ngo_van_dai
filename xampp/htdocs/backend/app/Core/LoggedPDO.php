@@ -9,9 +9,11 @@ class LoggedPDO extends \PDO
     {
         parent::__construct($dsn, $username, $password, $options);
 
+        // PHP 8.x: ATTR_STATEMENT_CLASS không cho phép constructor args khi class extends PDOStatement.
+        // Logger được inject qua Logger::getInstance() singleton bên trong LoggedPDOStatement.
         $this->setAttribute(
             \PDO::ATTR_STATEMENT_CLASS,
-            [LoggedPDOStatement::class, [Logger::getInstance()]]
+            [LoggedPDOStatement::class]
         );
     }
 }

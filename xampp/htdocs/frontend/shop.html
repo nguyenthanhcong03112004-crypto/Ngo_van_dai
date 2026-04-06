@@ -49,16 +49,19 @@
                 </nav>
 
                 <div class="flex items-center gap-4">
-                    <a href="user/wishlist.html" class="p-2 text-slate-600 hover:bg-slate-100 rounded-full relative transition-colors">
+                    <a href="user/wishlist.html" class="p-2 text-slate-600 hover:bg-slate-100 rounded-full relative transition-colors" title="Danh sách yêu thích">
                         <i data-lucide="heart" size="22"></i>
                     </a>
-                    <a href="user/checkout.html" class="p-2 text-slate-600 hover:bg-slate-100 rounded-full relative transition-colors">
+                    <a href="user/checkout.html" class="p-2 text-slate-600 hover:bg-slate-100 rounded-full relative transition-colors" title="Giỏ hàng">
                         <i data-lucide="shopping-cart" size="22"></i>
-                        <span class="absolute top-1 right-1 w-4 h-4 bg-blue-600 text-white text-[10px] flex items-center justify-center rounded-full font-bold">2</span>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 text-white text-[10px] flex items-center justify-center rounded-full font-bold hidden">0</span>
                     </a>
-                    <a href="login.html" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
-                        <i data-lucide="user" size="18"></i> Đăng nhập
-                    </a>
+                    <div id="auth-header-container" class="flex items-center gap-2">
+                        <!-- Filled by auth.js -->
+                        <a href="login.html" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+                            <i data-lucide="user" size="18"></i> Đăng nhập
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,12 +161,25 @@
         </div>
     </footer>
 
-    <script src="js/helpers.js?v=3"></script>
+    <script src="js/helpers.js?v=7"></script>
+    <script src="js/auth.js?v=7"></script>
+    <script src="js/cart.js?v=7"></script>
+    <script src="js/wishlist.js?v=7"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             fetchProducts();
+            updateCartBadge();
         });
+
+        function updateCartBadge() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('electrohub_cart') || '[]');
+                const count = cart.reduce((s, i) => s + (i.quantity || 1), 0);
+                const badge = document.getElementById('cartBadge');
+                if (badge) { badge.textContent = count; badge.classList.toggle('hidden', count === 0); }
+            } catch(e) {}
+        }
 
         async function fetchProducts() {
             try {
@@ -195,7 +211,7 @@
                                 <i data-lucide="star" size="14" class="text-yellow-500 fill-yellow-500"></i>
                                 <span class="text-xs font-bold text-slate-800">${rating}</span>
                             </div>
-                            <button onclick="WishlistManager.toggleWishlist({id: '${p.id}', name: '${p.name}', price: ${p.price}, image: '${p.image_url}', category: '${p.category_name}'})" class="p-2 rounded-xl backdrop-blur-md shadow-lg transition-all bg-white/90 text-slate-400 hover:text-red-500">
+                            <button onclick="WishlistManager && WishlistManager.toggleWishlist({id: '${p.id}', name: '${p.name}', price: ${p.price}, image: '${p.image_url}', category: '${p.category_name}'})" class="p-2 rounded-xl backdrop-blur-md shadow-lg transition-all bg-white/90 text-slate-400 hover:text-red-500">
                                 <i data-lucide="heart" size="18"></i>
                             </button>
                         </div>
@@ -208,7 +224,7 @@
                         </div>
                         <div class="flex items-center justify-between mt-auto">
                             <span class="text-lg font-black text-slate-900">${formatVND(p.price)}</span>
-                            <button onclick="CartManager.addToCart({id: '${p.id}', name: '${p.name}', price: ${p.price}, image: '${p.image_url}'}, this)" class="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
+                            <button onclick="CartManager ? CartManager.addToCart({id: '${p.id}', name: '${p.name}', price: ${p.price}, image: '${p.image_url}'}, this) : showToast('Vui lòng đăng nhập để thêm vào giỏ hàng', 'warning')" class="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all" title="Thêm vào giỏ hàng">
                                 <i data-lucide="shopping-cart" size="18"></i>
                             </button>
                         </div>
