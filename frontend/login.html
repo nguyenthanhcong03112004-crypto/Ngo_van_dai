@@ -51,20 +51,20 @@
                     <label class="text-sm font-bold text-slate-600">Email</label>
                     <div class="relative">
                         <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
-                        <input type="email" placeholder="example@email.com" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                        <input type="email" id="loginEmail" required placeholder="example@email.com" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
                     </div>
                 </div>
                 <div class="space-y-2">
                     <div class="flex items-center justify-between">
                         <label class="text-sm font-bold text-slate-600">Mật khẩu</label>
-                        <a href="#" class="text-xs font-bold text-blue-600 hover:underline">Quên mật khẩu?</a>
+                        <a href="reset-password.html" class="text-xs font-bold text-blue-600 hover:underline">Quên mật khẩu?</a>
                     </div>
                     <div class="relative">
                         <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
-                        <input type="password" placeholder="••••••••" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
                     </div>
                 </div>
-                <button type="submit" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95">
+                <button type="submit" id="loginBtn" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95">
                     Đăng nhập
                 </button>
             </form>
@@ -75,24 +75,24 @@
                     <label class="text-sm font-bold text-slate-600">Họ và tên</label>
                     <div class="relative">
                         <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
-                        <input type="text" placeholder="Nguyễn Văn A" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                        <input type="text" id="registerName" required placeholder="Nguyễn Văn A" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
                     </div>
                 </div>
                 <div class="space-y-2">
                     <label class="text-sm font-bold text-slate-600">Email</label>
                     <div class="relative">
                         <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
-                        <input type="email" placeholder="example@email.com" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                        <input type="email" id="registerEmail" required placeholder="example@email.com" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
                     </div>
                 </div>
                 <div class="space-y-2">
                     <label class="text-sm font-bold text-slate-600">Mật khẩu</label>
                     <div class="relative">
                         <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
-                        <input type="password" placeholder="••••••••" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
+                        <input type="password" id="registerPassword" required minlength="6" placeholder="Ít nhất 6 ký tự" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all">
                     </div>
                 </div>
-                <button type="submit" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95">
+                <button type="submit" id="registerBtn" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95">
                     Tạo tài khoản
                 </button>
             </form>
@@ -119,39 +119,69 @@
     <script src="js/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) {
-                lucide.createIcons();
-            }
+            if (window.lucide) lucide.createIcons();
 
             // Handle Login
             const loginForm = document.getElementById('loginForm');
-            loginForm.addEventListener('submit', (e) => {
+            loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const email = loginForm.querySelector('input[type="email"]').value;
-                
-                // Simulation: Check if email contains 'admin' to set role
-                const role = email.includes('admin') ? 'admin' : 'user';
-                const name = email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1);
+                const btn = document.getElementById('loginBtn');
+                btn.innerText = 'Đang xử lý...';
+                btn.disabled = true;
 
-                AuthManager.login({
-                    name: name,
-                    email: email,
-                    role: role
-                });
+                const payload = {
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value,
+                };
+
+                try {
+                    const response = await fetch('http://localhost:8888/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message);
+
+                    const dataToStore = { token: result.data.token, ...result.data.user };
+                    AuthManager.login(dataToStore);
+                } catch (error) {
+                    showToast(error.message, 'error');
+                    btn.innerText = 'Đăng nhập';
+                    btn.disabled = false;
+                }
             });
 
             // Handle Register
             const registerForm = document.getElementById('registerForm');
-            registerForm.addEventListener('submit', (e) => {
+            registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const name = registerForm.querySelector('input[type="text"]').value;
-                const email = registerForm.querySelector('input[type="email"]').value;
+                const btn = document.getElementById('registerBtn');
+                btn.innerText = 'Đang xử lý...';
+                btn.disabled = true;
 
-                AuthManager.login({
-                    name: name,
-                    email: email,
-                    role: 'user'
-                });
+                const payload = {
+                    name: document.getElementById('registerName').value,
+                    email: document.getElementById('registerEmail').value,
+                    password: document.getElementById('registerPassword').value,
+                };
+
+                try {
+                    const response = await fetch('http://localhost:8888/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message);
+
+                    const dataToStore = { token: result.data.token, ...result.data.user };
+                    AuthManager.login(dataToStore);
+                } catch (error) {
+                    showToast(error.message, 'error');
+                    btn.innerText = 'Tạo tài khoản';
+                    btn.disabled = false;
+                }
             });
         });
 

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý đánh giá</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .fixed-sidebar { width: 18rem; }
+        .main-content { margin-left: 18rem; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- SIDEBAR -->
+        <aside class="fixed top-0 left-0 w-72 bg-white border-r border-slate-200 h-screen flex flex-col z-50">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+            <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
+            <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="settings" size="20"></i> Cài đặt</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+
+    <main class="ml-72 p-10 min-h-screen">
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Kênh Đánh Giá</h1>
+                <p class="text-slate-500 font-medium">Theo dõi và kiểm duyệt phản hồi của khách hàng</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="exportExcel()" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 border border-slate-200 flex items-center gap-2 shadow-sm"><i data-lucide="file-spreadsheet" size="18"></i> Xuất Excel</button>
+            </div>
+        </header>
+
+        <!-- TOOLBAR -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 flex flex-wrap items-center gap-4">
+            <div class="relative flex-1 max-w-sm">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                <input type="text" id="rSearch" oninput="debounceR()" placeholder="Tìm nội dung, khách, sản phẩm..." class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-sm">
+            </div>
+            <div class="relative min-w-[180px]">
+                <i data-lucide="star" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                <select id="rStar" onchange="filterR()" class="w-full pl-12 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm appearance-none cursor-pointer text-slate-900">
+                    <option value="all">Tất cả số sao</option>
+                    <option value="5">5 Sao</option>
+                    <option value="4">4 Sao</option>
+                    <option value="3">3 Sao</option>
+                    <option value="2">2 Sao</option>
+                    <option value="1">1 Sao</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size="16"></i>
+            </div>
+            <div class="ml-auto text-[10px] font-black text-slate-400 uppercase tracking-widest" id="totalR">Cần kiểm duyệt?</div>
+        </div>
+
+        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Người dùng</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Sản phẩm</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Đánh giá</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50" id="rTableBody"></tbody>
+            </table>
+            <div id="rEmpty" class="hidden py-32 flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-slate-50 text-slate-200 rounded-full flex items-center justify-center mb-4"><i data-lucide="star" size="40"></i></div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Chưa có đánh giá</h3>
+                <p class="text-slate-400 max-w-xs">Không tìm thấy bất kỳ phản hồi nào phù hợp.</p>
+            </div>
+            <div class="p-8 border-t border-slate-50 flex items-center justify-between">
+                <div class="text-sm font-bold text-slate-400 uppercase tracking-widest" id="rInfo">...</div>
+                <div class="flex items-center gap-1.5" id="rBtns"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        let allR = [];
+        let filteredR = [];
+        let cp = 1;
+        const lim = 6;
+        let t;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            loadReviewsData();
+        });
+
+        async function loadReviewsData() {
+            const user = AuthManager.getUser();
+            const body = document.getElementById('rTableBody');
+            body.innerHTML = '<tr><td colspan="4" class="p-20 text-center"><div class="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin mx-auto"></div></td></tr>';
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/reviews`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    allR = result.data.reviews || result.data || [];
+                    applyLogic();
+                }
+            } catch (e) { showToast('Lỗi tải đánh giá', 'error'); }
+        }
+
+        function applyLogic() {
+            const q = document.getElementById('rSearch').value.toLowerCase();
+            const s = document.getElementById('rStar').value;
+
+            filteredR = allR.filter(r => {
+                const mq = (r.user_name || '').toLowerCase().includes(q) || (r.product_name || '').toLowerCase().includes(q) || (r.comment || '').toLowerCase().includes(q);
+                const ms = s === 'all' || r.rating.toString() === s;
+                return mq && ms;
+            });
+            render();
+        }
+
+        function render() {
+            const start = (cp - 1) * lim;
+            const paginated = filteredR.slice(start, start + lim);
+            const totalP = Math.ceil(filteredR.length / lim) || 1;
+            const body = document.getElementById('rTableBody');
+            
+            document.getElementById('totalR').innerText = `${filteredR.length} PHẢN HỒI`;
+
+            if(paginated.length === 0) {
+                body.innerHTML = '';
+                document.getElementById('rEmpty').classList.remove('hidden');
+                document.getElementById('rInfo').innerText = '0-0 / 0';
+                return;
+            }
+
+            document.getElementById('rEmpty').classList.add('hidden');
+            body.innerHTML = paginated.map(r => {
+                const stars = Array(5).fill(0).map((_, i) => `<i data-lucide="star" ${i < r.rating ? 'fill="currentColor" class="text-orange-400"' : 'class="text-slate-200"'} size="14"></i>`).join('');
+                return `
+                    <tr class="hover:bg-slate-50/50 transition-all border-b border-slate-50 group">
+                        <td class="px-8 py-6">
+                            <p class="font-black text-slate-900 leading-none">${r.user_name}</p>
+                            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">${new Date(r.created_at).toLocaleDateString()}</p>
+                        </td>
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-3">
+                                <img src="${r.product_image || 'https://picsum.photos/seed/p'+r.product_id+'/100'}" class="w-10 h-10 rounded-lg object-cover border border-slate-100 shadow-sm">
+                                <span class="text-sm font-bold text-slate-700 line-clamp-1 max-w-[180px] group-hover:text-blue-600 transition-colors">${r.product_name}</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-6 max-w-sm">
+                            <div class="flex gap-0.5 mb-2">${stars}</div>
+                            <p class="text-sm text-slate-500 font-medium line-clamp-2 italic">"${r.comment}"</p>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <button onclick="delR(${r.id})" class="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100 rounded-xl transition-all shadow-sm" title="Xóa đánh giá"><i data-lucide="trash-2" size="18"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('rInfo').innerText = `Trang ${cp} / ${totalP}`;
+            let b = '';
+            for(let i=1; i<=totalP; i++) {
+                b += `<button onclick="go(${i})" class="w-9 h-9 rounded-xl font-black text-xs transition-all ${cp===i ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-slate-400'}">${i}</button>`;
+            }
+            document.getElementById('rBtns').innerHTML = b;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function debounceR() { clearTimeout(t); t = setTimeout(() => { cp=1; applyLogic(); }, 400); }
+        function filterR() { cp=1; applyLogic(); }
+        function go(p) { cp=p; render(); }
+
+        async function delR(id) {
+            if(!confirm('Xác nhận xóa đánh giá này khỏi hệ thống?')) return;
+            const u = AuthManager.getUser();
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/reviews/${id}`, {
+                    method: 'DELETE', headers: { 'Authorization': `Bearer ${u.token}` }
+                });
+                if(res.ok) { showToast('Đã xóa đánh giá', 'success'); loadReviewsData(); }
+            } catch (e) { showToast('Lỗi xử lý', 'error'); }
+        }
+
+        function exportExcel() {
+            const data = filteredR.map(r => ({'User': r.user_name, 'Product': r.product_name, 'Rating': r.rating, 'Date': r.created_at, 'Comment': r.comment}));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "DanhGia");
+            XLSX.writeFile(wb, "ElectroHub_Reviews.xlsx");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý mã giảm giá</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .fixed-sidebar { width: 18rem; }
+        .main-content { margin-left: 18rem; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- SIDEBAR -->
+        <aside class="fixed top-0 left-0 w-72 bg-white border-r border-slate-200 h-screen flex flex-col z-50">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+            <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
+            <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="settings" size="20"></i> Cài đặt</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+
+    <main class="ml-72 p-10 min-h-screen">
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Mã giảm giá (Voucher)</h1>
+                <p class="text-slate-500 font-medium">Tạo và quản lý các chương trình khuyến mãi</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="exportXLS()" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 border border-slate-200 flex items-center gap-2"><i data-lucide="download" size="18"></i> Excel</button>
+                <button onclick="openVModal()" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-100 flex items-center gap-2"><i data-lucide="plus" size="18"></i> Tạo mã mới</button>
+            </div>
+        </header>
+
+        <!-- TOOLBAR -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 flex flex-wrap items-center gap-4">
+            <div class="relative flex-1 max-w-sm">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                <input type="text" id="vSearch" oninput="debounce()" placeholder="Tìm theo mã code..." class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-sm">
+            </div>
+            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-auto" id="totalV">0 VOUCHERS</div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden relative">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Mã Code</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Giảm giá</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Lượt dùng</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Hạn dùng</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Trạng thái</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50" id="vTableBody">
+                    <!-- Data -->
+                </tbody>
+            </table>
+            <div id="vPagination" class="p-8 border-t border-slate-50 flex items-center justify-between">
+                <div class="text-sm font-bold text-slate-400" id="vPageInfo">Trang 1 / 1</div>
+                <div class="flex items-center gap-1.5" id="vPageBtns"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal CRUD -->
+    <div id="vModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden relative">
+            <form id="vForm" class="p-8 space-y-6">
+                <input type="hidden" id="vId">
+                <div>
+                    <h2 id="vModalTitle" class="text-2xl font-black text-slate-900">Tạo mã giảm giá</h2>
+                    <p class="text-slate-500 font-medium text-sm">Thiết lập chính sách khuyến mãi cho sự kiện.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Mã CODE (Viết liền)</label>
+                        <input type="text" id="vCode" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-slate-900 uppercase">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Số tiền giảm (đ)</label>
+                            <input type="number" id="vAmount" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-slate-900">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Tối thiểu đơn (đ)</label>
+                            <input type="number" id="vMin" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-slate-900">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Ngày hết hạn</label>
+                        <input type="date" id="vExpiry" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-50">
+                    <button type="button" onclick="closeVModal()" class="px-6 py-3 text-sm font-black text-slate-400 hover:text-slate-900 transition-all uppercase">Hủy</button>
+                    <button type="submit" class="px-8 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 shadow-xl shadow-blue-100 uppercase">Lưu voucher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        let allV = [];
+        let filteredV = [];
+        let cp = 1;
+        const lim = 7;
+        let t;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            fetchVouchers();
+        });
+
+        async function fetchVouchers() {
+            const user = AuthManager.getUser();
+            if (!user) return;
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/vouchers`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    allV = result.data.vouchers || result.data || [];
+                    applyLogic();
+                } else {
+                    showToast(result.message || 'Lỗi tải voucher', 'error');
+                }
+            } catch (e) { 
+                console.error(e);
+                showToast('Lỗi tải voucher', 'error'); 
+            }
+        }
+
+        function applyLogic() {
+            const q = document.getElementById('vSearch').value.toUpperCase();
+            filteredV = allV.filter(v => v.code.toUpperCase().includes(q));
+            render();
+        }
+
+        function render() {
+            const start = (cp - 1) * lim;
+            const paginated = filteredV.slice(start, start + lim);
+            const totalP = Math.ceil(filteredV.length / lim) || 1;
+            const body = document.getElementById('vTableBody');
+
+            document.getElementById('totalV').innerText = `${filteredV.length} VOUCHERS`;
+            
+            body.innerHTML = paginated.map(v => {
+                const expiry = new Date(v.expires_at).toLocaleDateString('vi-VN');
+                const isExp = new Date(v.expires_at) < new Date();
+                return `
+                    <tr class="hover:bg-slate-50/80 transition-all group border-b border-slate-50">
+                        <td class="px-8 py-5">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg font-black text-sm tracking-widest border border-blue-100">${v.code}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <p class="font-black text-slate-800 leading-none">-${formatVND(v.discount_amount)}</p>
+                            <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-tighter">Đơn tối thiểu: ${formatVND(v.min_order_value)}</p>
+                        </td>
+                        <td class="px-8 py-5 text-center font-bold text-slate-600">${v.usage_count || 0}</td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-bold ${isExp ? 'text-red-400 line-through' : 'text-slate-500'}">${expiry}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            ${v.is_active && !isExp ? 
+                                '<span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[10px] font-black uppercase tracking-widest">Đang chạy</span>' : 
+                                '<span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[10px] font-black uppercase tracking-widest">Hết hạn/Tắt</span>'
+                            }
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                <button onclick='openVModal(${JSON.stringify(v)})' class="p-2 text-slate-400 hover:text-blue-600 transition-all"><i data-lucide="edit" size="18"></i></button>
+                                <button onclick="deleteV(${v.id})" class="p-2 text-slate-400 hover:text-red-500 transition-all"><i data-lucide="trash-2" size="18"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('vPageInfo').innerText = `Trang ${cp} / ${totalP}`;
+            let b = '';
+            for(let i=1; i<=totalP; i++) {
+                b += `<button onclick="go(${i})" class="w-9 h-9 rounded-xl font-black text-xs transition-all ${cp===i ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-slate-400'}">${i}</button>`;
+            }
+            document.getElementById('vPageBtns').innerHTML = b;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function debounce() { clearTimeout(t); t = setTimeout(() => { cp=1; applyLogic(); }, 400); }
+        function go(p) { cp=p; render(); }
+
+        function openVModal(v = null) {
+            const form = document.getElementById('vForm');
+            const title = document.getElementById('vModalTitle');
+            form.reset();
+            document.getElementById('vId').value = '';
+            if (v) {
+                title.innerText = 'Cập nhật Voucher';
+                document.getElementById('vId').value = v.id;
+                document.getElementById('vCode').value = v.code;
+                document.getElementById('vAmount').value = v.discount_amount;
+                document.getElementById('vMin').value = v.min_order_amount;
+                document.getElementById('vExpiry').value = v.expires_at.split(' ')[0];
+            } else { title.innerText = 'Tạo mã giảm giá'; }
+            document.getElementById('vModal').classList.remove('hidden');
+        }
+        function closeVModal() { document.getElementById('vModal').classList.add('hidden'); }
+
+        document.getElementById('vForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('vId').value;
+            const data = {
+                code: document.getElementById('vCode').value.toUpperCase(),
+                discount_amount: parseInt(document.getElementById('vAmount').value),
+                min_order_value: parseInt(document.getElementById('vMin').value),
+                expires_at: document.getElementById('vExpiry').value,
+                is_active: 1
+            };
+            const user = AuthManager.getUser();
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${window.API_BASE}/api/admin/vouchers/${id}` : `${window.API_BASE}/api/admin/vouchers`;
+            try {
+                const res = await window.fetch(url, {
+                    method, headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if(res.ok) { showToast('Đã lưu thành công!', 'success'); closeVModal(); fetchVouchers(); }
+            } catch (e) { showToast('Lỗi lưu dữ liệu', 'error'); }
+        });
+
+        async function deleteV(id) {
+            if(!confirm('Xác nhận xóa mã này?')) return;
+            const user = AuthManager.getUser();
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/vouchers/${id}`, {
+                    method: 'DELETE', headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                if(res.ok) { showToast('Đã xóa!', 'success'); fetchVouchers(); }
+            } catch (e) { showToast('Lỗi khi xóa', 'error'); }
+        }
+
+        function exportXLS() {
+            const d = filteredV.map(v => ({'CODE': v.code, 'Giam': v.discount_amount, 'Min': v.min_order_amount, 'Han': v.expires_at}));
+            const ws = XLSX.utils.json_to_sheet(d);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Vouchers");
+            XLSX.writeFile(wb, "ElectroHub_Vouchers.xlsx");
+        }
+    </script>
+</body>
+</html>

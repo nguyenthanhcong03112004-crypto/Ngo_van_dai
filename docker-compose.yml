@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # ============================================================
+  # XAMPP Web Server (Apache + PHP)
+  # Frontend: http://localhost/frontend
+  # Backend:  http://localhost/backend
+  # ============================================================
+  xampp:
+    image: tomsik68/xampp:latest
+    container_name: ngo_van_dai_xampp
+    ports:
+      - "80:80"         # Apache web server
+      - "443:443"       # HTTPS
+      - "3308:3306"     # MySQL (port 3306 có thể đang bị chiếm bởi MySQL local)
+    volumes:
+      #   Bạn có thể quản lý file trực tiếp tại ./xampp/htdocs/
+      - ./xampp/htdocs:/opt/lampp/htdocs
+
+      # - (Tùy chọn) Log files để theo dõi lỗi
+      - ./xampp/logs/apache:/opt/lampp/logs
+    privileged: true    # Cần thiết cho XAMPP container
+    restart: unless-stopped
+
+  # ============================================================
+  # phpMyAdmin (Quản lý database qua giao diện web)
+  # Truy cập: http://localhost:8081
+  # ============================================================
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ngo_van_dai_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: ngo_van_dai_xampp  # Hostname của container XAMPP
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ""
+      MYSQL_ROOT_PASSWORD: ""
+    depends_on:
+      - xampp
+    restart: unless-stopped
+
+networks:
+  default:
+    name: ngo_van_dai_net

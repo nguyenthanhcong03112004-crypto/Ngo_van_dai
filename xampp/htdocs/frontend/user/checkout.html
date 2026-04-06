@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub - Thanh toán</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white group-hover:rotate-12 transition-transform">
+                        <i data-lucide="shopping-cart" size="24"></i>
+                    </div>
+                    <span class="text-2xl font-black text-slate-900 tracking-tighter">ElectroHub</span>
+                </a>
+                
+                <nav class="hidden lg:flex items-center gap-8 text-sm font-bold">
+                    <a href="../index.html" class="text-slate-600 hover:text-blue-600 transition-colors">Trang chủ</a>
+                    <a href="#" class="text-slate-600 hover:text-blue-600 transition-colors">Sản phẩm</a>
+                </nav>
+
+                <div class="flex items-center gap-4">
+                    <a href="wishlist.html" class="p-2 text-slate-600 hover:bg-slate-100 rounded-full relative transition-colors">
+                        <i data-lucide="heart" size="22"></i>
+                        <span class="wishlist-badge absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full font-bold" style="display: none;">0</span>
+                    </a>
+                    <a href="checkout.html" class="p-2 text-slate-600 hover:bg-slate-100 rounded-full relative transition-colors">
+                        <i data-lucide="shopping-cart" size="22"></i>
+                        <span class="cart-badge absolute top-1 right-1 w-4 h-4 bg-blue-600 text-white text-[10px] flex items-center justify-center rounded-full font-bold" style="display: none;">0</span>
+                    </a>
+                    
+                    <div class="h-6 w-px bg-slate-200 mx-2"></div>
+
+                    <div id="auth-header-container">
+                        <a href="../login.html" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+                            <i data-lucide="user" size="18"></i> Đăng nhập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center gap-4 mb-12">
+                <div class="p-3 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-200">
+                    <i data-lucide="shopping-cart" size="28"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight">Thanh toán đơn hàng</h1>
+                    <p class="text-slate-500 font-medium">Hoàn tất các bước để nhận hàng ngay</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- LEFT COLUMN: FORM & CART -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- SHIPPING INFO -->
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                            <i data-lucide="truck" class="text-blue-600" size="20"></i> Thông tin giao hàng
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-slate-600">Họ và tên</label>
+                                <input type="text" id="shippingName" placeholder="Nguyễn Văn A" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-slate-600">Số điện thoại</label>
+                                <input type="text" id="shippingPhone" placeholder="0901234567" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                            </div>
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-sm font-bold text-slate-600">Địa chỉ nhận hàng</label>
+                                <div class="relative">
+                                    <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                                    <input type="text" id="shippingAddress" placeholder="Số nhà, tên đường, phường/xã..." class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CART ITEMS -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+                            <h2 class="text-lg font-bold text-slate-800">Sản phẩm trong giỏ</h2>
+                        </div>
+                        <div id="checkout-cart-items" class="divide-y divide-slate-50">
+                            <!-- Items will be rendered by cart.js -->
+                            <div class="p-12 text-center">
+                                <div class="animate-pulse flex flex-col items-center gap-4">
+                                    <div class="w-12 h-12 bg-slate-100 rounded-full"></div>
+                                    <div class="h-4 w-48 bg-slate-100 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: SUMMARY & QR -->
+                <div class="space-y-6">
+                    <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 sticky top-8">
+                        <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                            <i data-lucide="credit-card" class="text-blue-600" size="24"></i> Tổng kết đơn hàng
+                        </h2>
+                        
+                        <!-- VOUCHER SELECTOR -->
+                        <div class="mb-6">
+                            <label class="text-sm font-bold text-slate-600 block mb-2">Mã ưu đãi (Voucher)</label>
+                            <div class="relative">
+                                <i data-lucide="ticket" class="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" size="18"></i>
+                                <select id="voucherSelect" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm appearance-none cursor-pointer transition-all">
+                                    <option value="">-- Chọn mã giảm giá --</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size="16"></i>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="flex justify-between text-slate-500 font-medium">
+                                <span>Tạm tính</span>
+                                <span id="checkout-summary-subtotal">0 ₫</span>
+                            </div>
+                            <div class="flex justify-between text-slate-500 font-medium">
+                                <span>Phí vận chuyển</span>
+                                <span>Miễn phí</span>
+                            </div>
+                            <div id="checkout-summary-discount-row" class="flex justify-between text-green-600 font-medium hidden">
+                                <span>Giảm giá</span>
+                                <span id="checkout-summary-discount">-0 ₫</span>
+                            </div>
+                            <div class="pt-4 border-t border-slate-100 flex justify-between items-end">
+                                <span class="font-bold text-slate-800">Tổng thanh toán</span>
+                                <span id="checkout-summary-total" class="text-3xl font-black text-blue-600 tracking-tight">0 ₫</span>
+                            </div>
+                        </div>
+
+                        <button onclick="generateQR()" id="confirmBtn" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all transform active:scale-95 shadow-lg shadow-blue-100 hover:bg-blue-700">
+                            Xác nhận đặt hàng <i data-lucide="arrow-right" size="20"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- QR MODAL -->
+    <div id="qrModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl overflow-hidden relative p-8 text-center animate-fade-in">
+            <button onclick="closeQRModal()" class="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-all">
+                <i data-lucide="x" size="24"></i>
+            </button>
+            <h2 class="text-2xl font-black text-slate-900 mb-2">Thanh toán đơn hàng</h2>
+            <p class="text-sm font-bold text-slate-800 mb-2">Quét mã VietQR để thanh toán</p>
+            <p class="text-xs text-slate-400 mb-6">Tự động điền số tiền và nội dung</p>
+            
+            <div class="p-4 bg-white border-2 border-blue-600 rounded-2xl shadow-lg mb-6">
+                <img id="qrImage" src="" alt="VietQR" class="w-full aspect-square object-contain">
+            </div>
+            <div class="flex items-center justify-center gap-2 text-blue-600 text-xs font-bold">
+                <i data-lucide="shield-check" size="14"></i> Thanh toán an toàn qua VietQR
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script src="../js/cart.js?v=3"></script>
+    <script src="../js/wishlist.js?v=3"></script>
+    <script src="../js/checkout.js?v=3"></script>
+</body>
+</html>

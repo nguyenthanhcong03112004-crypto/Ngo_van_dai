@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Giải quyết khiếu nại</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .fixed-sidebar { width: 18rem; }
+        .main-content { margin-left: 18rem; }
+        .chat-bubble-admin { @apply bg-blue-600 text-white rounded-2xl rounded-tr-none px-4 py-2 self-end max-w-[80%]; }
+        .chat-bubble-user { @apply bg-slate-100 text-slate-800 rounded-2xl rounded-tl-none px-4 py-2 self-start max-w-[80%]; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- SIDEBAR -->
+        <aside class="fixed top-0 left-0 w-72 bg-white border-r border-slate-200 h-screen flex flex-col z-50">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+            <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
+            <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="settings" size="20"></i> Cài đặt</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+
+    <main class="ml-72 p-10 min-h-screen">
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Kênh Khiếu Nại</h1>
+                <p class="text-slate-500 font-medium">Giải quyết các vấn đề phát sinh sau khi mua hàng</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="exportXLS()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 shadow-sm flex items-center gap-2"><i data-lucide="download" size="18"></i> Export Báo Cáo</button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Side: List of Disputed Orders -->
+            <div class="lg:col-span-1 space-y-4">
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Danh sách khiếu nại</h3>
+                    <div class="space-y-3 max-h-[600px] overflow-y-auto pr-1" id="disputeList">
+                        <!-- Items -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Chat and Resolution -->
+            <div class="lg:col-span-2 space-y-6">
+                <div id="welcomeScreen" class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm h-full flex flex-col items-center justify-center p-20 text-center min-h-[500px]">
+                    <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6"><i data-lucide="message-square" size="40"></i></div>
+                    <h2 class="text-2xl font-black text-slate-900 mb-2">Trung tâm giải quyết</h2>
+                    <p class="text-slate-400 font-medium max-w-sm">Vui lòng chọn một phiên khiếu nại để bắt đầu làm việc với khách hàng.</p>
+                </div>
+
+                <div id="chatInterface" class="hidden h-full flex flex-col bg-white rounded-[2.5rem] border border-slate-100 shadow-sm min-h-[600px]">
+                    <!-- Chat Header -->
+                    <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center font-black">ORD</div>
+                            <div>
+                                <h3 class="font-black text-slate-900" id="chatOrderTitle">ORD-...</h3>
+                                <p class="text-xs font-bold text-red-500 uppercase tracking-widest">Trạng thái: Khiếu nại</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                             <button onclick="resolveDispute('completed')" class="px-4 py-2 bg-green-500 text-white rounded-xl text-xs font-black uppercase hover:bg-green-600 transition-all">Hoàn tiền & Đóng</button>
+                             <button onclick="resolveDispute('confirmed')" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-black uppercase hover:bg-black transition-all">Bác bỏ & Duyệt đơn</button>
+                        </div>
+                    </div>
+                    <!-- Chat Messages -->
+                    <div class="flex-1 p-6 overflow-y-auto flex flex-col gap-4 bg-slate-50/30" id="chatMessages">
+                        <div class="flex flex-col gap-1 self-start max-w-[80%] bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
+                             <p class="text-sm font-medium text-slate-600">Khách hàng: "Tôi nhận hàng bị vỡ màn hình, sản phẩm không đúng mô tả. Yêu cầu hoàn tiền ngay!"</p>
+                             <span class="text-[10px] font-bold text-slate-400">10:45 AM</span>
+                        </div>
+                        <div class="flex flex-col gap-1 self-end max-w-[80%] bg-blue-600 text-white p-4 rounded-3xl shadow-sm">
+                             <p class="text-sm font-medium">Hệ thống: "Chúng tôi đã nhận được thông tin. Admin đang kiểm tra hình ảnh vận đơn."</p>
+                             <span class="text-[10px] font-bold text-blue-200">10:50 AM</span>
+                        </div>
+                    </div>
+                    <!-- Chat Input -->
+                    <div class="p-6 border-t border-slate-100">
+                        <form onsubmit="event.preventDefault(); sendMsg()" class="flex items-center gap-3">
+                            <label class="cursor-pointer p-4 text-slate-400 hover:text-blue-600 transition-all bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded-full" title="Đính kèm File/Hình ảnh">
+                                <i data-lucide="paperclip" size="20"></i>
+                                <input type="file" id="chatFileInput" class="hidden" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onchange="window.previewFile(this)">
+                            </label>
+                            <div class="relative flex-1">
+                                <input type="text" id="chatMsgInput" placeholder="Nhập tin nhắn phản hồi..." class="w-full pl-6 pr-24 py-4 bg-slate-50 border border-slate-200 rounded-3xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-slate-900">
+                                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2 bg-blue-600 text-white rounded-2xl font-black text-xs hover:bg-blue-700 transition-all uppercase tracking-widest">Gửi</button>
+                            </div>
+                        </form>
+                        <div id="filePreview" class="mt-3 hidden text-xs font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg border border-blue-100 flex items-center justify-between">
+                            <span id="filePreviewName"></span>
+                            <button onclick="window.clearFile()" class="text-red-500 hover:text-red-700">Xóa file</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PREVIEW MODAL -->
+    <div id="previewModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="bg-slate-900 w-full max-w-5xl rounded-[2.5rem] overflow-hidden flex flex-col h-[90vh] relative border border-white/10 shadow-2xl">
+            <div class="p-4 flex items-center justify-between border-b border-white/10 bg-white/5">
+                <h3 class="text-white font-bold flex items-center gap-2"><i data-lucide="eye" size="20"></i> Xem tệp đính kèm</h3>
+                <button onclick="window.closePreviewModal()" class="p-2 text-white hover:bg-white/20 rounded-full transition-all">
+                    <i data-lucide="x" size="24"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto flex items-center justify-center p-4" id="previewContent">
+                <!-- Content injected here -->
+            </div>
+            <div class="p-4 border-t border-white/10 flex justify-center bg-white/5 gap-4">
+                <button onclick="window.closePreviewModal()" class="px-6 py-2.5 bg-white/10 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-white/20 transition-all">
+                    Đóng
+                </button>
+                <a id="previewDownloadBtn" href="#" target="_blank" download class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30">
+                    <i data-lucide="download" size="18"></i> Tải xuống tệp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        let allD = [];
+        let curId = null;
+        let socket = null;
+        let unreadIds = new Set();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            loadDisputesData();
+            initSocket();
+            requestNotificationPermission();
+        });
+
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission();
+            }
+        }
+
+        function initSocket() {
+            socket = io('http://localhost:3000');
+            socket.on('connect', () => {
+                console.log('Connected to WebSocket server');
+            });
+            socket.on('receive_message', (data) => {
+                if (curId === parseInt(data.order_id)) {
+                    appendSingleMessage(data);
+                }
+            });
+
+            socket.on('receive_notification', (data) => {
+                // If it's a message for another order or the admin is not focusing on this chat
+                if (curId !== parseInt(data.order_id)) {
+                    showToast(`Có khiếu nại mới từ ${data.user_name} cho #ORD-${data.order_id}!`, 'info');
+                    unreadIds.add(parseInt(data.order_id));
+                    loadDisputesData(); // Refresh the list to show the new dispute
+                    
+                    // Native Browser Notification
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        new Notification("ElectroHub - Khiếu nại mới", {
+                            body: `Đơn hàng #ORD-${data.order_id}: ${data.message}`,
+                            icon: '../assets/favicon.ico' // Assuming favicon exists
+                        });
+                    }
+                }
+            });
+        }
+
+        function appendSingleMessage(m) {
+            const box = document.getElementById('chatMessages');
+            // Remove "No messages" text if it exists
+            if (box.querySelector('.italic')) {
+                box.innerHTML = '';
+            }
+            
+            const isAdmin = m.sender_role === 'admin';
+            const timeStr = new Date(m.created_at || new Date()).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex flex-col gap-1 ${isAdmin ? 'self-end bg-blue-600 text-white' : 'self-start bg-white border border-slate-200'} p-4 rounded-3xl shadow-sm max-w-[80%]`;
+            msgDiv.innerHTML = `
+                <p class="text-xs font-black border-b ${isAdmin ? 'border-blue-400/50' : 'border-slate-100 text-slate-800'} pb-2 mb-2 uppercase tracking-widest">${isAdmin ? 'ADMIN HỆ THỐNG' : m.sender_name}</p>
+                ${m.message ? `<p class="text-sm font-bold leading-relaxed ${isAdmin ? 'text-white' : 'text-slate-600'}">${m.message}</p>` : ''}
+                ${renderMedia(m.attachment_url)}
+                <span class="text-[10px] font-bold mt-1 ${isAdmin ? 'text-blue-200' : 'text-slate-400'}">${timeStr}</span>
+            `;
+            box.appendChild(msgDiv);
+            if (window.lucide) lucide.createIcons();
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function loadDisputesData() {
+            const user = AuthManager.getUser();
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/orders`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    allD = (result.data.orders || result.data || []).filter(o => o.status === 'disputed' || o.id % 7 === 0);
+                    renderList();
+                }
+            } catch (e) { showToast('Lỗi tải dữ liệu', 'error'); }
+        }
+
+        function renderList() {
+            const body = document.getElementById('disputeList');
+            body.innerHTML = allD.map(o => {
+                const isUnread = unreadIds.has(o.id) && curId !== o.id;
+                return `
+                <div onclick="selectDispute(${o.id})" class="p-5 rounded-2xl border-2 transition-all cursor-pointer relative ${curId === o.id ? 'bg-blue-50 border-blue-600' : 'bg-white border-slate-50 hover:border-slate-200'}">
+                    ${isUnread ? '<div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse shadow-lg shadow-red-500/50"></div>' : ''}
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-black text-blue-600 tracking-tighter">ORD-${o.id}</span>
+                        <span class="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 py-0.5 bg-red-50 rounded-full">KHIẾU NẠI</span>
+                    </div>
+                    <p class="font-bold text-slate-800 line-clamp-1 mb-1">${o.user_name || 'Khách hàng ẩn danh'}</p>
+                    <p class="text-[11px] text-slate-400 font-bold flex items-center gap-2">
+                        <i data-lucide="clock" size="10"></i> ${new Date().toLocaleDateString()}
+                        ${isUnread ? '<span class="text-[9px] text-red-500 font-black uppercase">Tin mới!</span>' : ''}
+                    </p>
+                </div>
+            `}).join('');
+            if(window.lucide) lucide.createIcons();
+        }
+
+        function selectDispute(id) {
+            curId = id;
+            unreadIds.delete(id);
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('chatInterface').classList.remove('hidden');
+            document.getElementById('chatOrderTitle').innerText = `ORD-${id}`;
+            renderList();
+            fetchChatMessages(id);
+            if (socket) {
+                socket.emit('join_room', id);
+            }
+        }
+
+        async function fetchChatMessages(id) {
+            const box = document.getElementById('chatMessages');
+            box.innerHTML = `<div class="text-center text-sm font-bold text-slate-400 p-4">Đang tải tin nhắn...</div>`;
+            const user = AuthManager.getUser();
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/orders/${id}/chat`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    renderChatMessages(result.data, id);
+                } else {
+                    box.innerHTML = `<div class="text-center text-sm font-bold text-red-400 p-4">Không thể tải tin nhắn.</div>`;
+                }
+            } catch (err) {
+                box.innerHTML = `<div class="text-center text-sm font-bold text-red-400 p-4">Lỗi mạng.</div>`;
+            }
+        }
+
+        function renderMedia(url) {
+            if (!url) return '';
+            const ext = url.split('.').pop().toLowerCase();
+            const fullUrl = `${window.location.origin}${url}`;
+            
+            if (['mp4', 'mov'].includes(ext)) {
+                return `<video controls class="max-w-[300px] h-auto mt-2 rounded-xl border-2 border-inherit"><source src="${fullUrl}" type="video/${ext}"></video>`;
+            }
+            if (['pdf'].includes(ext)) {
+                return `<button onclick="window.openPreviewModal('${fullUrl}', 'pdf')" class="inline-flex items-center gap-2 mt-2 px-4 py-3 bg-white/20 hover:bg-white/30 text-inherit rounded-xl transition-all border border-inherit"><i data-lucide="file-text" size="18"></i><span class="font-bold underline text-xs">Xem chi tiết PDF</span></button>`;
+            }
+            if (['doc', 'docx'].includes(ext)) {
+                return `<button onclick="window.openPreviewModal('${fullUrl}', 'doc')" class="inline-flex items-center gap-2 mt-2 px-4 py-3 bg-white/20 hover:bg-white/30 text-inherit rounded-xl transition-all border border-inherit"><i data-lucide="file-text" size="18"></i><span class="font-bold underline text-xs">Tải Tệp Word (${ext.toUpperCase()})</span></button>`;
+            }
+            return `<img onclick="window.openPreviewModal('${fullUrl}', 'image')" src="${fullUrl}" class="max-w-[200px] h-auto mt-2 rounded-xl border-2 border-inherit object-cover cursor-pointer hover:opacity-80 transition-all" alt="Attachment" title="Bấm để xem lớn">`;
+        }
+
+        window.openPreviewModal = function(url, type) {
+            document.getElementById('previewModal').classList.remove('hidden');
+            const content = document.getElementById('previewContent');
+            const dlBtn = document.getElementById('previewDownloadBtn');
+            dlBtn.href = url;
+            
+            if (type === 'image') {
+                content.innerHTML = `<img src="${url}" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl">`;
+            } else if (type === 'pdf') {
+                content.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-xl bg-white shadow-2xl"></iframe>`;
+            } else if (type === 'doc') {
+                content.innerHTML = `
+                    <div class="text-center text-white">
+                        <i data-lucide="file-question" size="64" class="mx-auto mb-4 text-orange-400"></i>
+                        <p class="text-2xl font-bold mb-2">Tệp văn bản Office</p>
+                        <p class="text-slate-300 mb-6">Trình duyệt không hỗ trợ xem trực tiếp DOC/DOCX ngoại tuyến.</p>
+                        <p class="text-slate-400 text-sm">Vui lòng nhấp Tải xuống bên dưới để mở tệp.</p>
+                    </div>
+                `;
+                if(window.lucide) lucide.createIcons();
+            }
+        }
+
+        window.closePreviewModal = function() {
+            document.getElementById('previewModal').classList.add('hidden');
+            document.getElementById('previewContent').innerHTML = '';
+        }
+
+        function renderChatMessages(msgs, orderId) {
+            const box = document.getElementById('chatMessages');
+            if (msgs.length === 0) {
+                box.innerHTML = `<div class="bg-white p-4 rounded-3xl border border-slate-100 text-sm font-medium text-slate-500 text-center italic mb-4">Chưa có tin nhắn nào cho khiếu nại này.</div>`;
+                return;
+            }
+            box.innerHTML = msgs.map(m => {
+                const isAdmin = m.sender_role === 'admin';
+                const timeStr = new Date(m.created_at).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+                return `
+                <div class="flex flex-col gap-1 ${isAdmin ? 'self-end bg-blue-600 text-white' : 'self-start bg-white border border-slate-200'} p-4 rounded-3xl shadow-sm max-w-[80%]">
+                    <p class="text-xs font-black border-b ${isAdmin ? 'border-blue-400/50' : 'border-slate-100 text-slate-800'} pb-2 mb-2 uppercase tracking-widest">${isAdmin ? 'ADMIN HỆ THỐNG' : m.sender_name}</p>
+                    ${m.message ? `<p class="text-sm font-bold leading-relaxed ${isAdmin ? 'text-white' : 'text-slate-600'}">${m.message}</p>` : ''}
+                    ${renderMedia(m.attachment_url)}
+                    <span class="text-[10px] font-bold mt-1 ${isAdmin ? 'text-blue-200' : 'text-slate-400'}">${timeStr}</span>
+                </div>`;
+            }).join('');
+            box.scrollTop = box.scrollHeight;
+        }
+
+        window.previewFile = function(input) {
+            const file = input.files[0];
+            const pv = document.getElementById('filePreview');
+            if(file) {
+                document.getElementById('filePreviewName').innerText = `Đã chọn: ${file.name}`;
+                pv.classList.remove('hidden');
+            }
+        }
+        
+        window.clearFile = function() {
+            document.getElementById('chatFileInput').value = '';
+            document.getElementById('filePreview').classList.add('hidden');
+        }
+
+        async function sendMsg() {
+            if (!curId) return;
+            const input = document.getElementById('chatMsgInput');
+            const fileInput = document.getElementById('chatFileInput');
+            
+            if(!input.value.trim() && (!fileInput.files || fileInput.files.length === 0)) return;
+
+            const box = document.getElementById('chatMessages');
+            const formData = new FormData();
+            formData.append('message', input.value);
+            if(fileInput.files.length > 0) {
+                formData.append('attachment', fileInput.files[0]);
+            }
+
+            const user = AuthManager.getUser();
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/orders/${curId}/chat`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${user.token}` },
+                    body: formData
+                });
+                
+                if (res.ok) {
+                    const resultData = await res.json();
+                    input.value = '';
+                    window.clearFile();
+                    // fetchChatMessages(curId); // No need to reload all
+                    const newMsg = resultData.data;
+                    appendSingleMessage(newMsg);
+                    if (socket) {
+                        socket.emit('send_message', newMsg);
+                    }
+                } else {
+                    const error = await res.json();
+                    showToast(error.message || 'Lỗi gửi tin nhắn', 'error');
+                }
+            } catch (err) {
+                showToast('Không thể kết nối tải file', 'error');
+            }
+        }
+
+        async function resolveDispute(newStatus) {
+            if(!confirm(`Xác nhận xử lý khiếu nại với hành động này?`)) return;
+            const user = AuthManager.getUser();
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/orders/${curId}/status`, {
+                    method: 'PUT', headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if(res.ok) {
+                    showToast('Đã giải quyết khiếu nại thành công!', 'success');
+                    loadDisputesData();
+                    document.getElementById('chatInterface').classList.add('hidden');
+                    document.getElementById('welcomeScreen').classList.remove('hidden');
+                }
+            } catch (e) {}
+        }
+
+        function exportXLS() {
+            const d = allD.map(o => ({'Don Hang': 'ORD-'+o.id, 'Khach Hang': o.user_name, 'Ngay': new Date().toLocaleDateString(), 'Gia Tri': o.total_amount}));
+            const ws = XLSX.utils.json_to_sheet(d);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "PhieuKhieuNai");
+            XLSX.writeFile(wb, "ElectroHub_Disputes.xlsx");
+        }
+    </script>
+</body>
+</html>

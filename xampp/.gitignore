@@ -1,0 +1,5 @@
+# Bỏ qua dữ liệu MySQL (không commit vào git)
+mysql/data/
+
+# Bỏ qua log files
+logs/

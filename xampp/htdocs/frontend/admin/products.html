@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý sản phẩm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Export/Import Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .fixed-sidebar { width: 18rem; }
+        .main-content { margin-left: 18rem; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out; }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- SIDEBAR -->
+        <aside class="fixed top-0 left-0 w-72 bg-white border-r border-slate-200 h-screen flex flex-col z-50">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+            <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
+            <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="settings" size="20"></i> Cài đặt</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ml-72 p-10 min-h-screen">
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Quản lý sản phẩm</h1>
+                <p class="text-slate-500 font-medium">Hệ thống quản trị kho hàng chuyên nghiệp</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="document.getElementById('importExcelInput').click()" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all border border-slate-200">
+                    <i data-lucide="upload" size="18"></i> Import Excel
+                </button>
+                <input type="file" id="importExcelInput" class="hidden" accept=".xlsx, .xls" onchange="handleImportExcel(event)">
+                <div class="relative group">
+                    <button class="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl font-bold hover:bg-black transition-all shadow-md">
+                        <i data-lucide="download" size="18"></i> Xuất dữ liệu
+                    </button>
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 hidden group-hover:block z-20 overflow-hidden">
+                        <button onclick="exportToExcel()" class="w-full px-5 py-3 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-3 border-b border-slate-50">
+                            <i data-lucide="file-spreadsheet" class="text-green-600" size="16"></i> Excel (.xlsx)
+                        </button>
+                        <button onclick="exportToPDF()" class="w-full px-5 py-3 text-left text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-3">
+                            <i data-lucide="file-text" class="text-red-500" size="16"></i> PDF (.pdf)
+                        </button>
+                    </div>
+                </div>
+                <button onclick="openProductModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                    <i data-lucide="plus" size="18"></i> Thêm mới
+                </button>
+            </div>
+        </header>
+
+        <!-- TOOLBAR: SEARCH & FILTER -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 flex flex-wrap items-center gap-4 justify-between">
+            <div class="flex items-center gap-4 flex-1">
+                <div class="relative max-w-sm w-full">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                    <input type="text" id="productSearch" oninput="debounceSearch()" placeholder="Tìm tên sản phẩm, ID..." class="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm transition-all text-slate-900 placeholder:text-slate-400">
+                </div>
+                <div class="relative min-w-[200px]">
+                    <i data-lucide="filter" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                    <select id="categoryFilter" onchange="filterProducts()" class="w-full pl-12 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm appearance-none cursor-pointer transition-all text-slate-900 border-none">
+                        <option value="all">Tất cả danh mục</option>
+                        <!-- Categories will be loaded here -->
+                    </select>
+                    <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size="16"></i>
+                </div>
+            </div>
+            <div class="text-sm font-bold text-slate-400 uppercase tracking-widest" id="totalProductCount">Đang tải...</div>
+        </div>
+
+        <!-- PRODUCTS TABLE -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden relative min-h-[400px]">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="px-8 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider cursor-pointer group" onclick="sortBy('name')">
+                                <span class="flex items-center gap-2">Sản phẩm <i data-lucide="arrow-up-down" size="12" class="opacity-30 group-hover:opacity-100"></i></span>
+                            </th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Danh mục</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider cursor-pointer group" onclick="sortBy('price')">
+                                <span class="flex items-center gap-2">Giá <i data-lucide="arrow-up-down" size="12" class="opacity-30 group-hover:opacity-100"></i></span>
+                            </th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider cursor-pointer group" onclick="sortBy('stock')">
+                                <span class="flex items-center gap-2">Kho <i data-lucide="arrow-up-down" size="12" class="opacity-30 group-hover:opacity-100"></i></span>
+                            </th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Trạng thái</th>
+                            <th class="px-8 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50" id="productTableBody">
+                        <!-- Products will be rendered here -->
+                        <tr><td colspan="6" class="text-center p-20"><div class="flex flex-col items-center gap-4"><div class="w-12 h-12 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"></div><p class="text-slate-400 font-bold">Đang lấy dữ liệu...</p></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden flex-col items-center justify-center p-20 text-center">
+                <div class="w-20 h-20 bg-slate-100 text-slate-300 rounded-full flex items-center justify-center mb-4"><i data-lucide="package-search" size="40"></i></div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Không tìm thấy sản phẩm</h3>
+                <p class="text-slate-500 max-w-xs">Thử tìm kiếm với từ khóa khác hoặc xóa các bộ lọc hiện tại.</p>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="p-6 border-t border-slate-50 flex items-center justify-between bg-white/50 backdrop-blur-sm sticky bottom-0">
+                <div class="text-sm font-bold text-slate-500" id="paginationInfo">Đang tải...</div>
+                <div class="flex items-center gap-2" id="paginationButtons">
+                    <!-- Buttons will be generated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PRODUCT MODAL -->
+    <div id="productModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden relative modal-animate max-h-[95vh] flex flex-col">
+            <form id="productForm" class="flex flex-col h-full">
+                <input type="hidden" id="productId">
+                <!-- Modal Header -->
+                <div class="p-8 pb-4 flex justify-between items-start">
+                    <div>
+                        <h2 id="modalTitle" class="text-2xl font-black text-slate-900 mb-1">Thêm sản phẩm mới</h2>
+                        <p class="text-slate-500 font-medium text-sm">Điền đầy đủ thông tin để cập nhật giỏ hàng trực tuyến.</p>
+                    </div>
+                    <button type="button" onclick="closeProductModal()" class="p-2 hover:bg-slate-100 rounded-full transition-all text-slate-400 hover:text-slate-900">
+                        <i data-lucide="x" size="24"></i>
+                    </button>
+                </div>
+                <!-- Modal Body -->
+                <div class="flex-1 p-8 pt-4 overflow-y-auto space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-wider block">Tên sản phẩm</label>
+                            <input type="text" id="productName" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-slate-900 tracking-tight" placeholder="VD: iPhone 15 Pro Max">
+                        </div>
+                        <div class="space-y-2 text-slate-400">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-wider block">Danh mục</label>
+                            <div class="relative">
+                                <select id="productCategory" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-slate-900 appearance-none cursor-pointer">
+                                    <!-- Populated from API -->
+                                </select>
+                                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size="18"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-wider block">Mô tả sản phẩm</label>
+                        <textarea id="productDescription" rows="4" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all text-slate-900 leading-relaxed" placeholder="Nhập mô tả chi tiết, thông số kỹ thuật..."></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-wider block">Giá bán (VND)</label>
+                            <div class="relative">
+                                <input type="number" id="productPrice" required min="0" class="w-full pl-12 pr-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-black transition-all text-slate-900 tracking-tight" placeholder="0">
+                                <span class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₫</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-wider block">Số lượng tồn kho</label>
+                            <div class="relative">
+                                <input type="number" id="productStock" required min="0" class="w-full pl-12 pr-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-black transition-all text-slate-900 tracking-tight" placeholder="0">
+                                <i data-lucide="box" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-wider block">Hình ảnh sản phẩm</label>
+                        <div class="grid grid-cols-4 gap-4">
+                            <div id="imagePreview" class="col-span-1 aspect-square bg-slate-100 rounded-2xl border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden">
+                                <i data-lucide="image" class="text-slate-300" size="32"></i>
+                            </div>
+                            <div class="col-span-3 space-y-2">
+                                <input type="text" id="productImage" oninput="updateImagePreview(this.value)" placeholder="Dán link hình ảnh tại đây..." class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-all text-slate-900 text-sm">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase italic">* Hỗ trợ định dạng JPG, PNG hoặc WebP</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Footer -->
+                <div class="p-8 pt-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                    <button type="button" onclick="closeProductModal()" class="px-8 py-3.5 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-sm hover:bg-slate-100 transition-all">HỦY THAO TÁC</button>
+                    <button type="submit" class="px-8 py-3.5 bg-blue-600 text-white rounded-2xl font-black text-sm hover:bg-blue-700 transition-all shadow-xl shadow-blue-100">LƯU THAY ĐỔI</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        // --- GLOBAL STATE ---
+        let allProducts = [];
+        let filteredProducts = [];
+        let categories = [];
+        let currentPage = 1;
+        const itemsPerPage = 7;
+        let sortColumn = 'id';
+        let sortDirection = 'desc';
+        let searchTimer;
+
+        const productForm = document.getElementById('productForm');
+        const productTableBody = document.getElementById('productTableBody');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const modal = document.getElementById('productModal');
+
+        // --- CORE FUNCTIONS ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (window.lucide) lucide.createIcons();
+            await fetchCategories();
+            await fetchProducts();
+        });
+
+        async function fetchCategories() {
+            try {
+                // In this project, categories might be at /api/user/categories or similar
+                // We'll try to fetch from backend or use the known ones
+                const res = await fetch(`${window.API_BASE}/api/user/categories`);
+                const result = await res.json();
+                if (res.ok) {
+                    categories = result.data || [];
+                    const html = ['<option value="all">Tất cả danh mục</option>']
+                        .concat(categories.map(c => `<option value="${c.id}">${c.name}</option>`))
+                        .join('');
+                    categoryFilter.innerHTML = html;
+                    document.getElementById('productCategory').innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                }
+            } catch (err) { console.error('Failed to fetch categories:', err); }
+        }
+
+        async function fetchProducts() {
+            const user = AuthManager.getUser();
+            try {
+                const response = await fetch(`${window.API_BASE}/api/admin/products`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    allProducts = result.data.products || result.data || [];
+                    applyAllFilters();
+                } else {
+                    showToast('Lỗi: ' + (result.message || 'Không thể tải dữ liệu'), 'error');
+                }
+            } catch (error) {
+                showToast('Lỗi kết nối máy chủ', 'error');
+            }
+        }
+
+        function applyAllFilters() {
+            const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+            const catId = categoryFilter.value;
+
+            filteredProducts = allProducts.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm) || p.id.toString().includes(searchTerm);
+                const matchesCategory = catId === 'all' || p.category_id.toString() === catId;
+                return matchesSearch && matchesCategory;
+            });
+
+            // Sorting
+            filteredProducts.sort((a, b) => {
+                let valA = a[sortColumn];
+                let valB = b[sortColumn];
+                if (typeof valA === 'string') valA = valA.toLowerCase();
+                if (typeof valB === 'string') valB = valB.toLowerCase();
+                
+                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginated = filteredProducts.slice(start, end);
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
+
+            document.getElementById('totalProductCount').innerText = `${filteredProducts.length} SẢN PHẨM`;
+            
+            if (paginated.length === 0) {
+                productTableBody.innerHTML = '';
+                document.getElementById('emptyState').classList.remove('hidden');
+                document.getElementById('paginationInfo').innerText = 'Không có dữ liệu hiển thị';
+                document.getElementById('paginationButtons').innerHTML = '';
+                return;
+            }
+
+            document.getElementById('emptyState').classList.add('hidden');
+            productTableBody.innerHTML = paginated.map(p => `
+                <tr class="hover:bg-slate-50/80 transition-all border-b border-slate-50 last:border-0 group">
+                    <td class="px-8 py-5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl border border-slate-100 overflow-hidden shadow-sm group-hover:shadow-md transition-all">
+                                <img src="${p.image_url || 'https://picsum.photos/seed/p'+p.id+'/100'}" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <p class="font-black text-slate-900 tracking-tight leading-tight mb-1">${p.name}</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mã: SP-${p.id}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5">
+                        <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold uppercase">${p.category_name || 'Khác'}</span>
+                    </td>
+                    <td class="px-8 py-5">
+                        <p class="font-black text-slate-900">${formatVND(p.price)}</p>
+                    </td>
+                    <td class="px-8 py-5">
+                        <div class="flex items-center gap-2">
+                             <div class="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-${p.stock < 10 ? 'red' : 'blue'}-500 rounded-full" style="width: ${Math.min(p.stock, 100)}%"></div>
+                             </div>
+                             <span class="font-bold text-sm text-slate-600">${p.stock}</span>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5">
+                        ${p.is_active ? 
+                            '<span class="flex items-center gap-2 text-green-600 text-[10px] font-black uppercase tracking-widest"><span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Hoạt động</span>' : 
+                            '<span class="flex items-center gap-2 text-slate-400 text-[10px] font-black uppercase tracking-widest"><span class="w-2 h-2 bg-slate-300 rounded-full"></span> Đã ẩn</span>'
+                        }
+                    </td>
+                    <td class="px-8 py-5 text-right">
+                        <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <button onclick='openProductModal(${JSON.stringify(p)})' class="p-2.5 bg-white border border-slate-100 text-blue-600 rounded-xl shadow-sm hover:shadow-md hover:bg-blue-600 hover:text-white transition-all"><i data-lucide="edit" size="18"></i></button>
+                            <button onclick="deleteProduct(${p.id})" class="p-2.5 bg-white border border-slate-100 text-red-500 rounded-xl shadow-sm hover:shadow-md hover:bg-red-500 hover:text-white transition-all"><i data-lucide="trash-2" size="18"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Pagination UI
+            document.getElementById('paginationInfo').innerText = `Trang ${currentPage} / ${totalPages}`;
+            let btns = '';
+            for(let i=1; i<=totalPages; i++) {
+                btns += `<button onclick="goToPage(${i})" class="w-10 h-10 flex items-center justify-center rounded-xl font-black text-sm transition-all ${currentPage === i ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}">${i}</button>`;
+            }
+            document.getElementById('paginationButtons').innerHTML = btns;
+            
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // --- ACTIONS ---
+        function debounceSearch() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                currentPage = 1;
+                applyAllFilters();
+            }, 400);
+        }
+
+        function filterProducts() {
+            currentPage = 1;
+            applyAllFilters();
+        }
+
+        function sortBy(col) {
+            if (sortColumn === col) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = col;
+                sortDirection = 'asc';
+            }
+            applyAllFilters();
+        }
+
+        function goToPage(p) {
+            currentPage = p;
+            renderTable();
+        }
+
+        function openProductModal(p = null) {
+            const title = document.getElementById('modalTitle');
+            productForm.reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('imagePreview').innerHTML = '<i data-lucide="image" class="text-slate-300" size="32"></i>';
+            if (window.lucide) lucide.createIcons();
+
+            if (p) {
+                title.innerText = 'Cập nhật sản phẩm';
+                document.getElementById('productId').value = p.id;
+                document.getElementById('productName').value = p.name;
+                document.getElementById('productCategory').value = p.category_id;
+                document.getElementById('productDescription').value = p.description || '';
+                document.getElementById('productPrice').value = p.price;
+                document.getElementById('productStock').value = p.stock;
+                document.getElementById('productImage').value = p.image_url || '';
+                updateImagePreview(p.image_url);
+            } else {
+                title.innerText = 'Thêm sản phẩm mới';
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            modal.classList.add('hidden');
+        }
+
+        function updateImagePreview(url) {
+            const prev = document.getElementById('imagePreview');
+            if (url && url.length > 5) {
+                prev.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+            } else {
+                prev.innerHTML = '<i data-lucide="image" class="text-slate-300" size="32"></i>';
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('productId').value;
+            const user = AuthManager.getUser();
+            const data = {
+                name: document.getElementById('productName').value,
+                category_id: parseInt(document.getElementById('productCategory').value),
+                description: document.getElementById('productDescription').value,
+                price: parseInt(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                image_url: document.getElementById('productImage').value,
+                is_active: 1
+            };
+
+            const url = id ? `${window.API_BASE}/api/admin/products/${id}` : `${window.API_BASE}/api/admin/products`;
+            const method = id ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    showToast(result.message, 'success');
+                    closeProductModal();
+                    fetchProducts();
+                } else { showToast(result.message, 'error'); }
+            } catch (err) { showToast('Lỗi kết nối', 'error'); }
+        });
+
+        async function deleteProduct(id) {
+            if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) return;
+            const user = AuthManager.getUser();
+            try {
+                const res = await fetch(`${window.API_BASE}/api/admin/products/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    showToast('Đã xóa thành công', 'success');
+                    fetchProducts();
+                } else { showToast(result.message, 'error'); }
+            } catch (err) { showToast('Lỗi khi xóa', 'error'); }
+        }
+
+        // --- EXPORT / IMPORT ---
+        function exportToExcel() {
+            const data = filteredProducts.map(p => ({
+                'ID': p.id,
+                'Tên sản phẩm': p.name,
+                'Danh mục': p.category_name,
+                'Giá': p.price,
+                'Tồn kho': p.stock,
+                'Trạng thái': p.is_active ? 'Đang bán' : 'Bị ẩn'
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sản phẩm");
+            XLSX.writeFile(wb, "ElectroHub_Products.xlsx");
+            showToast('Đã xuất Excel thành công!', 'success');
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("DANH SÁCH SẢN PHẨM - ELECTROHUB", 14, 15);
+            const rows = filteredProducts.map(p => [p.id, p.name, p.category_name, formatVND(p.price), p.stock]);
+            doc.autoTable({
+                head: [['ID', 'Tên sản phẩm', 'Danh mục', 'Giá', 'Kho']],
+                body: rows,
+                startY: 25,
+                theme: 'striped',
+                styles: { font: 'helvetica', fontSize: 9 }
+            });
+            doc.save("ElectroHub_Products.pdf");
+            showToast('Đã tạo file PDF!', 'success');
+        }
+
+        function handleImportExcel(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const data = evt.target.result;
+                const workbook = XLSX.read(data, { type: 'binary' });
+                const sheetName = workbook.SheetNames[0];
+                const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+                
+                if (confirm(`Tìm thấy ${rows.length} sản phẩm. Tiếp hành Import vào hệ thống?`)) {
+                    processImportBulk(rows);
+                }
+            };
+            reader.readAsBinaryString(file);
+        }
+
+        async function processImportBulk(rows) {
+            const user = AuthManager.getUser();
+            showToast('Đang xử lý import...', 'info');
+            let successLine = 0;
+            for(const row of rows) {
+                try {
+                    const data = {
+                        name: row['Tên sản phẩm'] || row['name'],
+                        category_id: 1, // Default or map if exists
+                        price: parseInt(row['Giá'] || row['price'] || 0),
+                        stock: parseInt(row['Tồn kho'] || row['stock'] || 0),
+                        description: 'Dữ liệu nhập từ Excel',
+                        is_active: 1
+                    };
+                    const res = await fetch(`${window.API_BASE}/api/admin/products`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                        body: JSON.stringify(data)
+                    });
+                    if (res.ok) successLine++;
+                } catch (e) {}
+            }
+            showToast(`Import hoàn tất! Thành công: ${successLine}/${rows.length}`, 'success');
+            fetchProducts();
+        }
+    </script>
+</body>
+</html>

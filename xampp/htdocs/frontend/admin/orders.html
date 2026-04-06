@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý đơn hàng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Export Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { width: 18rem; }
+        .main-content { margin-left: 18rem; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- SIDEBAR -->
+        <aside class="fixed top-0 left-0 w-72 bg-white border-r border-slate-200 h-screen flex flex-col z-50">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+            <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
+            <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="settings" size="20"></i> Cài đặt</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ml-72 p-10 min-h-screen">
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Quản lý đơn hàng</h1>
+                <p class="text-slate-500 font-medium">Theo dõi, kiểm duyệt và quản lý luồng đơn hàng</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="exportToExcel()" class="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-bold hover:bg-black transition-all shadow-md">
+                    <i data-lucide="file-spreadsheet" size="18"></i> Xuất Excel
+                </button>
+                <button onclick="exportToPDF()" class="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-all">
+                    <i data-lucide="printer" size="18"></i> In báo cáo PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- TOOLBAR: SEARCH & FILTER -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 flex flex-wrap items-center gap-4">
+            <div class="relative flex-1 max-w-md">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                <input type="text" id="orderSearch" oninput="debounceSearch()" placeholder="Tìm theo Mã đơn (ORD-...) hoặc Khách hàng..." class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-slate-900 text-sm">
+            </div>
+            <div class="relative min-w-[220px]">
+                <i data-lucide="filter" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                <select id="statusFilter" onchange="filterOrders()" class="w-full pl-12 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-black text-sm appearance-none cursor-pointer transition-all text-slate-900">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending">Chờ xác nhận</option>
+                    <option value="confirmed">Đã xác nhận</option>
+                    <option value="shipping">Đang giao</option>
+                    <option value="completed">Hoàn thành</option>
+                    <option value="cancelled">Đã hủy</option>
+                    <option value="disputed">Khiếu nại</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size="16"></i>
+            </div>
+            <div class="ml-auto flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest" id="totalOrderCount">
+                <i data-lucide="info" size="14"></i> <span>Đang lấy số liệu...</span>
+            </div>
+        </div>
+
+        <!-- ORDERS TABLE -->
+        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest cursor-pointer group" onclick="sortBy('id')">
+                                <span class="flex items-center gap-2">Mã Đơn <i data-lucide="chevron-down" size="12" class="opacity-30"></i></span>
+                            </th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Khách hàng</th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest cursor-pointer group" onclick="sortBy('created_at')">
+                                <span class="flex items-center gap-2">Ngày đặt <i data-lucide="arrow-up-down" size="12" class="opacity-30"></i></span>
+                            </th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest cursor-pointer group" onclick="sortBy('total_amount')">
+                                <span class="flex items-center gap-2">Giá trị <i data-lucide="arrow-up-down" size="12" class="opacity-30"></i></span>
+                            </th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Trạng thái</th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50" id="orderTableBody">
+                        <!-- Loading -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="emptyState" class="hidden py-32 flex flex-col items-center justify-center text-center">
+                <div class="w-24 h-24 bg-slate-50 text-slate-200 rounded-full flex items-center justify-center mb-6"><i data-lucide="shopping-bag" size="48"></i></div>
+                <h3 class="text-xl font-black text-slate-900 mb-2">Không có đơn hàng nào</h3>
+                <p class="text-slate-400 max-w-xs font-medium">Chúng tôi không tìm thấy đơn hàng nào khớp với bộ lọc hiện tại.</p>
+            </div>
+
+            <!-- Pagination Container -->
+            <div class="p-8 border-t border-slate-50 flex items-center justify-between bg-white">
+                <div class="text-sm font-bold text-slate-400" id="paginationInfo">Ghi chú: Đang xử lý...</div>
+                <div class="flex items-center gap-1.5" id="paginationPages">
+                    <!-- Dynamic buttons -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Invoice Modal -->
+    <div id="invoiceModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-4xl h-[90vh] rounded-[2rem] shadow-2xl flex flex-col overflow-hidden relative">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <h2 class="text-xl font-black text-slate-900">Chi tiết Hóa đơn PDF</h2>
+                <button onclick="closeInvoiceModal()" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 bg-white border border-slate-200 shadow-sm rounded-xl transition-all"><i data-lucide="x" size="20"></i></button>
+            </div>
+            <div class="flex-1 overflow-hidden bg-slate-50">
+                <iframe id="invoiceIframe" class="w-full h-full border-0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        let allOrders = [];
+        let filteredOrders = [];
+        let currentPage = 1;
+        const limitItems = 8;
+        let currentSort = { col: 'id', dir: 'desc' };
+        let sTimer;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            fetchOrders();
+        });
+
+        async function fetchOrders() {
+            const user = AuthManager.getUser();
+            const container = document.getElementById('orderTableBody');
+            container.innerHTML = '<tr><td colspan="6" class="p-20 text-center"><div class="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin mx-auto"></div></td></tr>';
+            
+            try {
+                const res = await fetch(`${window.API_BASE}/api/admin/orders`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    allOrders = result.data.orders || result.data || [];
+                    applyLogic();
+                } else { showToast(result.message, 'error'); }
+            } catch (e) { showToast('Lỗi tải đơn hàng', 'error'); }
+        }
+
+        function applyLogic() {
+            const q = document.getElementById('orderSearch').value.toLowerCase();
+            const s = document.getElementById('statusFilter').value;
+
+            filteredOrders = allOrders.filter(o => {
+                const matchQ = `ORD-${o.id}`.toLowerCase().includes(q) || (o.user_name || '').toLowerCase().includes(q);
+                const matchS = s === 'all' || o.status === s;
+                return matchQ && matchS;
+            });
+
+            // Global Sort
+            filteredOrders.sort((a,b) => {
+                const dir = currentSort.dir === 'asc' ? 1 : -1;
+                return (a[currentSort.col] > b[currentSort.col] ? 1 : -1) * dir;
+            });
+
+            renderUI();
+        }
+
+        function renderUI() {
+            const start = (currentPage - 1) * limitItems;
+            const paginated = filteredOrders.slice(start, start + limitItems);
+            const body = document.getElementById('orderTableBody');
+            const totalP = Math.ceil(filteredOrders.length / limitItems) || 1;
+
+            document.getElementById('totalOrderCount').innerHTML = `<span>${filteredOrders.length} ĐƠN HÀNG</span>`;
+            
+            if (paginated.length === 0) {
+                body.innerHTML = '';
+                document.getElementById('emptyState').classList.remove('hidden');
+            } else {
+                document.getElementById('emptyState').classList.add('hidden');
+                body.innerHTML = paginated.map(o => {
+                    const date = new Date(o.created_at).toLocaleDateString('vi-VN');
+                    return `
+                        <tr class="hover:bg-slate-50/80 transition-all border-b border-slate-50 group">
+                            <td class="px-8 py-6 font-black text-blue-600 tracking-tighter">ORD-${o.id}</td>
+                            <td class="px-8 py-6">
+                                <p class="font-bold text-slate-800 leading-tight">${o.user_name || 'Khách vãng lai'}</p>
+                                <p class="text-[11px] text-slate-400 font-bold uppercase mt-0.5">${o.user_phone || 'N/A'}</p>
+                            </td>
+                            <td class="px-8 py-6 text-slate-500 font-bold text-sm">${date}</td>
+                            <td class="px-8 py-6 font-black text-slate-900">${formatVND(o.total_amount)}</td>
+                            <td class="px-8 py-6">${getStatusBadge(o.status)}</td>
+                            <td class="px-8 py-6 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <button onclick="openInvoiceModal(${o.id})" class="p-2.5 bg-white border border-slate-100 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-all shadow-sm flex items-center gap-2" title="In Hóa Đơn PDF"><i data-lucide="printer" size="16"></i> Popup</button>
+                                    
+                                    <select onchange="if(this.value) { updateStatus(${o.id}, this.value); this.value=''; }" class="px-3 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 outline-none cursor-pointer transition-all appearance-none ring-0">
+                                         <option value="" disabled selected>Chọn hành động...</option>
+                                         <option value="confirmed">Duyệt đơn</option>
+                                         <option value="shipping">Giao hàng</option>
+                                         <option value="completed">Hoàn tất</option>
+                                         <option value="cancelled">Hủy bỏ</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Pagination UI
+            document.getElementById('paginationInfo').innerText = `Hiển thị ${start+1}-${Math.min(start+limitItems, filteredOrders.length)} / ${filteredOrders.length} đơn hàng`;
+            let btns = '';
+            for(let i=1; i<=totalP; i++) {
+                btns += `<button onclick="goP(${i})" class="w-9 h-9 rounded-xl font-black text-xs transition-all ${currentPage===i ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'bg-white border border-slate-200 text-slate-500 hover:border-slate-400'}">${i}</button>`;
+            }
+            document.getElementById('paginationPages').innerHTML = btns;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function getStatusBadge(s) {
+            const map = {
+                pending: 'bg-orange-100 text-orange-600 label:Chờ xác nhận',
+                confirmed: 'bg-blue-100 text-blue-600 label:Đã xác nhận',
+                shipping: 'bg-purple-100 text-purple-600 label:Đang giao',
+                completed: 'bg-green-100 text-green-600 label:Thành công',
+                cancelled: 'bg-slate-100 text-slate-500 label:Đã hủy',
+                disputed: 'bg-red-100 text-red-600 label:Khiếu nại'
+            };
+            const config = map[s] || map.pending;
+            const [cls, label] = config.split(' label:');
+            return `<span class="px-3 py-1 ${cls} rounded-full text-[10px] font-black uppercase tracking-widest">${label}</span>`;
+        }
+
+        function debounceSearch() {
+            clearTimeout(sTimer);
+            sTimer = setTimeout(() => { currentPage=1; applyLogic(); }, 400);
+        }
+
+        function openInvoiceModal(id) {
+            document.getElementById('invoiceIframe').src = `invoice.html?id=${id}`;
+            document.getElementById('invoiceModal').classList.remove('hidden');
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceIframe').src = '';
+            document.getElementById('invoiceModal').classList.add('hidden');
+        }
+        function filterOrders() { currentPage=1; applyLogic(); }
+        function goP(p) { currentPage=p; renderUI(); }
+        function sortBy(col) {
+            if (currentSort.col === col) currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            else { currentSort.col = col; currentSort.dir = 'asc'; }
+            applyLogic();
+        }
+
+        async function updateStatus(id, ns) {
+            if(!confirm(`Xác nhận chuyển trạng thái sang [${ns}]?`)) return;
+            const user = AuthManager.getUser();
+            try {
+                const res = await fetch(`${window.API_BASE}/api/admin/orders/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: ns })
+                });
+                if(res.ok) { showToast('Cập nhật thành công', 'success'); fetchOrders(); }
+                else { showToast('Lỗi cập nhật', 'error'); }
+            } catch (e) { showToast('Lỗi server', 'error'); }
+        }
+
+        function exportToExcel() {
+            const data = filteredOrders.map(o => ({
+                'Mã Đơn': 'ORD-'+o.id,
+                'Khách hàng': o.user_name,
+                'SĐT': o.user_phone,
+                'Ngày đặt': new Date(o.created_at).toLocaleDateString(),
+                'Tổng tiền': o.total_amount,
+                'Trạng thái': o.status
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "DonHang");
+            XLSX.writeFile(wb, "ElectroHub_Orders.xlsx");
+            showToast('Đã xuất Excel!', 'success');
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(18).text("ELECTROHUB - DANH SACH DON HANG", 14, 20);
+            const rows = filteredOrders.map(o => ['ORD-'+o.id, o.user_name, new Date(o.created_at).toLocaleDateString(), formatVND(o.total_amount), o.status]);
+            doc.autoTable({
+                head: [['ID', 'Khach Hang', 'Ngay Dat', 'Gia Tri', 'Trang Thai']],
+                body: rows,
+                startY: 30,
+                theme: 'grid',
+                headStyles: { fillColor: [37, 99, 235] }
+            });
+            doc.save("ElectroHub_BaoCaoDonHang.pdf");
+            showToast('Đã tạo PDF thành công!', 'success');
+        }
+    </script>
+</body>
+</html>

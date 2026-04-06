@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Quản lý khách hàng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Export Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .fixed-sidebar { width: 18rem; }
+        .main-content { margin-left: 18rem; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- SIDEBAR -->
+        <aside class="fixed top-0 left-0 w-72 bg-white border-r border-slate-200 h-screen flex flex-col z-50">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+            <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
+            <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="settings" size="20"></i> Cài đặt</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ml-72 p-10 min-h-screen">
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Quản lý khách hàng</h1>
+                <p class="text-slate-500 font-medium">Danh sách người dùng và lịch sử mua sắm</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="exportExcel()" class="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all border border-slate-200 shadow-sm">
+                    <i data-lucide="download" size="18"></i> Xuất Excel
+                </button>
+                <button onclick="exportPDF()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                    <i data-lucide="printer" size="18"></i> In báo cáo PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- TOOLBAR -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 flex flex-wrap items-center gap-4">
+            <div class="relative max-w-sm flex-1">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                <input type="text" id="custSearch" oninput="debounceS()" placeholder="Tìm tên hoặc email..." class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-sm">
+            </div>
+            <div class="relative min-w-[200px]">
+                <i data-lucide="filter" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size="18"></i>
+                <select id="statusF" onchange="applyFilters()" class="w-full pl-12 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm appearance-none cursor-pointer transition-all">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="active">Đang hoạt động</option>
+                    <option value="locked">Đang bị khóa</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size="16"></i>
+            </div>
+            <div class="ml-auto flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest" id="totalCount">
+                <span>0 KHÁCH HÀNG</span>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50/50">
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest cursor-pointer group" onclick="sortBy('name')">
+                                <span class="flex items-center gap-2">Họ & Tên <i data-lucide="arrow-up-down" size="12" class="opacity-30 group-hover:opacity-100"></i></span>
+                            </th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Liên hệ</th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest cursor-pointer group" onclick="sortBy('created_at')">
+                                <span class="flex items-center gap-2">Ngày tham gia <i data-lucide="arrow-up-down" size="12" class="opacity-30 group-hover:opacity-100"></i></span>
+                            </th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest cursor-pointer group" onclick="sortBy('orders_count')">
+                                <span class="flex items-center gap-2">Tổng Đơn <i data-lucide="arrow-up-down" size="12" class="opacity-30 group-hover:opacity-100"></i></span>
+                            </th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Trạng thái</th>
+                            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50" id="custTableBody">
+                        <!-- Content -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="noData" class="hidden py-32 flex flex-col items-center justify-center text-center">
+                <div class="w-20 h-20 bg-slate-100 text-slate-300 rounded-full flex items-center justify-center mb-4"><i data-lucide="users" size="40"></i></div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Không có khách hàng</h3>
+                <p class="text-slate-400 max-w-xs font-medium">Dữ liệu hiển thị hiện đang trống.</p>
+            </div>
+
+            <!-- Page UI -->
+            <div class="p-8 border-t border-slate-50 flex items-center justify-between bg-white/30">
+                <div class="text-sm font-bold text-slate-400 uppercase tracking-widest" id="pageInfo">...</div>
+                <div class="flex items-center gap-1.5" id="pageBtns">
+                    <!-- Dynamic -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        let allC = [];
+        let filteredC = [];
+        let cp = 1;
+        const lim = 8;
+        let sc = 'id';
+        let sd = 'desc';
+        let t;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            loadCustomersData();
+        });
+
+        async function loadCustomersData() {
+            const user = AuthManager.getUser();
+            const body = document.getElementById('custTableBody');
+            body.innerHTML = '<tr><td colspan="6" class="p-20 text-center"><div class="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin mx-auto"></div></td></tr>';
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/customers`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    allC = result.data.customers || result.data || [];
+                    applyFilters();
+                } else { showToast(result.message, 'error'); }
+            } catch (e) { showToast('Lỗi tải dữ liệu', 'error'); }
+        }
+
+        function applyFilters() {
+            const q = document.getElementById('custSearch').value.toLowerCase();
+            const s = document.getElementById('statusF').value;
+
+            filteredC = allC.filter(c => {
+                const mq = (c.name || '').toLowerCase().includes(q) || (c.email || '').toLowerCase().includes(q);
+                const ms = s === 'all' || c.status === s;
+                return mq && ms;
+            });
+
+            filteredC.sort((a,b) => {
+                const d = sd === 'asc' ? 1 : -1;
+                return (a[sc] > b[sc] ? 1 : -1) * d;
+            });
+
+            render();
+        }
+
+        function render() {
+            const start = (cp - 1) * lim;
+            const paginated = filteredC.slice(start, start + lim);
+            const totalPages = Math.ceil(filteredC.length / lim) || 1;
+            const body = document.getElementById('custTableBody');
+
+            document.getElementById('totalCount').innerText = `${filteredC.length} KHÁCH HÀNG`;
+            
+            if (paginated.length === 0) {
+                body.innerHTML = '';
+                document.getElementById('noData').classList.remove('hidden');
+                document.getElementById('pageInfo').innerText = '0-0 / 0';
+                document.getElementById('pageBtns').innerHTML = '';
+                return;
+            }
+
+            document.getElementById('noData').classList.add('hidden');
+            body.innerHTML = paginated.map(c => `
+                <tr class="hover:bg-slate-50/80 transition-all border-b border-slate-50 group">
+                    <td class="px-8 py-5">
+                        <div class="flex items-center gap-3">
+                            <img src="https://picsum.photos/seed/u${c.id}/100" class="w-10 h-10 rounded-full border border-slate-100">
+                            <div>
+                                <p class="font-bold text-slate-800 leading-none mb-1 group-hover:text-blue-600 transition-colors">${c.name}</p>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">ID: USER-${c.id}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5">
+                        <p class="text-sm font-bold text-slate-500">${c.email}</p>
+                        <p class="text-[10px] text-slate-400 font-bold">${c.phone || ''}</p>
+                    </td>
+                    <td class="px-8 py-5 text-sm font-bold text-slate-500">
+                        ${new Date(c.created_at).toLocaleDateString('vi-VN')}
+                    </td>
+                    <td class="px-8 py-5 font-black text-slate-900">${c.orders_count || 0}</td>
+                    <td class="px-8 py-5">
+                        ${c.status === 'active' ? 
+                            '<span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[10px] font-black uppercase tracking-widest">Active</span>' : 
+                            '<span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-[10px] font-black uppercase tracking-widest">Locked</span>'
+                        }
+                    </td>
+                    <td class="px-8 py-5 text-right">
+                        <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <button class="p-2 text-slate-400 hover:text-blue-600 transition-all"><i data-lucide="eye" size="18"></i></button>
+                            ${c.status === 'active' ? 
+                                `<button onclick="toggleLock(${c.id}, 'locked')" class="p-2 text-slate-400 hover:text-red-500 transition-all" title="Khóa tài khoản"><i data-lucide="lock" size="18"></i></button>` :
+                                `<button onclick="toggleLock(${c.id}, 'active')" class="p-2 text-green-600 transition-all" title="Mở khóa"><i data-lucide="unlock" size="18"></i></button>`
+                            }
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('pageInfo').innerText = `Trang ${cp} / ${totalPages}`;
+            let b = '';
+            for(let i=1; i<=totalPages; i++) {
+                b += `<button onclick="go(${i})" class="w-9 h-9 rounded-xl font-black text-xs transition-all ${cp===i ? 'bg-blue-600 text-white shadow-lg' : 'bg-white border border-slate-200 text-slate-500 hover:border-slate-400'}">${i}</button>`;
+            }
+            document.getElementById('pageBtns').innerHTML = b;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function debounceS() {
+            clearTimeout(t);
+            t = setTimeout(() => { cp=1; applyFilters(); }, 400);
+        }
+        function sortBy(c) {
+            if (sc === c) sd = sd === 'asc' ? 'desc' : 'asc';
+            else { sc = c; sd = 'asc'; }
+            applyFilters();
+        }
+        function go(p) { cp=p; render(); }
+
+        async function toggleLock(id, ns) {
+            if(!confirm(`Xác nhận ${ns === 'active' ? 'mở khóa' : 'khóa'} tài khoản này?`)) return;
+            const user = AuthManager.getUser();
+            try {
+                const res = await window.fetch(`${window.API_BASE}/api/admin/customers/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: ns })
+                });
+                if (res.ok) { showToast('Đã cập nhật trạng thái!', 'success'); loadCustomersData(); }
+                else { showToast('Lỗi xử lý', 'error'); }
+            } catch (e) { showToast('Lỗi kết nối', 'error'); }
+        }
+
+        function exportExcel() {
+            const data = filteredC.map(c => ({
+                'Name': c.name, 'Email': c.email, 'Join Date': new Date(c.created_at).toLocaleDateString(),
+                'Orders': c.orders_count, 'Status': c.status
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "KhachHang");
+            XLSX.writeFile(wb, "ElectroHub_Customers.xlsx");
+            showToast('Đã xuất Excel!', 'success');
+        }
+
+        function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(18).text("ELECTROHUB - DANH SACH KHACH HANG", 14, 20);
+            const rows = filteredC.map(c => [c.name, c.email, new Date(c.created_at).toLocaleDateString(), c.orders_count, c.status]);
+            doc.autoTable({
+                head: [['Ho Ten', 'Email', 'Ngay Tham Gia', 'Don Hang', 'Trang Thai']],
+                body: rows,
+                startY: 30,
+                theme: 'striped',
+                headStyles: { fillColor: [59, 130, 246] }
+            });
+            doc.save("ElectroHub_CustReport.pdf");
+            showToast('Đã tạo PDF!', 'success');
+        }
+    </script>
+</body>
+</html>

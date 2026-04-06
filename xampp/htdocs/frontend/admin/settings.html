@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroHub Admin - Cài đặt hệ thống</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        .fixed-sidebar { width: 18rem; }
+        .main-content { margin-left: 18rem; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- SIDEBAR -->
+        <aside class="fixed top-0 left-0 w-72 bg-white border-r border-slate-200 h-screen flex flex-col z-50">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                <i data-lucide="layout-dashboard" size="24"></i>
+            </div>
+            <span class="text-2xl font-black text-slate-900 tracking-tighter">AdminHub</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="bar-chart-3" size="20"></i> Tổng quan</a>
+            <a href="products.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="package" size="20"></i> Sản phẩm</a>
+            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="shopping-bag" size="20"></i> Đơn hàng</a>
+            <a href="customers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="users" size="20"></i> Khách hàng</a>
+            <a href="vouchers.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="ticket" size="20"></i> Mã giảm giá</a>
+            <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="star" size="20"></i> Đánh giá</a>
+            <a href="disputes.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold transition-all"><i data-lucide="message-square" size="20"></i> Khiếu nại</a>
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold transition-all"><i data-lucide="settings" size="20"></i> Cài đặt</a>
+        </nav>
+        <div class="p-6 border-t border-slate-100"><a href="../index.html" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition-all"><i data-lucide="log-out" size="20"></i> Thoát Admin</a></div>
+    </aside>
+
+    <main class="ml-72 p-10 min-h-screen">
+        <header class="mb-10">
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Cài đặt hệ thống</h1>
+            <p class="text-slate-500 font-medium">Cấu hình các tham số vận hành cho toàn bộ cửa hàng</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left: Settings Navigation -->
+            <div class="lg:col-span-1 space-y-4">
+                <div class="bg-white p-2 rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                    <button onclick="scrollToS('general')" class="w-full flex items-center gap-4 px-6 py-4 text-sm font-bold text-blue-600 bg-blue-50 rounded-2xl transition-all">
+                        <i data-lucide="store" size="20"></i> Thông tin cửa hàng
+                    </button>
+                    <button onclick="scrollToS('system')" class="w-full flex items-center gap-4 px-6 py-4 text-sm font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all">
+                        <i data-lucide="layers" size="20"></i> Cấu hình hệ thống
+                    </button>
+                    <button onclick="scrollToS('notifications')" class="w-full flex items-center gap-4 px-6 py-4 text-sm font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all">
+                        <i data-lucide="bell" size="20"></i> Thông báo & Email
+                    </button>
+                    <button onclick="scrollToS('security')" class="w-full flex items-center gap-4 px-6 py-4 text-sm font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all">
+                        <i data-lucide="shield-check" size="20"></i> Bảo mật & Tài khoản
+                    </button>
+                </div>
+
+                <div class="bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden group">
+                     <i data-lucide="zap" class="absolute -right-4 -top-4 text-white/10 group-hover:scale-125 transition-all" size="120"></i>
+                     <h3 class="text-lg font-black mb-2 relative z-10">Chế độ bảo trì?</h3>
+                     <p class="text-slate-400 text-sm mb-6 relative z-10 leading-relaxed">Tạm thời ngắt kết nối phía khách hàng để cập nhật hệ thống.</p>
+                     <button class="w-full py-3 bg-red-600 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-700 transition-all relative z-10">KÍCH HOẠT NGAY</button>
+                </div>
+            </div>
+
+            <!-- Right: Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- General Info -->
+                <section id="general" class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-8 border-b border-slate-50 bg-slate-50/50">
+                        <h2 class="text-xl font-black text-slate-900">Thông tin cửa hàng</h2>
+                    </div>
+                    <div class="p-8 space-y-6">
+                        <div class="flex items-center gap-8">
+                            <div class="relative group">
+                                <img src="https://picsum.photos/seed/shop/200" class="w-24 h-24 rounded-3xl object-cover ring-4 ring-slate-50 group-hover:opacity-75 transition-all">
+                                <button class="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all font-black text-[10px] uppercase">Gỡ ảnh</button>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-slate-900 mb-1">Logo Thương Hiệu</p>
+                                <p class="text-xs text-slate-400 font-medium mb-3">Tải lên file PNG hoặc JPG (tối đa 2MB).</p>
+                                <button class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-all">Thay đổi logo</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Tên hiển thị</label>
+                                <input type="text" value="ElectroHub Vietnam" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-slate-900">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Email liên hệ</label>
+                                <input type="email" value="contact@electrohub.vn" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-slate-900">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Địa chỉ văn phòng</label>
+                            <input type="text" value="Sảnh A, Toà nhà Công Nghệ, Hà Nội, Việt Nam" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all text-slate-900">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- System Config -->
+                <section id="system" class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-8 border-b border-slate-50 bg-slate-50/50">
+                        <h2 class="text-xl font-black text-slate-900">Cấu hình hệ thống</h2>
+                    </div>
+                <!-- Notifications Config -->
+                <section id="notifications" class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-8 border-b border-slate-50 bg-slate-50/50">
+                        <h2 class="text-xl font-black text-slate-900">Thông báo & Email</h2>
+                    </div>
+                    <div class="p-8 space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+                             <div>
+                                 <p class="text-sm font-bold text-slate-900">Thông báo đơn hàng mới</p>
+                                 <p class="text-[10px] text-slate-400 font-bold uppercase">Nhận thông báo đẩy khi có khách đặt hàng</p>
+                             </div>
+                             <button class="w-12 h-6 bg-blue-600 rounded-full relative p-1 transition-all"><span class="block w-4 h-4 bg-white rounded-full ml-auto"></span></button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+                             <div>
+                                 <p class="text-sm font-bold text-slate-900">Báo cáo doanh thu hàng ngày</p>
+                                 <p class="text-[10px] text-slate-400 font-bold uppercase">Gửi email tổng kết doanh số lúc 23h59</p>
+                             </div>
+                             <button class="w-12 h-6 bg-slate-200 rounded-full relative p-1 transition-all"><span class="block w-4 h-4 bg-white rounded-full"></span></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Security & Account -->
+                <section id="security" class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-8 border-b border-slate-50 bg-slate-50/50 flex justify-between items-center">
+                        <h2 class="text-xl font-black text-slate-900">Bảo mật & Tài khoản</h2>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-[10px] font-black uppercase">Admin Profile</span>
+                    </div>
+                    
+                    <!-- Profile Info -->
+                    <div class="p-8 border-b border-slate-50 space-y-6">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Thông tin cá nhân</h3>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Họ và tên</label>
+                                <input type="text" id="accName" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Số điện thoại</label>
+                                <input type="text" id="accPhone" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Số tài khoản ngân hàng</label>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="col-span-1 relative">
+                                    <select id="accBankName" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900 appearance-none">
+                                        <option value="">Chọn ngân hàng</option>
+                                    </select>
+                                    <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" size="16"></i>
+                                </div>
+                                <div class="col-span-2">
+                                    <input type="text" id="accBankNumber" placeholder="Nhập số tài khoản..." class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="saveProfile()" class="px-8 py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all">CẬP NHẬT THÔNG TIN</button>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="p-8 space-y-6 bg-slate-50/30">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Đổi mật khẩu</h3>
+                        <div class="space-y-4">
+                            <div class="space-y-2">
+                                <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Mật khẩu hiện tại</label>
+                                <input type="password" id="oldPass" class="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900" placeholder="••••••••">
+                            </div>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Mật khẩu mới</label>
+                                    <input type="password" id="newPass" class="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900" placeholder="••••••••">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Xác nhận mật khẩu mới</label>
+                                    <input type="password" id="confirmPass" class="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-900" placeholder="••••••••">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="changePassword()" class="px-8 py-3 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-700 transition-all shadow-lg shadow-red-100">XÁC NHẬN ĐỔI MẬT KHẨU</button>
+                    </div>
+                </section>
+
+                <!-- Footer Summary buttons -->
+                <div class="flex items-center justify-end gap-3 mt-4">
+                     <button class="px-8 py-4 bg-white border border-slate-200 text-slate-400 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">KHÔI PHỤC MẶC ĐỊNH</button>
+                     <button onclick="saveAll()" class="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all">LƯU CẤU HÌNH HỆ THỐNG</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/helpers.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        const BANKS = [
+            {bin: "970425", name: "ABBANK", desc: "An Bình"}, {bin: "970416", name: "ACB", desc: "Á Châu"},
+            {bin: "970405", name: "Agribank", desc: "Nông nghiệp"}, {bin: "970409", name: "BacABank", desc: "Bắc Á"},
+            {bin: "970438", name: "BaoVietBank", desc: "Bảo Việt"}, {bin: "970418", name: "BIDV", desc: "Đầu tư & Phát triển"},
+            {bin: "546034", name: "CAKE", desc: "Cake by VPBank"}, {bin: "970444", name: "CBBank", desc: "Xây dựng"},
+            {bin: "422589", name: "CIMB", desc: "CIMB Việt Nam"}, {bin: "533948", name: "Citibank", desc: "Citibank Việt Nam"},
+            {bin: "970446", name: "COOPBANK", desc: "Hợp tác xã"}, {bin: "796500", name: "DBSBank", desc: "DBS"},
+            {bin: "970431", name: "Eximbank", desc: "Xuất Nhập khẩu"}, {bin: "970408", name: "GPBank", desc: "Dầu khí"},
+            {bin: "970437", name: "HDBank", desc: "Phát triển TP.HCM"}, {bin: "970442", name: "HongLeong", desc: "Hong Leong"},
+            {bin: "458761", name: "HSBC", desc: "HSBC Việt Nam"}, {bin: "970456", name: "IBKHCM", desc: "IBK - TP.HCM"},
+            {bin: "970455", name: "IBKHN", desc: "IBK - Hà Nội"}, {bin: "970434", name: "IndovinaBank", desc: "Indovina"},
+            {bin: "668888", name: "KBank", desc: "KASIKORNBANK"}, {bin: "970467", name: "KEBHANAHN", desc: "KEB Hana - Hà Nội"},
+            {bin: "970466", name: "KEBHanaHCM", desc: "KEB Hana - TP.HCM"}, {bin: "970452", name: "KienLongBank", desc: "Kiên Long"},
+            {bin: "970463", name: "KookminHCM", desc: "Kookmin - TP.HCM"}, {bin: "970462", name: "KookminHN", desc: "Kookmin - Hà Nội"},
+            {bin: "970449", name: "LPBank", desc: "Lộc Phát"}, {bin: "977777", name: "MAFC", desc: "Mirae Asset"},
+            {bin: "970422", name: "MBBank", desc: "Quân đội"}, {bin: "970426", name: "MSB", desc: "Hàng Hải"},
+            {bin: "970428", name: "NamABank", desc: "Nam Á"}, {bin: "970419", name: "NCB", desc: "Quốc dân"},
+            {bin: "801011", name: "Nonghyup", desc: "Nonghyup"}, {bin: "970448", name: "OCB", desc: "Phương Đông"},
+            {bin: "970430", name: "PGBank", desc: "Thịnh vượng"}, {bin: "970439", name: "PublicBank", desc: "Public Bank"},
+            {bin: "970412", name: "PVcomBank", desc: "Đại chúng"}, {bin: "970403", name: "Sacombank", desc: "Sài Gòn Thương Tín"},
+            {bin: "970400", name: "SaigonBank", desc: "Sài Gòn Công Thương"}, {bin: "970429", name: "SCB", desc: "Sài Gòn"},
+            {bin: "970440", name: "SeABank", desc: "Đông Nam Á"}, {bin: "970443", name: "SHB", desc: "Sài Gòn - Hà Nội"},
+            {bin: "970424", name: "ShinhanBank", desc: "Shinhan"}, {bin: "970410", name: "StandardChartered", desc: "Standard Chartered"},
+            {bin: "970407", name: "Techcombank", desc: "Kỹ thương"}, {bin: "963388", name: "Timo", desc: "Timo"},
+            {bin: "970423", name: "TPBank", desc: "Tiên Phong"}, {bin: "546035", name: "Ubank", desc: "Ubank by VPBank"},
+            {bin: "970458", name: "UnitedOverseas", desc: "UOB Việt Nam"}, {bin: "970441", name: "VIB", desc: "Quốc tế"},
+            {bin: "999888", name: "VBSP", desc: "Chính sách Xã hội"}, {bin: "970427", name: "VietABank", desc: "Việt Á"},
+            {bin: "970433", name: "VietBank", desc: "Việt Nam Thương Tín"}, {bin: "970454", name: "VietCapitalBank", desc: "BVBank"},
+            {bin: "970436", name: "Vietcombank", desc: "Ngoại thương"}, {bin: "970415", name: "VietinBank", desc: "Công Thương"},
+            {bin: "971005", name: "ViettelMoney", desc: "Viettel Money"}, {bin: "970406", name: "Vikki", desc: "Vikki (HDBank)"},
+            {bin: "971011", name: "VNPTMoney", desc: "VNPT Money"}, {bin: "970421", name: "VRB", desc: "Liên doanh Việt - Nga"},
+            {bin: "970457", name: "Woori", desc: "Woori Việt Nam"}
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            initBanks();
+            loadProfile();
+        });
+
+        function initBanks() {
+            const select = document.getElementById('accBankName');
+            BANKS.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.name;
+                opt.dataset.bin = b.bin;
+                opt.textContent = `${b.name} (${b.desc})`;
+                select.appendChild(opt);
+            });
+        }
+
+        async function loadProfile() {
+            const user = AuthManager.getUser();
+            try {
+                const response = await window.fetch(`${window.API_BASE}/api/user/profile`, {
+                    headers: { 'Authorization': `Bearer ${user.token}` }
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    const d = result.data;
+                    document.getElementById('accName').value = d.name || '';
+                    document.getElementById('accPhone').value = d.phone || '';
+                    document.getElementById('accBankName').value = d.bank_name || '';
+                    document.getElementById('accBankNumber').value = d.bank_account || '';
+                }
+            } catch (err) {}
+        }
+
+        async function saveProfile() {
+            const user = AuthManager.getUser();
+            const bankSelect = document.getElementById('accBankName');
+            const bin = bankSelect.options[bankSelect.selectedIndex]?.dataset.bin || '';
+
+            const data = {
+                name: document.getElementById('accName').value,
+                phone: document.getElementById('accPhone').value,
+                bank_name: bankSelect.value,
+                bank_account: document.getElementById('accBankNumber').value,
+                bank_bin: bin
+            };
+
+            try {
+                const response = await window.fetch(`${window.API_BASE}/api/user/profile`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showToast('Đã lưu thông tin tài khoản!', 'success');
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (err) {
+                showToast('Lỗi kết nối máy chủ.', 'error');
+            }
+        }
+
+        async function changePassword() {
+            const current_password = document.getElementById('oldPass').value;
+            const new_password = document.getElementById('newPass').value;
+            const confirm_password = document.getElementById('confirmPass').value;
+
+            if(!current_password || !new_password) {
+                return showToast('Vui lòng nhập mật khẩu!', 'error');
+            }
+            if(new_password !== confirm_password) {
+                return showToast('Xác nhận mật khẩu không khớp!', 'error');
+            }
+
+            const user = AuthManager.getUser();
+            try {
+                const response = await window.fetch(`${window.API_BASE}/api/user/change-password`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ current_password, new_password, confirm_password })
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showToast('Đổi mật khẩu thành công! Hệ thống sẽ tự động đăng xuất...', 'success');
+                    setTimeout(() => {
+                        AuthManager.logout();
+                        window.location.href = '../login.html';
+                    }, 2000);
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (err) {
+                showToast('Lỗi xử lý.', 'error');
+            }
+        }
+
+        function scrollToS(id) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update active state in sidebar
+                document.querySelectorAll('.lg\\:col-span-1 button').forEach(b => {
+                    b.classList.remove('text-blue-600', 'bg-blue-50');
+                    b.classList.add('text-slate-500');
+                });
+                const btn = Array.from(document.querySelectorAll('.lg\\:col-span-1 button')).find(b => b.textContent.toLowerCase().includes(id === 'general' ? 'thông tin' : id === 'system' ? 'cấu hình' : id === 'notifications' ? 'thông báo' : 'bảo mật'));
+                if(btn) {
+                    btn.classList.add('text-blue-600', 'bg-blue-50');
+                    btn.classList.remove('text-slate-500');
+                }
+            }
+        }
+
+        function saveAll() {
+            showToast('Đã cập nhật cấu hình hệ thống!', 'success');
+        }
+    </script>
+</body>
+</html>
+</body>
+</html>

@@ -6,15 +6,18 @@ namespace Controllers\User;
 use Core\BaseController;
 use Core\Middleware;
 use Models\Order;
+use Models\DisputeChat;
 
 class OrderController extends BaseController
 {
     private Order $orderModel;
+    private DisputeChat $chatModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->orderModel = new Order();
+        $this->chatModel = new DisputeChat();
     }
 
     public function index(): void
@@ -104,6 +107,48 @@ class OrderController extends BaseController
             }
         } else {
             $this->error('Không thể lưu file trên máy chủ.', 500);
+        }
+    }
+
+    public function getChat(int $id): void
+    {
+        $payload = Middleware::requireAuth();
+        if (!$this->orderModel->belongsToUser($id, $payload['user_id'])) {
+            $this->error('Order not found or access denied', 404);
+        }
+
+        try {
+            $messages = $this->chatModel->getByOrder($id);
+            $this->success($messages, 'Chat history fetched');
+        } catch (\Exception $e) {
+            $this->logger->error("Error fetching chat for order {$id}: " . $e->getMessage());
+            $this->error('Internal Server Error', 500);
+        }
+    }
+
+    public function sendChat(int $id): void
+    {
+        $payload = Middleware::requireAuth();
+        if (!$this->orderModel->belongsToUser($id, $payload['user_id'])) {
+            $this->error('Order not found or access denied', 404);
+        }
+
+        $body = $this->getBody();
+        if (empty($body['message'])) {
+            $this->error('Missing message', 422);
+        }
+
+        try {
+            $this->chatModel->create([
+                'order_id'    => $id,
+                'user_id'     => (int)$payload['user_id'],
+                'message'     => $body['message'],
+                'sender_role' => 'user'
+            ]);
+            $this->success(null, 'Message sent');
+        } catch (\Exception $e) {
+            $this->logger->error("Error sending chat message for order {$id}: " . $e->getMessage());
+            $this->error('Internal Server Error', 500);
         }
     }
 }
