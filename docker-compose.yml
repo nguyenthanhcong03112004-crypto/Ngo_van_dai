@@ -39,6 +39,12 @@ services:
     volumes:
       - ./xampp/htdocs:/opt/lampp/htdocs
       - ./xampp/logs/apache:/opt/lampp/logs
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=ecommerce_db
+      - DB_USER=root
+      - DB_PASS=
     privileged: true
     depends_on:
       mysql:

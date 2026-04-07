@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+// globals: true
 
 /**
  * SC-191 to SC-200 — Admin Analytics & Reporting

@@ -16,11 +16,11 @@ class Database
     {
         $this->logger = Logger::getInstance();
 
-        $host = $_ENV['DB_HOST'] ?? 'mysql';
-        $port = $_ENV['DB_PORT'] ?? '3306';
-        $name = $_ENV['DB_NAME'] ?? 'ecommerce_db';
-        $user = $_ENV['DB_USER'] ?? 'ecommerce_user';
-        $pass = $_ENV['DB_PASS'] ?? '';
+        $host = $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: 'mysql';
+        $port = $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?: '3306';
+        $name = $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'ecommerce_db';
+        $user = $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'ecommerce_user';
+        $pass = $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '';
 
         $dsn = "mysql:host={$host};port={$port};dbname={$name};charset=utf8mb4";
 

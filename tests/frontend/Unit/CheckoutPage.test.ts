@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+// globals: true
 
 /**
  * Module 3 & 4: Cart, Checkout, Voucher (Frontend Unit Tests)

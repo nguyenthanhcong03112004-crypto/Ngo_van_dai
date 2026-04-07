@@ -2,19 +2,14 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "lib": ["ES2020", "DOM"],
     "types": ["vitest/globals", "node"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "typeRoots": ["../E-Commerce/node_modules/@types"],
-    "paths": {
-      "vitest": ["../E-Commerce/node_modules/vitest"],
-      "@playwright/test": ["../E-Commerce/node_modules/@playwright/test"],
-      "@/*": ["../E-Commerce/src/*"]
-    }
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["./**/*.ts", "./**/*.tsx"]
 }

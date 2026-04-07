@@ -31,47 +31,50 @@ class OrderController extends BaseController
         $this->success($this->orderModel->getByUser($userId, $month, $year));
     }
 
-    public function show(int $id): void
+    public function show(string $id): void
     {
         $payload = Middleware::requireAuth();
-        if (!$this->orderModel->belongsToUser($id, $payload['user_id'])) {
+        $oid = (int)$id;
+        if (!$this->orderModel->belongsToUser($oid, $payload['user_id'])) {
             $this->error('Order not found or access denied', 404);
         }
-        $order = $this->orderModel->getById($id);
+        $order = $this->orderModel->getById($oid);
         $this->success($order);
     }
 
-    public function cancel(int $id): void
+    public function cancel(string $id): void
     {
         $payload = Middleware::requireAuth();
         $userId = $payload['user_id'];
+        $oid = (int)$id;
 
-        if (!$this->orderModel->belongsToUser($id, $userId)) {
+        if (!$this->orderModel->belongsToUser($oid, $userId)) {
             $this->error('Order not found or access denied', 404);
         }
 
-        $order = $this->orderModel->getById($id);
+        $order = $this->orderModel->getById($oid);
 
         if ($order['status'] !== 'pending') {
             $this->error('Chỉ có thể hủy đơn hàng ở trạng thái "Chờ xác nhận".', 409); // 409 Conflict
         }
 
-        if ($this->orderModel->updateStatus($id, 'cancelled')) {
-            $this->logger->info('User cancelled order', ['order_id' => $id, 'user_id' => $userId]);
+        if ($this->orderModel->updateStatus($oid, 'cancelled')) {
+            $this->logger->info('User cancelled order', ['order_id' => $oid, 'user_id' => $userId]);
             $this->success(null, 'Đơn hàng đã được hủy thành công.');
         } else {
             $this->error('Không thể hủy đơn hàng. Vui lòng thử lại.', 500);
         }
     }
 
-    public function uploadReceipt(int $id): void
+    public function uploadReceipt(string $id): void
     {
         $payload = Middleware::requireAuth();
-        if (!$this->orderModel->belongsToUser($id, $payload['user_id'])) {
+        $oid = (int)$id;
+        if (!$this->orderModel->belongsToUser($oid, $payload['user_id'])) {
             $this->error('Order not found or access denied', 404);
         }
 
-        $order = $this->orderModel->getById($id);
+        $order = $this->orderModel->getById($oid);
         if ($order['status'] !== 'pending') {
             $this->error('Chỉ có thể tải lên biên lai cho đơn hàng chờ xác nhận.', 409);
         }
@@ -99,8 +102,8 @@ class OrderController extends BaseController
 
         if (move_uploaded_file($file['tmp_name'], $destination)) {
             $url = '/uploads/receipts/' . $filename;
-            if ($this->orderModel->updateReceiptUrl($id, $url)) {
-                $this->logger->info('Receipt uploaded successfully', ['order_id' => $id, 'url' => $url]);
+            if ($this->orderModel->updateReceiptUrl($oid, $url)) {
+                $this->logger->info('Receipt uploaded successfully', ['order_id' => $oid, 'url' => $url]);
                 $this->success(['url' => $url], 'Tải lên minh chứng thành công. Đơn hàng đang chờ duyệt.');
             } else {
                 $this->error('Không thể cập nhật trạng thái đơn hàng.', 500);
@@ -110,26 +113,28 @@ class OrderController extends BaseController
         }
     }
 
-    public function getChat(int $id): void
+    public function getChat(string $id): void
     {
         $payload = Middleware::requireAuth();
-        if (!$this->orderModel->belongsToUser($id, $payload['user_id'])) {
+        $oid = (int)$id;
+        if (!$this->orderModel->belongsToUser($oid, $payload['user_id'])) {
             $this->error('Order not found or access denied', 404);
         }
 
         try {
-            $messages = $this->chatModel->getByOrder($id);
+            $messages = $this->chatModel->getByOrder($oid);
             $this->success($messages, 'Chat history fetched');
         } catch (\Exception $e) {
-            $this->logger->error("Error fetching chat for order {$id}: " . $e->getMessage());
+            $this->logger->error("Error fetching chat for order {$oid}: " . $e->getMessage());
             $this->error('Internal Server Error', 500);
         }
     }
 
-    public function sendChat(int $id): void
+    public function sendChat(string $id): void
     {
         $payload = Middleware::requireAuth();
-        if (!$this->orderModel->belongsToUser($id, $payload['user_id'])) {
+        $oid = (int)$id;
+        if (!$this->orderModel->belongsToUser($oid, $payload['user_id'])) {
             $this->error('Order not found or access denied', 404);
         }
 
@@ -161,7 +166,7 @@ class OrderController extends BaseController
                 mkdir($uploadDir, 0777, true);
             }
 
-            $filename = 'chat_' . $id . '_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
+            $filename = 'chat_' . $oid . '_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
             if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
                 $attachmentUrl = '/uploads/chats/' . $filename;
             } else {
@@ -171,7 +176,7 @@ class OrderController extends BaseController
 
         try {
             $chatId = $this->chatModel->create([
-                'order_id'    => $id,
+                'order_id'    => $oid,
                 'user_id'     => (int)$payload['user_id'],
                 'message'     => $message,
                 'sender_role' => 'user',
@@ -179,7 +184,7 @@ class OrderController extends BaseController
             ]);
 
             // Auto-update order status to 'disputed' when user starts/continues chat
-            $this->orderModel->updateStatus($id, 'disputed');
+            $this->orderModel->updateStatus($oid, 'disputed');
 
             // Fetch the newly created message with sender name
             $stmt = \Core\Database::getInstance()->getConnection()->prepare(
@@ -193,7 +198,7 @@ class OrderController extends BaseController
 
             $this->success($msg, 'Message sent');
         } catch (\Exception $e) {
-            $this->logger->error("Error sending chat message for order {$id}: " . $e->getMessage());
+            $this->logger->error("Error sending chat message for order {$oid}: " . $e->getMessage());
             $this->error('Internal Server Error', 500);
         }
     }

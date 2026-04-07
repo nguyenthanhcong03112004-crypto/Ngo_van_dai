@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+// globals: true
 
 /**
  * Module 1 & 2: Auth Logic and Product Filtering (Frontend Unit Tests)

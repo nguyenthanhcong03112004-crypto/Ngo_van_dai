@@ -43,9 +43,21 @@ class ProductController
         $data = json_decode(file_get_contents('php://input'), true);
         
         try {
-            if (!isset($data['name'], $data['price'], $data['category_id'])) {
+            $required = ['name', 'price', 'category_id'];
+            $missing  = [];
+            foreach ($required as $field) {
+                if (!isset($data[$field])) {
+                    $missing[] = $field;
+                }
+            }
+
+            if (!empty($missing)) {
                 http_response_code(400);
-                echo json_encode(['status' => 'error', 'message' => 'Missing required fields']);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status'  => 'error', 
+                    'message' => 'Missing required fields: ' . implode(', ', $missing)
+                ]);
                 return;
             }
 

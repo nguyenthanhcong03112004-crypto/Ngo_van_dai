@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+// globals: true
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -52,7 +52,8 @@ function applyVoucher(
 }
 
 function buildVietQRUrl(bankId: string, accountNo: string, amount: number, orderId: string): string {
-  return `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${amount}&addInfo=Order%20${orderId}`;
+  const addInfo = encodeURIComponent(`Order ${orderId}`);
+  return `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${amount}&addInfo=${addInfo}`;
 }
 
 function calculateTotal(subtotal: number, shippingFee: number, discount: number, isExpress = false): number {
@@ -211,7 +212,7 @@ describe('SC-106 to SC-112 — Shipping Fees & Total Formula', () => {
 
     // Assert
     expect(total).toBe(subtotal + shipping - discount);
-    expect(total).toBe(37_000_000); // 37M + 30k - 2M = 35,030,000
+    expect(total).toBe(35_030_000); // 37M + 30k - 2M = 35,030,000
   });
 
   it('[SC-110] total should never be negative even with large discount', () => {

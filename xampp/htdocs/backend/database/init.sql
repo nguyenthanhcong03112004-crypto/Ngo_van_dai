@@ -239,19 +239,19 @@ INSERT IGNORE INTO `users` (`id`,`name`,`email`,`password`,`role`,`phone`,`addre
 (3,  'Trần Thị Bán Hàng',  'sales2@shop.com',  '$2y$10$mUBvOf7rpl6E8dzgH6.duu.EH8p66nLxWZIWcPAQcD6oaY67aT5nS', 'sales',  '0900000003', 'Showroom HCM - 456 Nguyễn Huệ, Quận 1',         'active'),
 (4,  'Lê Văn POS',         'sales3@shop.com',  '$2y$10$mUBvOf7rpl6E8dzgH6.duu.EH8p66nLxWZIWcPAQcD6oaY67aT5nS', 'sales',  '0900000004', 'Showroom Đà Nẵng - 78 Bạch Đằng, Hải Châu',    'active'),
 -- Regular Users
-(4,  'Nguyễn Văn An',    'user@shop.com',            '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0912345678', '12 Hoàng Diệu, Đống Đa, Hà Nội',    'active'),
-(5,  'Trần Thị Bình',    'binh.tran@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0923456789', '34 Lê Lợi, Quận 1, TP.HCM',         'active'),
-(6,  'Lê Văn Cường',     'cuong.le@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0934567890', '56 Hải Phòng, Đà Nẵng',             'active'),
-(7,  'Phạm Thị Dung',    'dung.pham@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0945678901', '78 Trần Phú, Nha Trang',            'active'),
-(8,  'Hoàng Văn Em',     'em.hoang@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0956789012', '90 Nguyễn Du, Cần Thơ',             'active'),
-(9,  'Vũ Thị Phương',    'phuong.vu@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0967890123', '11 Bà Triệu, Hải Phòng',            'active'),
-(10, 'Đỗ Văn Giang',     'giang.do@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0978901234', '22 Đinh Tiên Hoàng, Huế',           'active'),
-(11, 'Ngô Thị Hương',    'huong.ngo@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0989012345', '33 Lê Duẩn, Đắk Lắk',              'active'),
-(12, 'Bùi Văn Khoa',     'khoa.bui@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0990123456', '44 Trần Hưng Đạo, Bình Dương',      'active'),
-(13, 'Đinh Thị Lan',     'lan.dinh@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0901234560', '55 Nguyễn Trãi, Đồng Nai',          'active'),
-(14, 'Trương Văn Minh',  'minh.truong@gmail.com',    '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0912345670', '66 Lý Thường Kiệt, Hải Dương',      'active'),
-(15, 'Lương Thị Nga',    'nga.luong@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0923456780', '77 Phan Bội Châu, Nghệ An',         'active'),
-(16, 'Cao Văn Oanh',     'oanh.cao@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0934567891', '88 Hùng Vương, Thanh Hóa',          'active');
+(5,  'Nguyễn Văn An',    'user@shop.com',            '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0912345678', '12 Hoàng Diệu, Đống Đa, Hà Nội',    'active'),
+(6,  'Trần Thị Bình',    'binh.tran@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0923456789', '34 Lê Lợi, Quận 1, TP.HCM',         'active'),
+(7,  'Lê Văn Cường',     'cuong.le@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0934567890', '56 Hải Phòng, Đà Nẵng',             'active'),
+(8,  'Phạm Thị Dung',    'dung.pham@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0945678901', '78 Trần Phú, Nha Trang',            'active'),
+(9,  'Hoàng Văn Em',     'em.hoang@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0956789012', '90 Nguyễn Du, Cần Thơ',             'active'),
+(10, 'Vũ Thị Phương',    'phuong.vu@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0967890123', '11 Bà Triệu, Hải Phòng',            'active'),
+(11, 'Đỗ Văn Giang',     'giang.do@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0978901234', '22 Đinh Tiên Hoàng, Huế',           'active'),
+(12, 'Ngô Thị Hương',    'huong.ngo@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0989012345', '33 Lê Duẩn, Đắk Lắk',              'active'),
+(13, 'Bùi Văn Khoa',     'khoa.bui@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0990123456', '44 Trần Hưng Đạo, Bình Dương',      'active'),
+(14, 'Đinh Thị Lan',     'lan.dinh@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0901234560', '55 Nguyễn Trãi, Đồng Nai',          'active'),
+(15, 'Trương Văn Minh',  'minh.truong@gmail.com',    '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0912345670', '66 Lý Thường Kiệt, Hải Dương',      'active'),
+(16, 'Lương Thị Nga',    'nga.luong@gmail.com',      '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0923456780', '77 Phan Bội Châu, Nghệ An',         'active'),
+(17, 'Cao Văn Oanh',     'oanh.cao@gmail.com',       '$2y$10$Nq31mtIqWIOr0OgiUuDxYe58j3f263WCjbo8sbczJAuY1a4QOBAL6', 'user',   '0934567891', '88 Hùng Vương, Thanh Hóa',          'active');
 
 -- 2. CATEGORIES
 INSERT IGNORE INTO `categories` (`id`,`name`,`slug`,`description`) VALUES
